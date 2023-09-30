@@ -16,7 +16,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+ 
+        guard let scene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: scene)
+        let vc = CollectionViewController()
+        window?.rootViewController = UINavigationController(rootViewController: vc)
+        window?.makeKeyAndVisible()
+        
+        //탭바
+        let tabBarVC = UITabBarController()
+        let vc1 = UINavigationController(rootViewController: CollectionViewController())
+        let vc2 = UINavigationController(rootViewController: MapViewController())
+        let vc3 = UINavigationController(rootViewController: SettingViewController())
+        
+        
+        //vc1.title = "검색"
+        //vc2.title = "좋아요"
+        
+        tabBarVC.setViewControllers([vc1, vc2, vc3], animated: false)
+        tabBarVC.modalPresentationStyle = .fullScreen
+        tabBarVC.tabBar.backgroundColor = .darkGray
+        tabBarVC.tabBar.tintColor = UIColor.white
+        tabBarVC.tabBar.unselectedItemTintColor = UIColor.gray
+        //tabBarVC.tabBarItem.title = "검색"
+
+        
+        guard let items = tabBarVC.tabBar.items else { return }
+        items[0].image = UIImage(systemName: "house")
+        items[1].image = UIImage(systemName: "map")
+        items[2].image = UIImage(systemName: "gearshape")
+        
+        
+        window?.rootViewController = tabBarVC
+        window?.makeKeyAndVisible()
+
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
