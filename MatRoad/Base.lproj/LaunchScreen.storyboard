@@ -10,23 +10,41 @@
     </dependencies>
     <scenes>
         <!--Item-->
-        <scene sceneID="EHf-IW-A2E">
+        <scene sceneID="ucG-ix-H4S">
             <objects>
-                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                <viewController id="xGY-pU-X8P" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7zz-ZI-ncD">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <viewLayoutGuide key="safeArea" id="ElU-gg-Ibw"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="ire-JJ-zD9"/>
+                    <tabBarItem key="tabBarItem" title="Item" id="AX4-se-vwO"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LXx-Ot-xOc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="860.30534351145036" y="50"/>
+            <point key="canvasLocation" x="1002.2900763358779" y="-101.40845070422536"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="FuA-o7-0Wx">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="IIu-Rr-Y9Y" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionIndicatorImage="mail" catalog="system" id="Qgu-YB-uqB">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="xGY-pU-X8P" kind="relationship" relationship="viewControllers" id="Ep5-Jl-ohH"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Vk-bG-dWo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="75.572519083969468" y="-101.40845070422536"/>
         </scene>
     </scenes>
     <resources>
+        <image name="mail" catalog="system" width="128" height="93"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
