@@ -28,6 +28,18 @@ class CollectionViewController: BaseViewController {
         
         
     }
+//    func loadData(query: String) {
+//        foodManager.searchPlaceByKeyword(query: query) { result in
+//            switch result {
+//            case .success(let documents):
+//                // Assuming you have a property to store the results, similar to shopItems in MainViewController
+//                self.foodItems.append(contentsOf: documents)
+//                self.mainView.collectionView.reloadData()
+//            case .failure(let error):
+//                print("Error fetching data: \(error)")
+//            }
+//        }
+//    }
     
     // MARK: - 네비게이션UI
     func makeNavigationUI() {
@@ -53,7 +65,7 @@ class CollectionViewController: BaseViewController {
         navigationItem.rightBarButtonItems = [plusButton, deleteButton]
         navigationItem.leftBarButtonItem = albumButton
         
-        navigationItem.title = "MatBusim"
+        navigationItem.title = "맛슐랭"
         
     }
     
@@ -63,7 +75,6 @@ class CollectionViewController: BaseViewController {
         
         
         let registerAction = UIAlertAction(title: "맛집 등록", style: .default) { (action) in
-            // 맛집 등록 관련 코드를 여기에 작성하세요.
             
             let searchVC = SearchViewController()
             let searchNavController = UINavigationController(rootViewController: searchVC)
@@ -115,3 +126,4 @@ extension CollectionViewController: UICollectionViewDelegate, UICollectionViewDa
     
     
 }
+

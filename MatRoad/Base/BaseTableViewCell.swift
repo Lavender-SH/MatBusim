@@ -1,21 +1,19 @@
 //
-//  BaseCollectionViewCell.swift
-//  Recap Shopping
+//  BaseTableViewCell.swift
+//  MatRoad
 //
-//  Created by 이승현 on 2023/09/07.
+//  Created by 이승현 on 2023/10/03.
 //
 
 import UIKit
 import SnapKit
 
-class BaseCollectionViewCell: UICollectionViewCell {
+class BaseTableViewCell: UITableViewCell {
     
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureView()
         setConstraints()
-        
     }
     
     required init?(coder: NSCoder) {
@@ -25,7 +23,5 @@ class BaseCollectionViewCell: UICollectionViewCell {
     func configureView() { }
     
     func setConstraints() { }
-    
-    
-    
 }
+

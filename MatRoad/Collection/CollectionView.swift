@@ -28,7 +28,7 @@ class CollectionView: BaseView {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
         view.collectionViewLayout = collectionViewLayout()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         return view
     }()
     
