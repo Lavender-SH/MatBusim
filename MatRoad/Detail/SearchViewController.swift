@@ -29,8 +29,15 @@ class SearchViewController: BaseViewController {
         searchView.searchBar.delegate = self
         makeNavigationUI()
         //view.backgroundColor = .white
-
+        
+        
+        
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchView.searchBar.becomeFirstResponder()
+    }
+
     
     func loadData(query: String) {
         foodManager.searchPlaceCallRequest(query: query) { documents in
@@ -117,13 +124,30 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let reviewVC = ReviewViewController()
+        let selectedItem = foodItems[indexPath.row]
         
+        // selectedItem.placeURL을 URL로 변환하면서 http를 https로 변경
+        guard var urlString = selectedItem.placeURL else {
+            return
+        }
+        if urlString.starts(with: "http://") {
+            urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
+        }
+        guard let url = URL(string: urlString) else {
+            return
+        }
         
+        reviewVC.placeName = selectedItem.placeName
+        reviewVC.placeURL = urlString
+        let webviewVC = WebViewController(url: url)
         
-        let ReviewVC = ReviewViewController()
-        //ReviewVC.modalPresentationStyle = .fullScreen
-        present(ReviewVC, animated: true, completion: nil)
+        webviewVC.urlToLoad = url // URL 타입으로 전달
+        
+        present(reviewVC, animated: true, completion: nil)
     }
+
+
     
     
     

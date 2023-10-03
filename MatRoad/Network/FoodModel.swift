@@ -14,7 +14,6 @@ struct Food: Decodable {
 // MARK: - Document
 struct Document: Decodable {
     let addressName: String?
-    //let categoryGroupName: CategoryGroupName
     let categoryName: String?
     let phone: String?
     let placeName: String?
@@ -25,7 +24,6 @@ struct Document: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case addressName = "address_name"
-        //case categoryGroupName = "category_group_name"
         case categoryName = "category_name"
         case phone
         case placeName = "place_name"
@@ -39,8 +37,5 @@ struct Document: Decodable {
     }
 }
 
-//enum CategoryGroupName: String, Decodable {
-//    case 음식점 = "음식점"
-//    case 카페 = "카페"
-//}
+
 

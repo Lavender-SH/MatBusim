@@ -35,6 +35,7 @@
 		024B58262ACB4A22004319EA /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58252ACB4A22004319EA /* ReviewViewController.swift */; };
 		024B58282ACB4B3D004319EA /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58272ACB4B3D004319EA /* ReviewView.swift */; };
 		024B582D2ACBFC74004319EA /* Cosmos in Frameworks */ = {isa = PBXBuildFile; productRef = 024B582C2ACBFC74004319EA /* Cosmos */; };
+		024B58302ACC2AB0004319EA /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B582F2ACC2AB0004319EA /* WebViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		024B58222ACB3174004319EA /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		024B58252ACB4A22004319EA /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		024B58272ACB4B3D004319EA /* ReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewView.swift; sourceTree = "<group>"; };
+		024B582F2ACC2AB0004319EA /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +181,7 @@
 			children = (
 				024B58252ACB4A22004319EA /* ReviewViewController.swift */,
 				024B58272ACB4B3D004319EA /* ReviewView.swift */,
+				024B582F2ACC2AB0004319EA /* WebViewController.swift */,
 			);
 			path = Review;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				024B581D2ACAE9AD004319EA /* FoodModel.swift in Sources */,
 				024B58112AC86A81004319EA /* CollectionViewCell.swift in Sources */,
 				024B58282ACB4B3D004319EA /* ReviewView.swift in Sources */,
+				024B58302ACC2AB0004319EA /* WebViewController.swift in Sources */,
 				024B581B2ACAE99B004319EA /* API Key.swift in Sources */,
 				024B58142ACAD2D0004319EA /* SearchViewController.swift in Sources */,
 				024B580F2AC86A45004319EA /* CollectionView.swift in Sources */,

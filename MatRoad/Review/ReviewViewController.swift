@@ -7,10 +7,12 @@
 
 import UIKit
 
-class ReviewViewController: BaseViewController {
+class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     
     let reviewView = ReviewView()
+    var placeName: String?
+    var placeURL: String?
     
     override func loadView() {
         self.view = reviewView
@@ -20,6 +22,20 @@ class ReviewViewController: BaseViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .clear
+        reviewView.storeNameLabel.text = placeName
+        reviewView.internetButton.setTitle(placeURL, for: .normal)
+        reviewView.internetButton.addTarget(self, action: #selector(openWebView), for: .touchUpInside)
+        
+        let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped(_:)))
+        reviewView.imageView1.addGestureRecognizer(tapGesture1)
+        reviewView.imageView1.isUserInteractionEnabled = true
+        
+        let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped(_:)))
+        reviewView.imageView2.addGestureRecognizer(tapGesture2)
+        reviewView.imageView2.isUserInteractionEnabled = true
+        
+        let tapGesture3 = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            self.view.addGestureRecognizer(tapGesture3)
     }
     
     override func configureView() {
@@ -55,11 +71,53 @@ class ReviewViewController: BaseViewController {
 
         self.present(alertController, animated: true, completion: nil)
     }
+    
+    @objc func openWebView() {
+        guard var urlString = placeURL else {
+            print("Invalid URL")
+            return
+        }
+        if urlString.starts(with: "http://") {
+            urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
+        }
+        guard let url = URL(string: urlString) else {
+            return
+        }
+        let webVC = WebViewController(url: url)
+        //let navVC = UINavigationController(rootViewController: webVC)
+        present(webVC, animated: true, completion: nil)
+    }
+    
+    @objc func imageViewTapped(_ sender: UITapGestureRecognizer) {
+        guard let tappedImageView = sender.view as? UIImageView else { return }
+        
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        
+        imagePickerController.view.tag = tappedImageView.tag
+        
+        present(imagePickerController, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            if picker.view.tag == reviewView.imageView1.tag {
+                reviewView.imageView1.image = selectedImage
+            } else if picker.view.tag == reviewView.imageView2.tag {
+                reviewView.imageView2.image = selectedImage
+            }
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func dismissKeyboard() {
+        self.view.endEditing(true)
+    }
+
+
 
     
     
     
 }
-
-
-

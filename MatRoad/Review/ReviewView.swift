@@ -22,7 +22,8 @@ class ReviewView: BaseView {
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
-        view.backgroundColor = .green
+        view.backgroundColor = .darkGray
+        view.image = UIImage(named: "food1")
         return view
     }()
     
@@ -31,7 +32,8 @@ class ReviewView: BaseView {
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
-        view.backgroundColor = .green
+        view.backgroundColor = .darkGray
+        view.image = UIImage(named: "food2")
         return view
     }()
     
@@ -44,10 +46,10 @@ class ReviewView: BaseView {
     
     let storeNameLabel = {
         let view = UILabel()
-        view.textColor = .gray
-        view.font = UIFont.systemFont(ofSize: 15)
-        view.textAlignment = .left
-        view.backgroundColor = .darkGray
+        view.textColor = .white
+        view.font = UIFont.boldSystemFont(ofSize: 19)
+        view.textAlignment = .center
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -57,14 +59,14 @@ class ReviewView: BaseView {
         view.image = UIImage(systemName: "globe")
         return view
     }()
-    let internetLabel = {
-        let view = UILabel()
-        view.textColor = .gray
-        view.font = UIFont.systemFont(ofSize: 15)
-        view.textAlignment = .left
-        view.backgroundColor = .darkGray
-        return view
+    let internetButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+        button.contentHorizontalAlignment = .center
+        return button
     }()
+
     let rateLabel = {
         let view = UILabel()
         view.textColor = .white
@@ -80,11 +82,12 @@ class ReviewView: BaseView {
         let view = CosmosView()
         view.settings.fillMode = .half // 별을 반으로 채울 수 있게 설정
         view.settings.updateOnTouch = true // 사용자가 탭하거나 드래그할 때 별점 업데이트
-        view.settings.starSize = 40 // 별의 크기 설정
-        view.settings.starMargin = 5 // 별 사이의 간격 설정
+        view.settings.starSize = 45 // 별의 크기 설정
+        view.settings.starMargin = 7 // 별 사이의 간격 설정
         view.settings.filledColor = .orange // 채워진 별의 색상 설정
         view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
         view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
+        view.contentMode = .center
         view.rating = 0.0
         return view
     }()
@@ -93,7 +96,7 @@ class ReviewView: BaseView {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textAlignment = .left
+        label.textAlignment = .center
         label.text = "0.0"
         return label
     }()
@@ -113,6 +116,8 @@ class ReviewView: BaseView {
         let button = UIButton()
         button.setTitle("  맛집을 방문한 날짜를 입력해보세요.", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+        button.titleLabel?.textAlignment = .left
+            button.contentHorizontalAlignment = .left
         button.setTitleColor(.white, for: .normal)
         let calendarImage = UIImage(systemName: "calendar")
             button.setImage(calendarImage, for: .normal)
@@ -140,6 +145,29 @@ class ReviewView: BaseView {
         textView.textColor = .white
         return textView
     }()
+    let cancelButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.darkGray, for: .normal)
+        button.setTitle("취소", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        button.contentHorizontalAlignment = .center
+        button.layer.borderColor = UIColor.darkGray.cgColor
+        button.layer.borderWidth = 0.5
+        return button
+    }()
+    let saveButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.darkGray, for: .normal)
+        button.setTitle("저장", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        button.contentHorizontalAlignment = .center
+        button.layer.borderColor = UIColor.darkGray.cgColor
+        button.layer.borderWidth = 0.5
+        button.clipsToBounds = true
+        return button
+    }()
+    
+    
     
     override func configureView() {
         addSubview(alertView)
@@ -148,7 +176,7 @@ class ReviewView: BaseView {
         alertView.addSubview(homeImage)
         alertView.addSubview(storeNameLabel)
         alertView.addSubview(internetImage)
-        alertView.addSubview(internetLabel)
+        alertView.addSubview(internetButton)
         alertView.addSubview(rateLabel)
         alertView.addSubview(cosmosView)
         alertView.addSubview(rateNumberLabel)
@@ -156,12 +184,16 @@ class ReviewView: BaseView {
         alertView.addSubview(dateButton)
         alertView.addSubview(memoLabel)
         alertView.addSubview(memoTextView)
+        alertView.addSubview(cancelButton)
+        alertView.addSubview(saveButton)
         
         
         cosmosView.didFinishTouchingCosmos = { [weak self] rating in
             print("User rated: \(rating)")
             self?.rateNumberLabel.text = "\(rating)"
         }
+        imageView1.tag = 1
+        imageView2.tag = 2
         
     }
 
@@ -175,14 +207,16 @@ class ReviewView: BaseView {
         imageView1.snp.makeConstraints { make in
             make.top.equalTo(alertView.snp.top).inset(10)
             make.left.equalTo(alertView.snp.left).inset(10)
+            
             make.height.equalTo(200)
-            make.width.equalTo(160)
+            make.width.equalTo(alertView).multipliedBy(0.49).offset(-10)
         }
         imageView2.snp.makeConstraints { make in
             make.top.equalTo(alertView.snp.top).inset(10)
             make.left.equalTo(imageView1.snp.right).offset(13)
+            make.right.equalTo(alertView.snp.right).inset(10)
             make.height.equalTo(200)
-            make.width.equalTo(160)
+            make.width.equalTo(alertView).multipliedBy(0.49).offset(-10)
         }
         homeImage.snp.makeConstraints { make in
             make.top.equalTo(imageView1.snp.bottom).offset(10)
@@ -201,7 +235,7 @@ class ReviewView: BaseView {
             make.left.equalTo(alertView.snp.left).inset(10)
             make.size.equalTo(30)
         }
-        internetLabel.snp.makeConstraints { make in
+        internetButton.snp.makeConstraints { make in
             make.top.equalTo(storeNameLabel.snp.bottom).offset(10)
             make.left.equalTo(homeImage.snp.right).offset(10)
             make.right.equalTo(alertView.snp.right).offset(-10)
@@ -214,15 +248,17 @@ class ReviewView: BaseView {
             make.height.equalTo(40)
         }
         cosmosView.snp.makeConstraints { make in
-            make.top.equalTo(internetLabel.snp.bottom).offset(10)
+            make.top.equalTo(internetButton.snp.bottom).offset(10)
             make.left.equalTo(rateLabel.snp.right).offset(10)
-            make.width.equalTo(220)
+            make.right.equalTo(rateNumberLabel.snp.left).offset(-10)
+            //make.width.equalTo(220)
             make.height.equalTo(40)
         }
         rateNumberLabel.snp.makeConstraints { make in
-            make.top.equalTo(internetLabel.snp.bottom).offset(10)
+            make.top.equalTo(internetButton.snp.bottom).offset(10)
             make.left.equalTo(cosmosView.snp.right).offset(10)
-            make.width.equalTo(50)
+            make.right.equalTo(alertView.snp.right).inset(10)
+            make.width.equalTo(45)
             make.height.equalTo(40)
         }
         dateLabel.snp.makeConstraints { make in
@@ -234,7 +270,8 @@ class ReviewView: BaseView {
         dateButton.snp.makeConstraints { make in
             make.top.equalTo(cosmosView.snp.bottom).offset(5)
             make.left.equalTo(dateLabel.snp.right).offset(10)
-            make.width.equalTo(220)
+            make.right.equalTo(alertView.snp.right).offset(-10)
+            //make.width.equalTo(220)
             make.height.equalTo(40)
         }
         memoLabel.snp.makeConstraints { make in
@@ -247,7 +284,21 @@ class ReviewView: BaseView {
             make.top.equalTo(memoLabel.snp.bottom).offset(0)
             make.left.equalTo(alertView.snp.left).inset(10)
             make.right.equalTo(alertView.snp.right).offset(-10)
-            make.height.equalTo(280)
+            make.bottom.equalTo(cancelButton.snp.top).offset(-10)
+        }
+        cancelButton.snp.makeConstraints { make in
+            make.top.equalTo(memoTextView.snp.bottom).offset(10)
+            make.width.equalTo(alertView).multipliedBy(0.5)
+            make.left.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(60)
+        }
+        saveButton.snp.makeConstraints { make in
+            make.top.equalTo(memoTextView.snp.bottom).offset(10)
+            make.width.equalTo(alertView).multipliedBy(0.5)
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(60)
         }
         
         
