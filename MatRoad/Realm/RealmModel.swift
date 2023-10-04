@@ -16,10 +16,10 @@ class ReviewTable: Object {
     @Persisted var rateNumber: Double
     @Persisted var reviewDate: Date
     @Persisted var memo: String
-    @Persisted var imageView1Data: Data?
-    @Persisted var imageView2Data: Data?
+    @Persisted var imageView1URL: String?  // 이미지 데이터 대신 이미지의 파일 경로(URL)를 저장
+    @Persisted var imageView2URL: String?  // 이미지 데이터 대신 이미지의 파일 경로(URL)를 저장
 
-    convenience init(storeName: String, internetSettle: String, starCount: Double, rateNumber: Double, reviewDate: Date, memo: String, imageView1Data: Data?, imageView2Data: Data?) {
+    convenience init(storeName: String, internetSettle: String, starCount: Double, rateNumber: Double, reviewDate: Date, memo: String, imageView1URL: String?, imageView2URL: String?) {
         self.init()
         
         self.storeName = storeName
@@ -28,8 +28,8 @@ class ReviewTable: Object {
         self.rateNumber = rateNumber
         self.reviewDate = reviewDate
         self.memo = memo
-        self.imageView1Data = imageView1Data
-        self.imageView2Data = imageView2Data
+        self.imageView1URL = imageView1URL
+        self.imageView2URL = imageView2URL
     }
 }
 

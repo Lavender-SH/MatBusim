@@ -5,6 +5,7 @@
 //  Created by 이승현 on 2023/10/04.
 //
 
+import UIKit
 import Foundation
 import RealmSwift
 
@@ -13,6 +14,7 @@ protocol ReviewTableRepositoryType: AnyObject {
     func saveReview(_ review: ReviewTable)
     func deleteReview(_ review: ReviewTable)
     func findFileURL() -> URL?
+    func saveImageToDocument(fileName: String, image: UIImage) -> String?
 }
 
 class ReviewTableRepository: ReviewTableRepositoryType {
@@ -42,5 +44,18 @@ class ReviewTableRepository: ReviewTableRepositoryType {
     func findFileURL() -> URL? {
         let fileURL = realm.configuration.fileURL
         return fileURL
+    }
+    
+    func saveImageToDocument(fileName: String, image: UIImage) -> String? {
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        let fileURL = documentDirectory.appendingPathComponent(fileName)
+        guard let data = image.jpegData(compressionQuality: 0.5) else { return nil }
+        do {
+            try data.write(to: fileURL)
+            return fileURL.absoluteString
+        } catch let error {
+            print("file save error: ", error)
+            return nil
+        }
     }
 }
