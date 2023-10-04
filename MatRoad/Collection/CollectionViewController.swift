@@ -12,6 +12,10 @@ import RealmSwift
 class CollectionViewController: BaseViewController {
     
     let mainView = CollectionView()
+    //Realm 관련 변수
+    var reviewItems: Results<ReviewTable>!
+    let realm = try! Realm()
+    let repository = ReviewTableRepository()
     
     override func loadView() {
         self.view = mainView
@@ -25,21 +29,8 @@ class CollectionViewController: BaseViewController {
         mainView.collectionView.dataSource = self
         
         
-        
-        
+        print(realm.configuration.fileURL)
     }
-//    func loadData(query: String) {
-//        foodManager.searchPlaceByKeyword(query: query) { result in
-//            switch result {
-//            case .success(let documents):
-//                // Assuming you have a property to store the results, similar to shopItems in MainViewController
-//                self.foodItems.append(contentsOf: documents)
-//                self.mainView.collectionView.reloadData()
-//            case .failure(let error):
-//                print("Error fetching data: \(error)")
-//            }
-//        }
-//    }
     
     // MARK: - 네비게이션UI
     func makeNavigationUI() {
@@ -113,13 +104,13 @@ class CollectionViewController: BaseViewController {
 // MARK: - 확장: 컬렉션뷰 관련 함수
 extension CollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 18
+        return 36
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as? CollectionViewCell else { return UICollectionViewCell() }
         
-        cell.backgroundColor = .yellow
+        cell.backgroundColor = .clear
         
         return cell
     }

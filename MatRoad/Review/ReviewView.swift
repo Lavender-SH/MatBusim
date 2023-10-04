@@ -78,12 +78,12 @@ class ReviewView: BaseView {
     }()
     
     
-    private let cosmosView: CosmosView = {
+    let cosmosView: CosmosView = {
         let view = CosmosView()
         view.settings.fillMode = .half // 별을 반으로 채울 수 있게 설정
         view.settings.updateOnTouch = true // 사용자가 탭하거나 드래그할 때 별점 업데이트
-        view.settings.starSize = 45 // 별의 크기 설정
-        view.settings.starMargin = 7 // 별 사이의 간격 설정
+        view.settings.starSize = 43 // 별의 크기 설정
+        view.settings.starMargin = 5 // 별 사이의 간격 설정
         view.settings.filledColor = .orange // 채워진 별의 색상 설정
         view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
         view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
@@ -166,9 +166,7 @@ class ReviewView: BaseView {
         button.clipsToBounds = true
         return button
     }()
-    
-    
-    
+
     override func configureView() {
         addSubview(alertView)
         alertView.addSubview(imageView1)

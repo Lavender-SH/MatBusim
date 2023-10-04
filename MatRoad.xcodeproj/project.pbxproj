@@ -15,30 +15,32 @@
 		0208CE872AC15048000563D8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0208CE862AC15048000563D8 /* SnapKit */; };
 		0208CE8A2AC1505B000563D8 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 0208CE892AC1505B000563D8 /* Alamofire */; };
 		0208CE902AC1545E000563D8 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 0208CE8F2AC1545E000563D8 /* Kingfisher */; };
-		024B57FC2AC7E010004319EA /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B57FB2AC7E010004319EA /* CollectionViewController.swift */; };
 		024B58002AC85F7E004319EA /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B57FF2AC85F7E004319EA /* SettingViewController.swift */; };
 		024B58062AC8650F004319EA /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58032AC8650F004319EA /* BaseCollectionViewCell.swift */; };
 		024B58072AC8650F004319EA /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58042AC8650F004319EA /* BaseViewController.swift */; };
 		024B58082AC8650F004319EA /* BseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58052AC8650F004319EA /* BseView.swift */; };
 		024B580B2AC869D1004319EA /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 024B580A2AC869D1004319EA /* Realm */; };
 		024B580D2AC869D1004319EA /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 024B580C2AC869D1004319EA /* RealmSwift */; };
-		024B580F2AC86A45004319EA /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B580E2AC86A45004319EA /* CollectionView.swift */; };
-		024B58112AC86A81004319EA /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58102AC86A81004319EA /* CollectionViewCell.swift */; };
-		024B58142ACAD2D0004319EA /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58132ACAD2D0004319EA /* SearchViewController.swift */; };
-		024B58162ACAD67C004319EA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58152ACAD67C004319EA /* SearchView.swift */; };
 		024B58192ACAE8F6004319EA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58182ACAE8F6004319EA /* NetworkManager.swift */; };
 		024B581B2ACAE99B004319EA /* API Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B581A2ACAE99B004319EA /* API Key.swift */; };
 		024B581D2ACAE9AD004319EA /* FoodModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B581C2ACAE9AD004319EA /* FoodModel.swift */; };
 		024B581F2ACAE9BE004319EA /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 024B581E2ACAE9BE004319EA /* .gitignore */; };
-		024B58212ACB222A004319EA /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58202ACB222A004319EA /* SearchTableViewCell.swift */; };
 		024B58232ACB3174004319EA /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58222ACB3174004319EA /* BaseTableViewCell.swift */; };
-		024B58262ACB4A22004319EA /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58252ACB4A22004319EA /* ReviewViewController.swift */; };
-		024B58282ACB4B3D004319EA /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58272ACB4B3D004319EA /* ReviewView.swift */; };
 		024B582D2ACBFC74004319EA /* Cosmos in Frameworks */ = {isa = PBXBuildFile; productRef = 024B582C2ACBFC74004319EA /* Cosmos */; };
-		024B58302ACC2AB0004319EA /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B582F2ACC2AB0004319EA /* WebViewController.swift */; };
 		024B591C2ACDD28E004319EA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 024B591B2ACDD28E004319EA /* GoogleService-Info.plist */; };
 		024B591F2ACDD2DC004319EA /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 024B591E2ACDD2DC004319EA /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		024B59212ACDD2DC004319EA /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 024B59202ACDD2DC004319EA /* FirebaseCrashlytics */; };
+		024B59262ACDD49C004319EA /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59242ACDD49C004319EA /* RealmModel.swift */; };
+		024B59272ACDD49C004319EA /* ReviewTableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59252ACDD49C004319EA /* ReviewTableRepository.swift */; };
+		024B592C2ACDD50F004319EA /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59292ACDD50F004319EA /* CollectionView.swift */; };
+		024B592D2ACDD50F004319EA /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B592A2ACDD50F004319EA /* CollectionViewCell.swift */; };
+		024B592E2ACDD50F004319EA /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B592B2ACDD50F004319EA /* CollectionViewController.swift */; };
+		024B59332ACDD539004319EA /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59302ACDD539004319EA /* SearchViewController.swift */; };
+		024B59342ACDD539004319EA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59312ACDD539004319EA /* SearchView.swift */; };
+		024B59352ACDD539004319EA /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59322ACDD539004319EA /* SearchTableViewCell.swift */; };
+		024B593A2ACDD559004319EA /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59372ACDD559004319EA /* ReviewViewController.swift */; };
+		024B593B2ACDD559004319EA /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59382ACDD559004319EA /* WebViewController.swift */; };
+		024B593C2ACDD559004319EA /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59392ACDD559004319EA /* ReviewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,25 +51,27 @@
 		0208CE7A2AC14FB7000563D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0208CE7D2AC14FB7000563D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0208CE7F2AC14FB7000563D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		024B57FB2AC7E010004319EA /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		024B57FF2AC85F7E004319EA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		024B58032AC8650F004319EA /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		024B58042AC8650F004319EA /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		024B58052AC8650F004319EA /* BseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BseView.swift; sourceTree = "<group>"; };
-		024B580E2AC86A45004319EA /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
-		024B58102AC86A81004319EA /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
-		024B58132ACAD2D0004319EA /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
-		024B58152ACAD67C004319EA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		024B58182ACAE8F6004319EA /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		024B581A2ACAE99B004319EA /* API Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "API Key.swift"; sourceTree = "<group>"; };
 		024B581C2ACAE9AD004319EA /* FoodModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodModel.swift; sourceTree = "<group>"; };
 		024B581E2ACAE9BE004319EA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		024B58202ACB222A004319EA /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		024B58222ACB3174004319EA /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
-		024B58252ACB4A22004319EA /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
-		024B58272ACB4B3D004319EA /* ReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewView.swift; sourceTree = "<group>"; };
-		024B582F2ACC2AB0004319EA /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		024B591B2ACDD28E004319EA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		024B59242ACDD49C004319EA /* RealmModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
+		024B59252ACDD49C004319EA /* ReviewTableRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewTableRepository.swift; sourceTree = "<group>"; };
+		024B59292ACDD50F004319EA /* CollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		024B592A2ACDD50F004319EA /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		024B592B2ACDD50F004319EA /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		024B59302ACDD539004319EA /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		024B59312ACDD539004319EA /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		024B59322ACDD539004319EA /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
+		024B59372ACDD559004319EA /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
+		024B59382ACDD559004319EA /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		024B59392ACDD559004319EA /* ReviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,11 +114,12 @@
 			children = (
 				0208CE712AC14FB6000563D8 /* AppDelegate.swift */,
 				0208CE732AC14FB6000563D8 /* SceneDelegate.swift */,
+				024B59232ACDD49C004319EA /* Realm */,
 				024B58172ACAE8CB004319EA /* Network */,
 				024B58022AC864E5004319EA /* Base */,
-				024B57FD2AC85F40004319EA /* Collection */,
-				024B58122ACAD2AC004319EA /* Detail */,
-				024B58242ACB47E9004319EA /* Review */,
+				024B59282ACDD50F004319EA /* Collection */,
+				024B592F2ACDD539004319EA /* Search */,
+				024B59362ACDD559004319EA /* Review */,
 				024B57FE2AC85F51004319EA /* Map */,
 				024B58012AC85F85004319EA /* Setting */,
 				0208CE7A2AC14FB7000563D8 /* Assets.xcassets */,
@@ -123,16 +128,6 @@
 				024B591B2ACDD28E004319EA /* GoogleService-Info.plist */,
 			);
 			path = MatRoad;
-			sourceTree = "<group>";
-		};
-		024B57FD2AC85F40004319EA /* Collection */ = {
-			isa = PBXGroup;
-			children = (
-				024B57FB2AC7E010004319EA /* CollectionViewController.swift */,
-				024B580E2AC86A45004319EA /* CollectionView.swift */,
-				024B58102AC86A81004319EA /* CollectionViewCell.swift */,
-			);
-			path = Collection;
 			sourceTree = "<group>";
 		};
 		024B57FE2AC85F51004319EA /* Map */ = {
@@ -162,16 +157,6 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
-		024B58122ACAD2AC004319EA /* Detail */ = {
-			isa = PBXGroup;
-			children = (
-				024B58132ACAD2D0004319EA /* SearchViewController.swift */,
-				024B58152ACAD67C004319EA /* SearchView.swift */,
-				024B58202ACB222A004319EA /* SearchTableViewCell.swift */,
-			);
-			path = Detail;
-			sourceTree = "<group>";
-		};
 		024B58172ACAE8CB004319EA /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -183,12 +168,41 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
-		024B58242ACB47E9004319EA /* Review */ = {
+		024B59232ACDD49C004319EA /* Realm */ = {
 			isa = PBXGroup;
 			children = (
-				024B58252ACB4A22004319EA /* ReviewViewController.swift */,
-				024B58272ACB4B3D004319EA /* ReviewView.swift */,
-				024B582F2ACC2AB0004319EA /* WebViewController.swift */,
+				024B59242ACDD49C004319EA /* RealmModel.swift */,
+				024B59252ACDD49C004319EA /* ReviewTableRepository.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
+		024B59282ACDD50F004319EA /* Collection */ = {
+			isa = PBXGroup;
+			children = (
+				024B592B2ACDD50F004319EA /* CollectionViewController.swift */,
+				024B59292ACDD50F004319EA /* CollectionView.swift */,
+				024B592A2ACDD50F004319EA /* CollectionViewCell.swift */,
+			);
+			path = Collection;
+			sourceTree = "<group>";
+		};
+		024B592F2ACDD539004319EA /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				024B59302ACDD539004319EA /* SearchViewController.swift */,
+				024B59312ACDD539004319EA /* SearchView.swift */,
+				024B59322ACDD539004319EA /* SearchTableViewCell.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		024B59362ACDD559004319EA /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				024B59372ACDD559004319EA /* ReviewViewController.swift */,
+				024B59382ACDD559004319EA /* WebViewController.swift */,
+				024B59392ACDD559004319EA /* ReviewView.swift */,
 			);
 			path = Review;
 			sourceTree = "<group>";
@@ -310,23 +324,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				024B581D2ACAE9AD004319EA /* FoodModel.swift in Sources */,
-				024B58112AC86A81004319EA /* CollectionViewCell.swift in Sources */,
-				024B58282ACB4B3D004319EA /* ReviewView.swift in Sources */,
-				024B58302ACC2AB0004319EA /* WebViewController.swift in Sources */,
+				024B59262ACDD49C004319EA /* RealmModel.swift in Sources */,
+				024B593A2ACDD559004319EA /* ReviewViewController.swift in Sources */,
 				024B581B2ACAE99B004319EA /* API Key.swift in Sources */,
-				024B58142ACAD2D0004319EA /* SearchViewController.swift in Sources */,
-				024B580F2AC86A45004319EA /* CollectionView.swift in Sources */,
+				024B593B2ACDD559004319EA /* WebViewController.swift in Sources */,
+				024B592C2ACDD50F004319EA /* CollectionView.swift in Sources */,
 				024B58192ACAE8F6004319EA /* NetworkManager.swift in Sources */,
 				024B58002AC85F7E004319EA /* SettingViewController.swift in Sources */,
-				024B58162ACAD67C004319EA /* SearchView.swift in Sources */,
-				024B58262ACB4A22004319EA /* ReviewViewController.swift in Sources */,
+				024B593C2ACDD559004319EA /* ReviewView.swift in Sources */,
+				024B592E2ACDD50F004319EA /* CollectionViewController.swift in Sources */,
+				024B59342ACDD539004319EA /* SearchView.swift in Sources */,
+				024B59332ACDD539004319EA /* SearchViewController.swift in Sources */,
 				0208CE762AC14FB6000563D8 /* MapViewController.swift in Sources */,
 				0208CE722AC14FB6000563D8 /* AppDelegate.swift in Sources */,
 				0208CE742AC14FB6000563D8 /* SceneDelegate.swift in Sources */,
-				024B57FC2AC7E010004319EA /* CollectionViewController.swift in Sources */,
+				024B59352ACDD539004319EA /* SearchTableViewCell.swift in Sources */,
+				024B59272ACDD49C004319EA /* ReviewTableRepository.swift in Sources */,
 				024B58232ACB3174004319EA /* BaseTableViewCell.swift in Sources */,
 				024B58082AC8650F004319EA /* BseView.swift in Sources */,
-				024B58212ACB222A004319EA /* SearchTableViewCell.swift in Sources */,
+				024B592D2ACDD50F004319EA /* CollectionViewCell.swift in Sources */,
 				024B58072AC8650F004319EA /* BaseViewController.swift in Sources */,
 				024B58062AC8650F004319EA /* BaseCollectionViewCell.swift in Sources */,
 			);
