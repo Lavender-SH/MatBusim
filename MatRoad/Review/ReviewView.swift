@@ -84,9 +84,11 @@ class ReviewView: BaseView {
         view.settings.updateOnTouch = true // 사용자가 탭하거나 드래그할 때 별점 업데이트
         view.settings.starSize = 43 // 별의 크기 설정
         view.settings.starMargin = 5 // 별 사이의 간격 설정
-        view.settings.filledColor = .orange // 채워진 별의 색상 설정
-        view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
-        view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
+//        view.settings.filledColor = .orange // 채워진 별의 색상 설정
+//        view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
+//        view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
+        view.settings.filledImage = UIImage(named: "fill")
+        view.settings.emptyImage = UIImage(named: "empty")
         view.contentMode = .center
         view.rating = 0.0
         return view

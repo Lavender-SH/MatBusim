@@ -18,6 +18,12 @@ class CollectionViewController: BaseViewController {
     let realm = try! Realm()
     let repository = ReviewTableRepository()
     var notificationToken: NotificationToken?
+    //삭제
+    var isDeleteMode = false
+    var selectedItemsToDelete: Set<IndexPath> = []
+    // 삭제 및 완료 버튼 추가
+    var deleteBarButton: UIBarButtonItem!
+    var doneBarButton: UIBarButtonItem!
     
     
     override func loadView() {
@@ -49,8 +55,18 @@ class CollectionViewController: BaseViewController {
             }
         }
         
+        // 삭제 및 완료 버튼 초기화
+        deleteBarButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(deleteSelectedItems))
+        doneBarButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(endEditMode))
+        
         
         print(realm.configuration.fileURL)
+    }
+    
+    override func configureView() {
+        mainView.ratingButton.addTarget(self, action: #selector(sortByRating), for: .touchUpInside)
+        mainView.latestButton.addTarget(self, action: #selector(sortByLatest), for: .touchUpInside)
+        mainView.pastButton.addTarget(self, action: #selector(sortByPast), for: .touchUpInside)
     }
     
     // MARK: - 네비게이션UI
@@ -105,11 +121,64 @@ class CollectionViewController: BaseViewController {
     
     
     @objc func reviewDeleteButtonTapped() {
-        
+        isDeleteMode.toggle()
+        if isDeleteMode {
+            // 편집 모드 시작
+            tabBarController?.tabBar.isHidden = true // 탭바 숨기기
+            navigationItem.rightBarButtonItems = [doneBarButton, deleteBarButton] // 삭제 및 완료 버튼 표시
+        } else {
+            // 편집 모드 종료
+            endEditMode()
+        }
+        mainView.collectionView.reloadData()
+        //        if isDeleteMode {
+        //            navigationItem.rightBarButtonItem?.title = "삭제"
+        //        } else {
+        //            for indexPath in selectedItemsToDelete {
+        //                let review = reviewItems[indexPath.row]
+        //                repository.deleteReview(review)
+        //            }
+        //            selectedItemsToDelete.removeAll()
+        //            navigationItem.rightBarButtonItem?.title = "편집"
+        //        }
+        //        mainView.collectionView.reloadData()
     }
+    
     
     @objc func albumButtonTapped() {
         
+    }
+    
+    @objc func sortByRating() {
+        reviewItems = repository.fetch().sorted(byKeyPath: "starCount", ascending: false)
+        mainView.collectionView.reloadData()
+    }
+    
+    @objc func sortByLatest() {
+        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
+        mainView.collectionView.reloadData()
+    }
+    
+    @objc func sortByPast() {
+        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: true)
+        mainView.collectionView.reloadData()
+    }
+    
+    @objc func endEditMode() {
+        isDeleteMode = false
+        tabBarController?.tabBar.isHidden = false // 탭바 표시
+        makeNavigationUI() // 원래의 네비게이션 바 버튼으로 복원
+        selectedItemsToDelete.removeAll()
+        mainView.collectionView.reloadData()
+    }
+    
+    @objc func deleteSelectedItems() {
+        for indexPath in selectedItemsToDelete {
+            let review = reviewItems[indexPath.row]
+            repository.deleteReview(review)
+        }
+        selectedItemsToDelete.removeAll()
+        mainView.collectionView.reloadData()
     }
     
     
@@ -129,31 +198,51 @@ extension CollectionViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.backgroundColor = .clear
         
         let review = reviewItems[indexPath.row]
+        cell.titleLabel.text = review.storeName
+        cell.cosmosView.rating = review.starCount
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateString = dateFormatter.string(from: review.reviewDate)
+        cell.dateLabel.text = dateString
+        
         if let imageUrlString = review.imageView1URL, let imageUrl = URL(string: imageUrlString) {
             cell.imageView.kf.setImage(with: imageUrl) // Kingfisher 라이브러리를 사용하여 이미지를 로드합니다.
         }
+        
+        //삭제할때
+        cell.deleteCheckmark.isHidden = !isDeleteMode
+        cell.deleteCheckmark.tintColor = selectedItemsToDelete.contains(indexPath) ? .orange : .lightGray
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let review = reviewItems[indexPath.row]
-        let reviewVC = ReviewViewController()
-        
-        reviewVC.isEditMode = true
-        reviewVC.selectedReviewId = review._id
-        
-        reviewVC.placeName = review.storeName
-        reviewVC.placeURL = review.internetSettle
-        reviewVC.starCount = review.starCount
-        reviewVC.rateNumber = review.rateNumber
-        reviewVC.reviewDate = review.reviewDate
-        reviewVC.memo = review.memo
-        reviewVC.imageView1URL = review.imageView1URL
-        reviewVC.imageView2URL = review.imageView2URL
-        
-        
-        present(reviewVC, animated: true, completion: nil)
+        if isDeleteMode {
+            if selectedItemsToDelete.contains(indexPath) {
+                selectedItemsToDelete.remove(indexPath)
+            } else {
+                selectedItemsToDelete.insert(indexPath)
+            }
+            collectionView.reloadItems(at: [indexPath])
+        } else {
+            let review = reviewItems[indexPath.row]
+            let reviewVC = ReviewViewController()
+            
+            reviewVC.isEditMode = true
+            reviewVC.selectedReviewId = review._id
+            
+            reviewVC.placeName = review.storeName
+            reviewVC.placeURL = review.internetSettle
+            reviewVC.starCount = review.starCount
+            reviewVC.rateNumber = review.rateNumber
+            reviewVC.reviewDate = review.reviewDate
+            reviewVC.memo = review.memo
+            reviewVC.imageView1URL = review.imageView1URL
+            reviewVC.imageView2URL = review.imageView2URL
+            
+            present(reviewVC, animated: true, completion: nil)
+        }
     }
     
     

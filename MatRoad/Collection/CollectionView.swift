@@ -10,9 +10,33 @@ import SnapKit
 
 class CollectionView: BaseView {
     
-    let sortButton: UIButton = {
+    let ratingButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("등록일", for: .normal)
+        button.setTitle("별점순", for: .normal)
+        button.setTitleColor(.gray, for: .normal)
+        button.backgroundColor = .clear
+        button.layer.borderWidth = 1
+        button.layer.cornerRadius = 10
+        button.layer.borderColor = UIColor.gray.cgColor
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        return button
+    }()
+    
+    let latestButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("최신순", for: .normal)
+        button.setTitleColor(.gray, for: .normal)
+        button.backgroundColor = .clear
+        button.layer.borderWidth = 1
+        button.layer.cornerRadius = 10
+        button.layer.borderColor = UIColor.gray.cgColor
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        return button
+    }()
+    
+    let pastButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("과거순", for: .normal)
         button.setTitleColor(.gray, for: .normal)
         button.backgroundColor = .clear
         button.layer.borderWidth = 1
@@ -35,23 +59,37 @@ class CollectionView: BaseView {
     
     override func configureView() {
         addSubview(collectionView)
-        addSubview(sortButton)
+        addSubview(ratingButton)
+        addSubview(latestButton)
+        addSubview(pastButton)
     }
     
     override func setConstraints() {
-        sortButton.snp.makeConstraints { make in
+        collectionView.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview()
+            make.top.equalTo(ratingButton.snp.bottom).offset(15)
+            make.bottom.equalToSuperview()
+        }
+        ratingButton.snp.makeConstraints { make in
             make.top.equalTo(10)
             make.right.equalTo(-13)
             make.width.equalTo(50)
             make.height.equalTo(24)
         }
-        
-        collectionView.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(sortButton.snp.bottom).offset(15)
-            make.bottom.equalToSuperview()
-            
+        latestButton.snp.makeConstraints { make in
+            make.top.equalTo(10)
+            make.right.equalTo(ratingButton.snp.left).offset(-13)
+            make.width.equalTo(50)
+            make.height.equalTo(24)
         }
+        pastButton.snp.makeConstraints { make in
+            make.top.equalTo(10)
+            make.right.equalTo(latestButton.snp.left).offset(-13)
+            make.width.equalTo(50)
+            make.height.equalTo(24)
+        }
+        
+
     }
     
     
