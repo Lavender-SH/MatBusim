@@ -141,6 +141,7 @@ extension CollectionViewController: UICollectionViewDelegate, UICollectionViewDa
         let reviewVC = ReviewViewController()
         
         reviewVC.isEditMode = true
+        reviewVC.selectedReviewId = review._id
         
         reviewVC.placeName = review.storeName
         reviewVC.placeURL = review.internetSettle

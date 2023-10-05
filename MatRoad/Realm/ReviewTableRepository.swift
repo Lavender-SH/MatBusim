@@ -59,22 +59,24 @@ class ReviewTableRepository: ReviewTableRepositoryType {
         }
     }
     
-    func updateOrSaveReview(review: ReviewTable, isEditMode: Bool, existingReviewItems: Results<ReviewTable>?) {
-        if isEditMode, let existingReview = existingReviewItems?.first(where: { $0.storeName == review.storeName }) {
+    func updateOrSaveReview(review: ReviewTable, isEditMode: Bool, existingReview: ReviewTable?) {
+        if isEditMode, let existing = existingReview {
             // Update existing review
             try! realm.write {
-                existingReview.starCount = review.starCount
-                existingReview.rateNumber = review.rateNumber
-                existingReview.reviewDate = review.reviewDate
-                existingReview.memo = review.memo
-                existingReview.imageView1URL = review.imageView1URL
-                existingReview.imageView2URL = review.imageView2URL
+                existing.starCount = review.starCount
+                existing.rateNumber = review.rateNumber
+                existing.reviewDate = review.reviewDate
+                existing.memo = review.memo
+                existing.imageView1URL = review.imageView1URL
+                existing.imageView2URL = review.imageView2URL
             }
         } else {
             // Save new review
             saveReview(review)
         }
     }
+
+
 
 }
 

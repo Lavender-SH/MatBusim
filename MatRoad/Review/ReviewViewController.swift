@@ -28,7 +28,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     var memo: String?
     
     var isEditMode: Bool = false
-    var selectedReviewId: String?
+    var selectedReviewId: ObjectId?
     
     //Realm 관련 변수
     var reviewItems: Results<ReviewTable>!
@@ -207,10 +207,14 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         // 7. ReviewTable 객체를 생성합니다.
         let review = ReviewTable(storeName: storeName, internetSettle: internetSettle, starCount: starCount, rateNumber: rateNumber, reviewDate: reviewDate, memo: memo, imageView1URL: imageView1Data, imageView2URL: imageView2Data, latitude: placeLatitude, longitude: placeLongitude)
         
-        // 8. Realm에 저장합니다.
-        repository.saveReview(review)
-        //⭐️
-        repository.updateOrSaveReview(review: review, isEditMode: isEditMode, existingReviewItems: reviewItems)
+        // 8. Realm에 저장.
+        if isEditMode, let id = selectedReviewId, let existingReview = repository.fetch().first(where: { $0._id == id }) {
+            // 기존 리뷰를 수정.
+            repository.updateOrSaveReview(review: review, isEditMode: true, existingReview: existingReview)
+        } else {
+            // 새 리뷰를 저장.
+            repository.saveReview(review)
+        }
         
         // 9. 저장이 완료되면 화면을 닫습니다.
         dismiss(animated: true, completion: nil)
