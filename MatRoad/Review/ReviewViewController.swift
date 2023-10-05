@@ -18,6 +18,15 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     let reviewView = ReviewView()
     var placeName: String?
     var placeURL: String?
+    var placeLatitude: String?
+    var placeLongitude: String?
+    var imageView1URL: String?
+    var imageView2URL: String?
+    var starCount: Double?
+    var rateNumber: Double?
+    var reviewDate: Date?
+    var memo: String?
+    
     
     //Realm 관련 변수
     var reviewItems: Results<ReviewTable>!
@@ -34,6 +43,26 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         view.backgroundColor = .clear
         reviewView.storeNameLabel.text = placeName
         reviewView.internetButton.setTitle(placeURL, for: .normal)
+        //
+        reviewView.cosmosView.rating = starCount ?? 0.0
+        reviewView.rateNumberLabel.text = "\(rateNumber ?? 0.0)"
+        if let date = reviewDate {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy년 MM월 dd일"
+            let dateString = formatter.string(from: date)
+            reviewView.dateButton.setTitle("  \(dateString)", for: .normal)
+        }
+        reviewView.memoTextView.text = memo
+
+        //⭐️
+        if let imageUrlString1 = imageView1URL, let imageUrl1 = URL(string: imageUrlString1) {
+            reviewView.imageView1.kf.setImage(with: imageUrl1)
+        }
+
+        if let imageUrlString2 = imageView2URL, let imageUrl2 = URL(string: imageUrlString2) {
+            reviewView.imageView2.kf.setImage(with: imageUrl2)
+        }
+        //
         reviewView.internetButton.addTarget(self, action: #selector(openWebView), for: .touchUpInside)
         
         let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped(_:)))
@@ -129,7 +158,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     @objc func cancelButtonTapped(){
         dismiss(animated: true, completion: nil)
     }
-
+    
     @objc func saveButtonTapped() {
         // 1. 입력된 정보를 가져옵니다.
         guard let storeName = placeName,
@@ -142,30 +171,58 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         // 2. 별점 정보를 가져옵니다.
         let starCount = reviewView.cosmosView.rating
+        if starCount == 0 {
+            showAlert(message: "별점을 입력해주세요!")
+            return
+        }
+        
         let rateNumber = Double(reviewView.rateNumberLabel.text ?? "0.0") ?? 0.0
         
         // 3. 날짜 정보를 Date 형식으로 변환합니다.
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy년 MM월 dd일"
         guard let reviewDate = formatter.date(from: reviewDateText) else {
-            print("Invalid date format!")
+            showAlert(message: "날짜를 입력해주세요!")
             return
         }
-        // 4. 이미지 정보
+        
+        // 4. 이미지 유효성 검사
+        if reviewView.imageView1.image == nil {
+            showAlert(message: "이미지를 넣어주세요!")
+            return
+        }
+        
+        // 5. 메모 유효성 검사
+        if memo.isEmpty {
+            showAlert(message: "메모를 남겨주세요!")
+            return
+        }
+        
+        // 6. 이미지 정보
         let imageView1Data = repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView1.image ?? UIImage())
         let imageView2Data = repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView2.image ?? UIImage())
         
-        // 5. ReviewTable 객체를 생성합니다.
-        let review = ReviewTable(storeName: storeName, internetSettle: internetSettle, starCount: starCount, rateNumber: rateNumber, reviewDate: reviewDate, memo: memo, imageView1URL: imageView1Data, imageView2URL: imageView2Data)
+        // 7. ReviewTable 객체를 생성합니다.
+        let review = ReviewTable(storeName: storeName, internetSettle: internetSettle, starCount: starCount, rateNumber: rateNumber, reviewDate: reviewDate, memo: memo, imageView1URL: imageView1Data, imageView2URL: imageView2Data, latitude: placeLatitude, longitude: placeLongitude)
         
-        // 6. Realm에 저장합니다.
+        // 8. Realm에 저장합니다.
         repository.saveReview(review)
         
-        // 7. 저장이 완료되면 화면을 닫습니다.
+        // 9. 저장이 완료되면 화면을 닫습니다.
         dismiss(animated: true, completion: nil)
     }
-
-
     
-
+    func showAlert(message: String) {
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    
+    
+    
+    
+    
+    
 }

@@ -101,6 +101,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
             return UITableViewCell()
         }
         let item = foodItems[indexPath.row]
+        
         cell.configure(with: item)
         cell.backgroundColor = .clear
         
@@ -126,6 +127,10 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let reviewVC = ReviewViewController()
         let selectedItem = foodItems[indexPath.row]
+        
+        reviewVC.placeLatitude = selectedItem.x
+        reviewVC.placeLongitude = selectedItem.y
+
         
         // selectedItem.placeURL을 URL로 변환하면서 http를 https로 변경
         guard var urlString = selectedItem.placeURL else {

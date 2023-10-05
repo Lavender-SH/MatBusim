@@ -201,8 +201,8 @@
 			isa = PBXGroup;
 			children = (
 				024B59372ACDD559004319EA /* ReviewViewController.swift */,
-				024B59382ACDD559004319EA /* WebViewController.swift */,
 				024B59392ACDD559004319EA /* ReviewView.swift */,
+				024B59382ACDD559004319EA /* WebViewController.swift */,
 			);
 			path = Review;
 			sourceTree = "<group>";
