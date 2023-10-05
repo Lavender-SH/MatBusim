@@ -27,6 +27,8 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     var reviewDate: Date?
     var memo: String?
     
+    var isEditMode: Bool = false
+    var selectedReviewId: String?
     
     //Realm 관련 변수
     var reviewItems: Results<ReviewTable>!
@@ -53,12 +55,12 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
             reviewView.dateButton.setTitle("  \(dateString)", for: .normal)
         }
         reviewView.memoTextView.text = memo
-
+        
         //⭐️
         if let imageUrlString1 = imageView1URL, let imageUrl1 = URL(string: imageUrlString1) {
             reviewView.imageView1.kf.setImage(with: imageUrl1)
         }
-
+        
         if let imageUrlString2 = imageView2URL, let imageUrl2 = URL(string: imageUrlString2) {
             reviewView.imageView2.kf.setImage(with: imageUrl2)
         }
@@ -207,10 +209,16 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         // 8. Realm에 저장합니다.
         repository.saveReview(review)
+        //⭐️
+        repository.updateOrSaveReview(review: review, isEditMode: isEditMode, existingReviewItems: reviewItems)
         
         // 9. 저장이 완료되면 화면을 닫습니다.
         dismiss(animated: true, completion: nil)
     }
+    
+    
+    
+    
     
     func showAlert(message: String) {
         let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)

@@ -140,6 +140,7 @@ extension CollectionViewController: UICollectionViewDelegate, UICollectionViewDa
         let review = reviewItems[indexPath.row]
         let reviewVC = ReviewViewController()
         
+        reviewVC.isEditMode = true
         
         reviewVC.placeName = review.storeName
         reviewVC.placeURL = review.internetSettle
@@ -156,22 +157,3 @@ extension CollectionViewController: UICollectionViewDelegate, UICollectionViewDa
     
     
 }
-
-
-
-
-
-
-
-//        if let imageUrlString = review.imageView1URL, let imageUrl = URL(string: imageUrlString) {
-//                reviewVC.imageView1Data = UIImage(data: try! Data(contentsOf: imageUrl))
-//            }
-//        if let imageUrlString2 = review.imageView2URL, let imageUrl2 = URL(string: imageUrlString2) {
-//                reviewVC.imageView2Data = UIImage(data: try! Data(contentsOf: imageUrl2))
-//            }
-//        if let imageView1URL = review.imageView1URL {
-//            reviewVC.imageView1Data = UIImage(contentsOfFile: imageView1URL)
-//        }
-//        if let imageView2URL = review.imageView2URL {
-//            reviewVC.imageView2Data = UIImage(contentsOfFile: imageView2URL)
-//        }
