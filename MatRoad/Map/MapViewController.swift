@@ -11,9 +11,11 @@ import RealmSwift
 import Kingfisher
 import SnapKit
 
-class MapViewController: UIViewController, MKMapViewDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     let mapView = MKMapView()
     let reviewRepository = ReviewTableRepository()
+    let locationManager = CLLocationManager()
+    let moveToCurrentLocationButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,9 +23,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         mapView.delegate = self
         view.addSubview(mapView)
         mapView.frame = view.bounds
+        mapView.showsUserLocation = true
         mapView.cameraZoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 4000000)
         addLogoToMapView()
         loadAnnotations()
+        
+        setupLocationManager()
+        setupMoveToCurrentLocationButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -34,9 +40,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func loadAnnotations() {
         let currentAnnotations = mapView.annotations
-        let reviews = reviewRepository.fetch()
         var newAnnotations: [MKPointAnnotation] = []
-
+        
+        let reviews = reviewRepository.fetch()
         for review in reviews {
             if let latitude = Double(review.latitude ?? ""), let longitude = Double(review.longitude ?? "") {
                 let annotation = MKPointAnnotation()
@@ -82,6 +88,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 annotationView = ImageAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 annotationView?.clusteringIdentifier = identifier
             }
+            //콜아웃 기능
+            //annotationView?.canShowCallout = true
             
             if let imageUrlString = annotation.subtitle, let imageUrl = URL(string: imageUrlString ?? "") {
                 annotationView?.setImage(with: imageUrl)
@@ -104,12 +112,44 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
         }
     }
+    // MARK: - 내 위치로 이동기능
+    func setupLocationManager() {
+            locationManager.delegate = self
+            locationManager.requestWhenInUseAuthorization()
+            //줌을 축소해도 다시 확대되게 만듬
+            //locationManager.desiredAccuracy = kCLLocationAccuracyBest // 최고 정확도로 위치 업데이트
+            //locationManager.distanceFilter = 10 // 위치가 10미터 이상 움직였을 때만 업데이트
+            locationManager.startUpdatingLocation()
+        }
+    func setupMoveToCurrentLocationButton() {
+        moveToCurrentLocationButton.setImage(UIImage(systemName: "location.fill"), for: .normal) // 위치 서비스 아이콘으로 설정
+        moveToCurrentLocationButton.tintColor = .gray
+        moveToCurrentLocationButton.backgroundColor = .white
+        moveToCurrentLocationButton.layer.cornerRadius = 20
+        moveToCurrentLocationButton.addTarget(self, action: #selector(moveToCurrentLocation), for: .touchUpInside)
+        view.addSubview(moveToCurrentLocationButton)
+        
+        moveToCurrentLocationButton.snp.makeConstraints { make in
+            make.bottom.equalTo(mapView).offset(-100)
+            make.trailing.equalTo(mapView).offset(-20)
+            make.width.height.equalTo(40)
+        }
+    }
+    @objc func moveToCurrentLocation() {
+        if let currentLocation = locationManager.location?.coordinate {
+            let region = MKCoordinateRegion(center: currentLocation, latitudinalMeters: 1500, longitudinalMeters: 1500)
+            mapView.setRegion(region, animated: true)
+        }
+    }
     
        
 }
 extension MapViewController {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let annotation = view.annotation as? MKPointAnnotation else { return }
+        
+        let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
+            mapView.setRegion(region, animated: true)
         
         if let review = reviewRepository.fetch().first(where: { $0.storeName == annotation.title && $0.imageView1URL == annotation.subtitle }) {
             let reviewVC = ReviewViewController()

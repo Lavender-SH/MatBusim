@@ -35,10 +35,19 @@ class SearchView: BaseView {
         }
         return searchBar
     }()
+    lazy var noResultsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "검색결과가 없습니다."
+        label.textColor = .white
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
     
     override func configureView() {
         addSubview(searchBar)
         addSubview(tableView)
+        addSubview(noResultsLabel)
     }
     
     override func setConstraints() {
@@ -50,6 +59,10 @@ class SearchView: BaseView {
             make.top.equalTo(searchBar.snp.bottom)
             make.horizontalEdges.equalToSuperview()
             make.bottom.equalToSuperview()
+        }
+        noResultsLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.horizontalEdges.equalToSuperview().inset(20)
         }
     }
     

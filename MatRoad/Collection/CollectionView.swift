@@ -9,6 +9,22 @@ import UIKit
 import SnapKit
 
 class CollectionView: BaseView {
+    lazy var searchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = ""
+        searchBar.layer.shadowColor = UIColor.clear.cgColor
+        searchBar.showsCancelButton = true
+        searchBar.barTintColor = .clear
+        searchBar.searchTextField.textColor = .white
+        searchBar.searchTextField.font = UIFont.systemFont(ofSize: 13)
+
+        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
+            cancelButton.setTitle("취소", for: .normal)
+            cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            cancelButton.tintColor = .white
+        }
+        return searchBar
+    }()
     
     let ratingButton: UIButton = {
         let button = UIButton(type: .system)
@@ -62,6 +78,7 @@ class CollectionView: BaseView {
         addSubview(ratingButton)
         addSubview(latestButton)
         addSubview(pastButton)
+        addSubview(searchBar)
     }
     
     override func setConstraints() {
@@ -69,6 +86,12 @@ class CollectionView: BaseView {
             make.horizontalEdges.equalToSuperview()
             make.top.equalTo(ratingButton.snp.bottom).offset(13)
             make.bottom.equalToSuperview()
+        }
+        searchBar.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalTo(pastButton.snp.left).offset(-15)
+            make.height.equalTo(45)
         }
         ratingButton.snp.makeConstraints { make in
             make.top.equalTo(10)

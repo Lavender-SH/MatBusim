@@ -54,7 +54,7 @@ class MainViewController: BaseViewController {
         setupSideMenu()
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
-        
+        mainView.searchBar.delegate = self
         // Realm 데이터베이스의 변경을 감지하는 옵저버를 추가
         notificationToken = reviewItems.observe { [weak self] (changes: RealmCollectionChange) in
             switch changes {
@@ -75,19 +75,30 @@ class MainViewController: BaseViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: NSNotification.Name("didRestoreBackup"), object: nil)
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+        
         print(realm.configuration.fileURL)
-    
+        
     }
     
     @objc func refreshData() {
         reviewItems = repository.fetch()
         mainView.collectionView.reloadData()
     }
-
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
     override func configureView() {
         mainView.ratingButton.addTarget(self, action: #selector(sortByRating), for: .touchUpInside)
         mainView.latestButton.addTarget(self, action: #selector(sortByLatest), for: .touchUpInside)
         mainView.pastButton.addTarget(self, action: #selector(sortByPast), for: .touchUpInside)
+        
+        if let cancelButton = mainView.searchBar.value(forKey: "cancelButton") as? UIButton {
+            cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: UIControl.Event.touchUpInside)
+        }
     }
     
     // MARK: - 네비게이션UI
@@ -112,7 +123,7 @@ class MainViewController: BaseViewController {
         navigationItem.rightBarButtonItems = [plusButton, deleteButton]
         navigationItem.leftBarButtonItems = [albumButton, albumButton2, albumButton3]
         
-
+        
         let logo = UIImage(named: "matlogo")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
@@ -120,7 +131,6 @@ class MainViewController: BaseViewController {
         
         navigationItem.titleView = imageView
     }
-    
     
     
     func setupSideMenu() {
@@ -147,14 +157,14 @@ class MainViewController: BaseViewController {
         sideMenuTableViewController.navigationController?.navigationBar.compactAppearance = appearance
         sideMenuTableViewController.navigationController?.navigationBar.scrollEdgeAppearance = appearance
         sideMenuTableViewController.navigationController?.navigationBar.tintColor = .white
-
+        
         sideMenu = SideMenuNavigationController(rootViewController: sideMenuTableViewController)
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
         
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutside))
-//        tapGesture.cancelsTouchesInView = false
-//        sideMenuTableViewController.view.addGestureRecognizer(tapGesture)
+        //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutside))
+        //        tapGesture.cancelsTouchesInView = false
+        //        sideMenuTableViewController.view.addGestureRecognizer(tapGesture)
     }
     
     // MARK: - 데이터추가 버튼
@@ -209,6 +219,10 @@ class MainViewController: BaseViewController {
         reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: true)
         mainView.collectionView.reloadData()
     }
+    @objc func cancelButtonTapped() {
+
+    }
+
     
     @objc func endEditMode() {
         isDeleteMode = false
@@ -247,7 +261,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.backgroundColor = .clear
         
         let review = selectedReview ?? reviewItems[indexPath.row]
-
+        
         cell.titleLabel.text = review.storeName
         cell.cosmosView.rating = review.starCount
         
@@ -295,7 +309,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             present(reviewVC, animated: true, completion: nil)
         }
     }
-
+    
     
     
 }
@@ -312,11 +326,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.textLabel?.textColor = .white
         //체크표시
         if indexPath == selectedSideMenuIndexPath {
-                cell.accessoryType = .checkmark
-                cell.tintColor = .white
-            } else {
-                cell.accessoryType = .none
-            }
+            cell.accessoryType = .checkmark
+            cell.tintColor = .white
+        } else {
+            cell.accessoryType = .none
+        }
         // "+ 앨범 추가" 셀에 버튼 추가
         if indexPath.row == albumNames.count - 1 {
             let addButton = UIButton(frame: CGRect(x: 15, y: 8, width: 200, height: 30))
@@ -370,7 +384,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         selectedSideMenuIndexPath = indexPath
         tableView.reloadData()
     }
-
+    
     
     // MARK: - 사이드메뉴바 헤더 구현
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -403,7 +417,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     @objc func editButtonTapped() {
         isDeleteMode.toggle()
         sideMenuTableViewController.tableView.setEditing(isDeleteMode, animated: true)
-     
+        
     }
     
     @objc func addAlbumButtonTapped() {
@@ -415,17 +429,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             }
             // "추가"
             let addAction = UIAlertAction(title: "추가", style: .default) { _ in
-                    if let newAlbumName = alertController.textFields?.first?.text, !newAlbumName.isEmpty {
-                        let newAlbum = AlbumTable(albumName: newAlbumName)
-                        
-                        let newAlbumId = newAlbum._id
-                        UserDefaults.standard.set(newAlbumId.stringValue, forKey: "newAlbumId")
-                        UserDefaults.standard.set(newAlbumName, forKey: "newAlbumName")
-                        
-                        self.repository.saveAlbum(newAlbum)
-                        self.sideMenuTableViewController.tableView.reloadData()
-                    }
+                if let newAlbumName = alertController.textFields?.first?.text, !newAlbumName.isEmpty {
+                    let newAlbum = AlbumTable(albumName: newAlbumName)
+                    
+                    let newAlbumId = newAlbum._id
+                    UserDefaults.standard.set(newAlbumId.stringValue, forKey: "newAlbumId")
+                    UserDefaults.standard.set(newAlbumName, forKey: "newAlbumName")
+                    
+                    self.repository.saveAlbum(newAlbum)
+                    self.sideMenuTableViewController.tableView.reloadData()
                 }
+            }
             let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
             alertController.addAction(addAction)
             alertController.addAction(cancelAction)
@@ -435,10 +449,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     // MARK: - 슬라이드 메뉴 바 셀 삭제
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
- 
+        
         return indexPath.row != 0 && indexPath.row != albumNames.count - 1
     }
-
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
@@ -448,7 +462,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                     realm.delete(albumToDelete)
                 }
             }
-  
+            
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -459,9 +473,34 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    
+}
+// MARK: - 서치바 관련함수
+extension MainViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchText = searchBar.text, !searchText.isEmpty else {
+            reviewItems = repository.fetch()
+            mainView.collectionView.reloadData()
+            return
+        }
+        reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+        mainView.collectionView.reloadData()
+        
+        
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        reviewItems = repository.fetch()
+        mainView.collectionView.reloadData()
+        
+    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            reviewItems = repository.fetch()
+        } else {
+            reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+        }
+        mainView.collectionView.reloadData()
+    }
 
     
-
 }
 

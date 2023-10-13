@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>사용자의 주변 장소를 보다 명시적으로 나타내기 위해 현재 위치 정보를 수집하여, 위치 정보는 앱 내에서만 사용되고 저장되지 않습니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>앱에서 사진을 선택하기 위해 앨범 접근 권한이 필요합니다!</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

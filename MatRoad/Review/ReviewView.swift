@@ -252,14 +252,14 @@ class ReviewView: BaseView {
         }
         
         imageView1.snp.makeConstraints { make in
-            make.top.equalTo(alertView.snp.top).inset(10)
+            make.top.equalTo(alertView.snp.top).inset(15)
             make.left.equalTo(alertView.snp.left).inset(10)
             make.height.equalTo(200)
             make.width.equalTo(alertView).multipliedBy(0.49).offset(-10)
         }
 
         imageView2.snp.makeConstraints { make in
-            make.top.equalTo(alertView.snp.top).inset(10)
+            make.top.equalTo(alertView.snp.top).inset(15)
             make.left.equalTo(imageView1.snp.right).offset(-10)
             make.right.equalTo(alertView.snp.right).inset(10)
             make.height.equalTo(200)

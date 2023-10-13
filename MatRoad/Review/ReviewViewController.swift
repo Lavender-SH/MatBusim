@@ -33,7 +33,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     let repository = ReviewTableRepository()
     //AlubmTable alubm 고유 _id
     var selectedAlbumId: ObjectId?
-
+    
     
     override func loadView() {
         self.view = reviewView
@@ -70,7 +70,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         }
         if let visitCount = visitCount {
             reviewView.visitCountButton.setTitle("   \(visitCount)", for: .normal)
-            }
+        }
         //
         reviewView.internetButton.addTarget(self, action: #selector(openWebView), for: .touchUpInside)
         
@@ -102,6 +102,10 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.locale = Locale(identifier: "ko_KR")
         
+        let calendar = Calendar.current
+        datePicker.minimumDate = calendar.date(from: DateComponents(year: 1980, month: 1, day: 1))
+        datePicker.maximumDate = Date()
+        
         let datePickerSize = datePicker.sizeThatFits(CGSize.zero)
         datePicker.frame = CGRect(x: (alertController.view.bounds.size.width - datePickerSize.width) * 0.5, y: 20, width: datePickerSize.width, height: datePickerSize.height)
         
@@ -119,7 +123,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         alertController.addAction(cancelAction)
-
+        
         updateSaveButtonBorderColor()
         self.present(alertController, animated: true, completion: nil)
     }
@@ -142,10 +146,10 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         alertController.addAction(cancelAction)
-
+        
         self.present(alertController, animated: true, completion: nil)
     }
-
+    
     // MARK: - 웹뷰 버튼 함수
     @objc func openWebView() {
         guard var urlString = placeURL else {
@@ -190,17 +194,6 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         }
         dismiss(animated: true, completion: nil)
     }
-
-//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-//        if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-//            if picker.view.tag == reviewView.imageView1.tag {
-//                reviewView.imageView1.image = selectedImage
-//            } else if picker.view.tag == reviewView.imageView2.tag {
-//                reviewView.imageView2.image = selectedImage
-//            }
-//        }
-//        dismiss(animated: true, completion: nil)
-//    }
     
     @objc func dismissKeyboard() {
         self.view.endEditing(true)
@@ -235,9 +228,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
             showAlert(message: "날짜를 입력해주세요!")
             return
         }
-        
-
-        
+         
         // 4. 이미지 유효성 검사
         if reviewView.imageView1.image == nil {
             showAlert(message: "이미지를 넣어주세요!")
@@ -276,7 +267,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         //새로운 앨범에 저장할 경우
         //print("===333===", selectedAlbumId)
         if let albumId = selectedAlbumId, !isEditMode {
-
+            
             if let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: albumId) {
                 let newReview = ReviewTable()
                 newReview.storeName = storeName
@@ -288,7 +279,9 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
                 newReview.imageView1URL = imageView1Data
                 newReview.imageView2URL = imageView2Data
                 newReview.visitCount = visitCount
-
+                newReview.longitude = placeLongitude
+                newReview.latitude = placeLatitude
+                
                 try! realm.write {
                     album.reviews.append(newReview)
                 }
@@ -317,7 +310,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
             reviewView.saveButton.layer.borderColor = UIColor.darkGray.cgColor
         }
     }
-
+    
     
     
 }

@@ -49,6 +49,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         items[1].image = UIImage(systemName: "map")
         items[2].image = UIImage(systemName: "gearshape")
         
+        let bottomInset: CGFloat = 6
+        for item in items {
+            item.imageInsets = UIEdgeInsets(top: bottomInset, left: 0, bottom: -bottomInset, right: 0)
+        }
         
         window?.rootViewController = tabBarVC
         window?.makeKeyAndVisible()

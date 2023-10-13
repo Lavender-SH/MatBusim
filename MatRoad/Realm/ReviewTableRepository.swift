@@ -104,39 +104,24 @@ class ReviewTableRepository: ReviewTableRepositoryType {
             realm.add(newReview)
         }
     }
-    // Add this method to the ReviewTableRepository class
     func saveReviewToSpecificAlbum(_ review: ReviewTable, albumId: ObjectId) {
         guard let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: albumId) else { return }
         try! realm.write {
             album.reviews.append(review)
         }
     }
+    
+    //Album
+    func fetchAlbums() -> Results<AlbumTable> {
+        let data = realm.objects(AlbumTable.self)
+        return data
+    }
+
+    func fetchReviews(from album: AlbumTable) -> List<ReviewTable> {
+        return album.reviews
+    }
 
 
 
 }
 
-
-//        func fetchReviewsForAlbum(albumName: String) -> List<ReviewTable>? {
-//            // Find the album with the specified name
-//            if let album = realm.objects(AlbumTable.self).filter("albumName == %@", albumName).first {
-//                // Return the reviews associated with this album
-//                return album.reviews
-//            }
-//            return nil
-//        }
-
-//        func fetchReviewsForAlbum(albumName: String) -> Results<AlbumTable> {
-//            let reviews = realm.objects(AlbumTable.self).filter("ANY album.albumName == %@", albumName)
-//            return reviews
-//        }
-
-//    func fetchReviewsForAlbum(albumName: String) -> Results<ReviewTable> {
-//        let reviewsForAlbum = realm.objects(ReviewTable.self).filter("albumName == %@", albumName)
-//        return reviewsForAlbum
-//    }
-
-//    func fetchReviewsForAlbum(albumName: String) -> Results<ReviewTable> {
-//        let reviews = realm.objects(ReviewTable.self).filter("ANY album.albumName == %@", albumName)
-//        return reviews
-//    }

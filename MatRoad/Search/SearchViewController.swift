@@ -36,11 +36,13 @@ class SearchViewController: BaseViewController {
         super.viewDidAppear(animated)
         searchView.searchBar.becomeFirstResponder()
     }
-
+    // MARK: - 네트워킹
     func loadData(query: String) {
         foodManager.searchPlaceCallRequest(query: query) { documents in
             guard let documents = documents else { return }
-            self.foodItems.append(contentsOf: documents)
+            //self.foodItems.append(contentsOf: documents)
+            self.foodItems = documents
+            self.searchView.noResultsLabel.isHidden = !self.foodItems.isEmpty
             self.searchView.tableView.reloadData()
         }
     }
@@ -76,14 +78,25 @@ extension SearchViewController: UISearchBarDelegate {
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         foodItems.removeAll()
+        searchView.noResultsLabel.isHidden = true
         searchView.tableView.reloadData()
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            foodItems.removeAll()
+        foodItems.removeAll()
+        
+        if !searchText.trimmingCharacters(in: .whitespaces).isEmpty {
+            loadData(query: searchText)
+        } else {
             searchView.tableView.reloadData()
         }
+        if searchText.isEmpty {
+            foodItems.removeAll()
+            searchView.noResultsLabel.isHidden = true
+            searchView.tableView.reloadData()
+        }
+        
     }
+    
 }
 
 // MARK: - 확장: 테이블뷰 관련 함수
@@ -123,10 +136,10 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let reviewVC = ReviewViewController()
         let selectedItem = foodItems[indexPath.row]
-       
+        
         reviewVC.placeLongitude = selectedItem.x
         reviewVC.placeLatitude = selectedItem.y
-
+        
         // selectedItem.placeURL을 URL로 변환하면서 http를 https로 변경
         guard var urlString = selectedItem.placeURL else {
             return
@@ -146,5 +159,5 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         //present(reviewVC, animated: true, completion: nil)
         navigationController?.pushViewController(reviewVC, animated: true)
     }
-
+    
 }
