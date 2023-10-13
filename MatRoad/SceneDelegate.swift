@@ -19,25 +19,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
  
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        let vc = CollectionViewController()
+        let vc = MainViewController()
         window?.rootViewController = UINavigationController(rootViewController: vc)
         window?.makeKeyAndVisible()
         
         //탭바
         let tabBarVC = UITabBarController()
-        let vc1 = UINavigationController(rootViewController: CollectionViewController())
+        let vc1 = UINavigationController(rootViewController: MainViewController())
         let vc2 = UINavigationController(rootViewController: MapViewController())
-        let vc3 = UINavigationController(rootViewController: SettingViewController())
+        let vc3 = UINavigationController(rootViewController: SettingsViewController())
         
         
         //vc1.title = "검색"
         //vc2.title = "좋아요"
+
         
         tabBarVC.setViewControllers([vc1, vc2, vc3], animated: false)
         tabBarVC.modalPresentationStyle = .fullScreen
-        tabBarVC.tabBar.backgroundColor = .darkGray
+        tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
         tabBarVC.tabBar.tintColor = UIColor.white
         tabBarVC.tabBar.unselectedItemTintColor = UIColor.gray
+        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+        tabBarVC.tabBar.isTranslucent = false
         //tabBarVC.tabBarItem.title = "검색"
 
         

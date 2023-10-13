@@ -15,7 +15,7 @@ class SearchView: BaseView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.rowHeight = 70
         view.register(SearchTableViewCell.self, forCellReuseIdentifier: "SearchCell")
-        view.backgroundColor = .darkGray
+        view.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
         return view
     }()
     
@@ -24,9 +24,10 @@ class SearchView: BaseView {
         searchBar.placeholder = ""
         searchBar.layer.shadowColor = UIColor.clear.cgColor
         searchBar.showsCancelButton = true
-        searchBar.barTintColor = .darkGray
+        searchBar.barTintColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
         searchBar.searchTextField.textColor = .white
         searchBar.autocapitalizationType = .none
+        searchBar.placeholder = "맛집을 검색해주세요"
         if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
             cancelButton.setTitle("취소", for: .normal)
             cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
@@ -34,8 +35,6 @@ class SearchView: BaseView {
         }
         return searchBar
     }()
-    
-    
     
     override func configureView() {
         addSubview(searchBar)
@@ -47,14 +46,11 @@ class SearchView: BaseView {
             make.top.equalToSuperview()
             make.horizontalEdges.equalToSuperview()
         }
-        
         tableView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom)
             make.horizontalEdges.equalToSuperview()
             make.bottom.equalToSuperview()
         }
-        
     }
-    
     
 }

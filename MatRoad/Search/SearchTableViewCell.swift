@@ -51,8 +51,6 @@ class SearchTableViewCell: BaseTableViewCell {
         return label
     }()
     
-    
-    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -98,17 +96,14 @@ class SearchTableViewCell: BaseTableViewCell {
         
     }
     func configure(with item: Document) {
-        posterImageView.image = UIImage(named: "foodMarkerBlack")
+        posterImageView.image = UIImage(named: "pin")
         placeLabel.text = item.placeName
         categoryLabel.text = item.finalCategory
         roadAddressLabel.text = item.roadAddressName
         phoneLabel.text = item.phone
     }
     
-    
 
-    
-    
     
 }
 

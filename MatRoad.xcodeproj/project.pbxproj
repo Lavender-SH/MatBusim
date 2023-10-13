@@ -9,13 +9,11 @@
 /* Begin PBXBuildFile section */
 		0208CE722AC14FB6000563D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0208CE712AC14FB6000563D8 /* AppDelegate.swift */; };
 		0208CE742AC14FB6000563D8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0208CE732AC14FB6000563D8 /* SceneDelegate.swift */; };
-		0208CE762AC14FB6000563D8 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0208CE752AC14FB6000563D8 /* MapViewController.swift */; };
 		0208CE7B2AC14FB7000563D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0208CE7A2AC14FB7000563D8 /* Assets.xcassets */; };
-		0208CE7E2AC14FB7000563D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0208CE7C2AC14FB7000563D8 /* LaunchScreen.storyboard */; };
 		0208CE872AC15048000563D8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0208CE862AC15048000563D8 /* SnapKit */; };
 		0208CE8A2AC1505B000563D8 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 0208CE892AC1505B000563D8 /* Alamofire */; };
 		0208CE902AC1545E000563D8 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 0208CE8F2AC1545E000563D8 /* Kingfisher */; };
-		024B58002AC85F7E004319EA /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B57FF2AC85F7E004319EA /* SettingViewController.swift */; };
+		0222FAD42AD437D80026BF82 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = 0222FAD32AD437D80026BF82 /* Zip */; };
 		024B58062AC8650F004319EA /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58032AC8650F004319EA /* BaseCollectionViewCell.swift */; };
 		024B58072AC8650F004319EA /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58042AC8650F004319EA /* BaseViewController.swift */; };
 		024B58082AC8650F004319EA /* BseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B58052AC8650F004319EA /* BseView.swift */; };
@@ -34,24 +32,23 @@
 		024B59272ACDD49C004319EA /* ReviewTableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59252ACDD49C004319EA /* ReviewTableRepository.swift */; };
 		024B592C2ACDD50F004319EA /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59292ACDD50F004319EA /* CollectionView.swift */; };
 		024B592D2ACDD50F004319EA /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B592A2ACDD50F004319EA /* CollectionViewCell.swift */; };
-		024B592E2ACDD50F004319EA /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B592B2ACDD50F004319EA /* CollectionViewController.swift */; };
+		024B592E2ACDD50F004319EA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B592B2ACDD50F004319EA /* MainViewController.swift */; };
 		024B59332ACDD539004319EA /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59302ACDD539004319EA /* SearchViewController.swift */; };
 		024B59342ACDD539004319EA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59312ACDD539004319EA /* SearchView.swift */; };
 		024B59352ACDD539004319EA /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59322ACDD539004319EA /* SearchTableViewCell.swift */; };
 		024B593A2ACDD559004319EA /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59372ACDD559004319EA /* ReviewViewController.swift */; };
 		024B593B2ACDD559004319EA /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59382ACDD559004319EA /* WebViewController.swift */; };
 		024B593C2ACDD559004319EA /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59392ACDD559004319EA /* ReviewView.swift */; };
+		024B593F2AD01991004319EA /* SideMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 024B593E2AD01991004319EA /* SideMenu */; };
+		0277C2E32AD71588004BD44D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0277C2E22AD71588004BD44D /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0208CE6E2AC14FB6000563D8 /* MatRoad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatRoad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0208CE712AC14FB6000563D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0208CE732AC14FB6000563D8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0208CE752AC14FB6000563D8 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0208CE7A2AC14FB7000563D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0208CE7D2AC14FB7000563D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0208CE7F2AC14FB7000563D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		024B57FF2AC85F7E004319EA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		024B58032AC8650F004319EA /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		024B58042AC8650F004319EA /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		024B58052AC8650F004319EA /* BseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BseView.swift; sourceTree = "<group>"; };
@@ -65,13 +62,14 @@
 		024B59252ACDD49C004319EA /* ReviewTableRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewTableRepository.swift; sourceTree = "<group>"; };
 		024B59292ACDD50F004319EA /* CollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		024B592A2ACDD50F004319EA /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
-		024B592B2ACDD50F004319EA /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		024B592B2ACDD50F004319EA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		024B59302ACDD539004319EA /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		024B59312ACDD539004319EA /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		024B59322ACDD539004319EA /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		024B59372ACDD559004319EA /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		024B59382ACDD559004319EA /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		024B59392ACDD559004319EA /* ReviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewView.swift; sourceTree = "<group>"; };
+		0277C2E22AD71588004BD44D /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,9 +81,11 @@
 				0208CE902AC1545E000563D8 /* Kingfisher in Frameworks */,
 				0208CE872AC15048000563D8 /* SnapKit in Frameworks */,
 				024B580B2AC869D1004319EA /* Realm in Frameworks */,
+				0222FAD42AD437D80026BF82 /* Zip in Frameworks */,
 				024B591F2ACDD2DC004319EA /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				024B59212ACDD2DC004319EA /* FirebaseCrashlytics in Frameworks */,
 				024B580D2AC869D1004319EA /* RealmSwift in Frameworks */,
+				024B593F2AD01991004319EA /* SideMenu in Frameworks */,
 				0208CE8A2AC1505B000563D8 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -120,30 +120,12 @@
 				024B59282ACDD50F004319EA /* Collection */,
 				024B592F2ACDD539004319EA /* Search */,
 				024B59362ACDD559004319EA /* Review */,
-				024B57FE2AC85F51004319EA /* Map */,
-				024B58012AC85F85004319EA /* Setting */,
 				0208CE7A2AC14FB7000563D8 /* Assets.xcassets */,
-				0208CE7C2AC14FB7000563D8 /* LaunchScreen.storyboard */,
+				0277C2E22AD71588004BD44D /* LaunchScreen.storyboard */,
 				0208CE7F2AC14FB7000563D8 /* Info.plist */,
 				024B591B2ACDD28E004319EA /* GoogleService-Info.plist */,
 			);
 			path = MatRoad;
-			sourceTree = "<group>";
-		};
-		024B57FE2AC85F51004319EA /* Map */ = {
-			isa = PBXGroup;
-			children = (
-				0208CE752AC14FB6000563D8 /* MapViewController.swift */,
-			);
-			path = Map;
-			sourceTree = "<group>";
-		};
-		024B58012AC85F85004319EA /* Setting */ = {
-			isa = PBXGroup;
-			children = (
-				024B57FF2AC85F7E004319EA /* SettingViewController.swift */,
-			);
-			path = Setting;
 			sourceTree = "<group>";
 		};
 		024B58022AC864E5004319EA /* Base */ = {
@@ -180,7 +162,7 @@
 		024B59282ACDD50F004319EA /* Collection */ = {
 			isa = PBXGroup;
 			children = (
-				024B592B2ACDD50F004319EA /* CollectionViewController.swift */,
+				024B592B2ACDD50F004319EA /* MainViewController.swift */,
 				024B59292ACDD50F004319EA /* CollectionView.swift */,
 				024B592A2ACDD50F004319EA /* CollectionViewCell.swift */,
 			);
@@ -233,6 +215,8 @@
 				024B582C2ACBFC74004319EA /* Cosmos */,
 				024B591E2ACDD2DC004319EA /* FirebaseAnalyticsWithoutAdIdSupport */,
 				024B59202ACDD2DC004319EA /* FirebaseCrashlytics */,
+				024B593E2AD01991004319EA /* SideMenu */,
+				0222FAD32AD437D80026BF82 /* Zip */,
 			);
 			productName = MatRoad;
 			productReference = 0208CE6E2AC14FB6000563D8 /* MatRoad.app */;
@@ -269,6 +253,8 @@
 				024B58092AC869D1004319EA /* XCRemoteSwiftPackageReference "realm-swift" */,
 				024B582B2ACBFC74004319EA /* XCRemoteSwiftPackageReference "Cosmos" */,
 				024B591D2ACDD2DC004319EA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				024B593D2AD01991004319EA /* XCRemoteSwiftPackageReference "SideMenu" */,
+				0222FAD22AD437D80026BF82 /* XCRemoteSwiftPackageReference "Zip" */,
 			);
 			productRefGroup = 0208CE6F2AC14FB6000563D8 /* Products */;
 			projectDirPath = "";
@@ -284,9 +270,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0208CE7E2AC14FB7000563D8 /* LaunchScreen.storyboard in Resources */,
 				024B591C2ACDD28E004319EA /* GoogleService-Info.plist in Resources */,
 				024B581F2ACAE9BE004319EA /* .gitignore in Resources */,
+				0277C2E32AD71588004BD44D /* LaunchScreen.storyboard in Resources */,
 				0208CE7B2AC14FB7000563D8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -330,12 +316,10 @@
 				024B593B2ACDD559004319EA /* WebViewController.swift in Sources */,
 				024B592C2ACDD50F004319EA /* CollectionView.swift in Sources */,
 				024B58192ACAE8F6004319EA /* NetworkManager.swift in Sources */,
-				024B58002AC85F7E004319EA /* SettingViewController.swift in Sources */,
 				024B593C2ACDD559004319EA /* ReviewView.swift in Sources */,
-				024B592E2ACDD50F004319EA /* CollectionViewController.swift in Sources */,
+				024B592E2ACDD50F004319EA /* MainViewController.swift in Sources */,
 				024B59342ACDD539004319EA /* SearchView.swift in Sources */,
 				024B59332ACDD539004319EA /* SearchViewController.swift in Sources */,
-				0208CE762AC14FB6000563D8 /* MapViewController.swift in Sources */,
 				0208CE722AC14FB6000563D8 /* AppDelegate.swift in Sources */,
 				0208CE742AC14FB6000563D8 /* SceneDelegate.swift in Sources */,
 				024B59352ACDD539004319EA /* SearchTableViewCell.swift in Sources */,
@@ -349,17 +333,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		0208CE7C2AC14FB7000563D8 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0208CE7D2AC14FB7000563D8 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		0208CE802AC14FB7000563D8 /* Debug */ = {
@@ -481,11 +454,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = DBXHWJCYZK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MatRoad/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "맛슐랭";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앱에서 사진 라이브러리에 접근하려 합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -512,11 +487,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = DBXHWJCYZK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MatRoad/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "맛슐랭";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앱에서 사진 라이브러리에 접근하려 합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -586,6 +563,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		0222FAD22AD437D80026BF82 /* XCRemoteSwiftPackageReference "Zip" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/Zip.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		024B58092AC869D1004319EA /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -610,6 +595,14 @@
 				minimumVersion = 10.15.0;
 			};
 		};
+		024B593D2AD01991004319EA /* XCRemoteSwiftPackageReference "SideMenu" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jonkykong/SideMenu.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -627,6 +620,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0208CE8E2AC1545E000563D8 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		0222FAD32AD437D80026BF82 /* Zip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0222FAD22AD437D80026BF82 /* XCRemoteSwiftPackageReference "Zip" */;
+			productName = Zip;
 		};
 		024B580A2AC869D1004319EA /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -652,6 +650,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 024B591D2ACDD2DC004319EA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
+		};
+		024B593E2AD01991004319EA /* SideMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 024B593D2AD01991004319EA /* XCRemoteSwiftPackageReference "SideMenu" */;
+			productName = SideMenu;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

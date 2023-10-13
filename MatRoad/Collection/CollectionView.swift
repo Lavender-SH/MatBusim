@@ -18,7 +18,7 @@ class CollectionView: BaseView {
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         return button
     }()
     
@@ -30,7 +30,7 @@ class CollectionView: BaseView {
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         return button
     }()
     
@@ -42,7 +42,7 @@ class CollectionView: BaseView {
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         return button
     }()
     
@@ -52,7 +52,7 @@ class CollectionView: BaseView {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
         view.collectionViewLayout = collectionViewLayout()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         return view
     }()
     
@@ -67,7 +67,7 @@ class CollectionView: BaseView {
     override func setConstraints() {
         collectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(ratingButton.snp.bottom).offset(15)
+            make.top.equalTo(ratingButton.snp.bottom).offset(13)
             make.bottom.equalToSuperview()
         }
         ratingButton.snp.makeConstraints { make in
@@ -99,7 +99,7 @@ class CollectionView: BaseView {
         layout.minimumLineSpacing = 20
         layout.minimumInteritemSpacing = 10
         let size = UIScreen.main.bounds.width - 30
-        layout.itemSize = CGSize(width: size / 3, height: 170)
+        layout.itemSize = CGSize(width: size / 3, height: 195)
         //layer.cornerRadius = 30
         return layout
     }

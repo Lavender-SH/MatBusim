@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 class SearchViewController: BaseViewController {
     
@@ -28,17 +29,14 @@ class SearchViewController: BaseViewController {
         searchView.tableView.prefetchDataSource = self
         searchView.searchBar.delegate = self
         makeNavigationUI()
-        //view.backgroundColor = .white
-        
-        
-        
+        view.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         searchView.searchBar.becomeFirstResponder()
     }
 
-    
     func loadData(query: String) {
         foodManager.searchPlaceCallRequest(query: query) { documents in
             guard let documents = documents else { return }
@@ -47,11 +45,10 @@ class SearchViewController: BaseViewController {
         }
     }
     
-    
     // MARK: - 네비게이션UI
     func makeNavigationUI() {
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = .gray
+        appearance.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.9))
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.shadowColor = .clear
@@ -69,8 +66,8 @@ class SearchViewController: BaseViewController {
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
+    
 }
-
 // MARK: - 확장: 서치바 관련 함수
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -101,13 +98,12 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
             return UITableViewCell()
         }
         let item = foodItems[indexPath.row]
-        
         cell.configure(with: item)
-        cell.backgroundColor = .clear
+        cell.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
         
         return cell
     }
-    
+    // MARK: - 페이지네이션
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             //print("==999==", foodItems.count, start)
@@ -127,11 +123,10 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let reviewVC = ReviewViewController()
         let selectedItem = foodItems[indexPath.row]
-        
-        reviewVC.placeLatitude = selectedItem.x
-        reviewVC.placeLongitude = selectedItem.y
+       
+        reviewVC.placeLongitude = selectedItem.x
+        reviewVC.placeLatitude = selectedItem.y
 
-        
         // selectedItem.placeURL을 URL로 변환하면서 http를 https로 변경
         guard var urlString = selectedItem.placeURL else {
             return
@@ -146,15 +141,10 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         reviewVC.placeName = selectedItem.placeName
         reviewVC.placeURL = urlString
         let webviewVC = WebViewController(url: url)
-        
         webviewVC.urlToLoad = url // URL 타입으로 전달
         
-        present(reviewVC, animated: true, completion: nil)
+        //present(reviewVC, animated: true, completion: nil)
+        navigationController?.pushViewController(reviewVC, animated: true)
     }
 
-
-    
-    
-    
-    
 }

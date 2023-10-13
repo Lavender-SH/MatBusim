@@ -46,6 +46,7 @@ class ReviewTableRepository: ReviewTableRepositoryType {
         return fileURL
     }
     
+    //이미지 저장
     func saveImageToDocument(fileName: String, image: UIImage) -> String? {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
         let fileURL = documentDirectory.appendingPathComponent(fileName)
@@ -58,7 +59,7 @@ class ReviewTableRepository: ReviewTableRepositoryType {
             return nil
         }
     }
-    
+    //리뷰 수정
     func updateOrSaveReview(review: ReviewTable, isEditMode: Bool, existingReview: ReviewTable?) {
         if isEditMode, let existing = existingReview {
             // Update existing review
@@ -75,9 +76,66 @@ class ReviewTableRepository: ReviewTableRepositoryType {
             saveReview(review)
         }
     }
+    
+    // 앨범 저장
+    func saveAlbum(_ album: AlbumTable) {
+        try! realm.write {
+            realm.add(album)
+        }
+    }
+    
+    // 리뷰를 특정 앨범에 저장
+    func saveReviewToAlbum(_ review: ReviewTable, album: AlbumTable) {
+        try! realm.write {
+            album.reviews.append(review)
+        }
+    }
+    
+    
+    func fetchReviewById(reviewId: ObjectId) -> ReviewTable? {
+        return realm.object(ofType: ReviewTable.self, forPrimaryKey: reviewId)
+    }
+    
+    func saveIDToReviews(_ id: ObjectId) {
+        let newReview = ReviewTable()
+        newReview._id = id
+        try! realm.write {
+            realm.add(newReview)
+        }
+    }
+    // Add this method to the ReviewTableRepository class
+    func saveReviewToSpecificAlbum(_ review: ReviewTable, albumId: ObjectId) {
+        guard let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: albumId) else { return }
+        try! realm.write {
+            album.reviews.append(review)
+        }
+    }
 
 
 
 }
 
 
+//        func fetchReviewsForAlbum(albumName: String) -> List<ReviewTable>? {
+//            // Find the album with the specified name
+//            if let album = realm.objects(AlbumTable.self).filter("albumName == %@", albumName).first {
+//                // Return the reviews associated with this album
+//                return album.reviews
+//            }
+//            return nil
+//        }
+
+//        func fetchReviewsForAlbum(albumName: String) -> Results<AlbumTable> {
+//            let reviews = realm.objects(AlbumTable.self).filter("ANY album.albumName == %@", albumName)
+//            return reviews
+//        }
+
+//    func fetchReviewsForAlbum(albumName: String) -> Results<ReviewTable> {
+//        let reviewsForAlbum = realm.objects(ReviewTable.self).filter("albumName == %@", albumName)
+//        return reviewsForAlbum
+//    }
+
+//    func fetchReviewsForAlbum(albumName: String) -> Results<ReviewTable> {
+//        let reviews = realm.objects(ReviewTable.self).filter("ANY album.albumName == %@", albumName)
+//        return reviews
+//    }

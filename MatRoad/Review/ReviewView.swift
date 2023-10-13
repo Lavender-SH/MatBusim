@@ -13,7 +13,7 @@ class ReviewView: BaseView {
     
     lazy var alertView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(cgColor: .init(red: 0.03, green: 0.03, blue: 0.03, alpha: 0.9))
         return view
     }()
     
@@ -24,6 +24,7 @@ class ReviewView: BaseView {
         view.clipsToBounds = true
         view.backgroundColor = .darkGray
         view.image = UIImage(named: "food1")
+        view.contentMode = .scaleAspectFill
         return view
     }()
     
@@ -34,6 +35,7 @@ class ReviewView: BaseView {
         view.clipsToBounds = true
         view.backgroundColor = .darkGray
         view.image = UIImage(named: "food2")
+        view.contentMode = .scaleAspectFill
         return view
     }()
     
@@ -87,8 +89,8 @@ class ReviewView: BaseView {
 //        view.settings.filledColor = .orange // 채워진 별의 색상 설정
 //        view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
 //        view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
-        view.settings.filledImage = UIImage(named: "fill")
-        view.settings.emptyImage = UIImage(named: "empty")
+        view.settings.filledImage = UIImage(named: "matfill")
+        view.settings.emptyImage = UIImage(named: "matempty")
         view.contentMode = .center
         view.rating = 0.0
         return view
@@ -207,10 +209,10 @@ class ReviewView: BaseView {
         imageView1.snp.makeConstraints { make in
             make.top.equalTo(alertView.snp.top).inset(10)
             make.left.equalTo(alertView.snp.left).inset(10)
-            
             make.height.equalTo(200)
             make.width.equalTo(alertView).multipliedBy(0.49).offset(-10)
         }
+
         imageView2.snp.makeConstraints { make in
             make.top.equalTo(alertView.snp.top).inset(10)
             make.left.equalTo(imageView1.snp.right).offset(13)
@@ -218,6 +220,7 @@ class ReviewView: BaseView {
             make.height.equalTo(200)
             make.width.equalTo(alertView).multipliedBy(0.49).offset(-10)
         }
+
         homeImage.snp.makeConstraints { make in
             make.top.equalTo(imageView1.snp.bottom).offset(10)
             make.left.equalTo(alertView.snp.left).inset(10)

@@ -14,26 +14,25 @@ class CollectionViewCell: BaseCollectionViewCell {
     
     let imageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleToFill
-        view.layer.cornerRadius = 20
+        view.contentMode = .scaleAspectFill
+        view.layer.cornerRadius = 16.5
         view.clipsToBounds = true
-        view.backgroundColor = .green
+        view.backgroundColor = .clear
         
         // 그라디언트 레이어 추가
         let gradientLayer = CAGradientLayer()
-            gradientLayer.colors = [UIColor.black.withAlphaComponent(0.7).cgColor, UIColor.clear.cgColor, UIColor.clear.cgColor, UIColor.black.withAlphaComponent(0.7).cgColor]
-            gradientLayer.locations = [0, 0.3, 0.7, 1] // 그라디언트 위치 조정
-            gradientLayer.frame = view.bounds
-            view.layer.insertSublayer(gradientLayer, at: 0)
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradientLayer.locations = [0.5, 1.0] // 시작 위치와 끝 위치 설정
+        gradientLayer.frame = view.bounds
+        view.layer.insertSublayer(gradientLayer, at: 0)
         
         return view
     }()
-
     
     let dateLabel = {
         let view = UILabel()
-        view.textColor = .darkGray
-        view.font = UIFont.systemFont(ofSize: 12)
+        view.textColor = .lightGray
+        view.font = UIFont.systemFont(ofSize: 10)
         view.textAlignment = .left
         view.text = ""
         return view
@@ -42,7 +41,7 @@ class CollectionViewCell: BaseCollectionViewCell {
     let titleLabel = {
         let view = UILabel()
         view.textColor = .white
-        view.font = UIFont.systemFont(ofSize: 14)
+        view.font = UIFont.systemFont(ofSize: 12)
         view.textAlignment = .left
         view.numberOfLines = 2
         view.setContentHuggingPriority(.defaultHigh, for: .vertical)
@@ -54,8 +53,12 @@ class CollectionViewCell: BaseCollectionViewCell {
         let view = CosmosView()
         view.settings.updateOnTouch = false
         view.settings.fillMode = .precise
-        view.settings.filledImage = UIImage(named: "fill")
-        view.settings.emptyImage = UIImage(named: "empty")
+        view.settings.filledImage = UIImage(named: "smallfill")
+        view.settings.emptyImage = UIImage()
+        view.settings.starSize = 12 // 별의 크기 설정
+        view.settings.starMargin = 1 // 별 사이의 간격 설정
+        //view.settings.emptyImage = UIImage(named: "empty")
+        //view.settings.emptyImage = nil
         return view
     }()
     
@@ -80,30 +83,42 @@ class CollectionViewCell: BaseCollectionViewCell {
     override func setConstraints() {
         imageView.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(contentView)
-            make.top.equalTo(contentView)
-            make.height.equalTo(170)
+            make.top.equalTo(contentView.snp.top).inset(0)
+            make.height.equalTo(180)
         }
         dateLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.top).offset(110)
+            make.bottom.equalTo(titleLabel.snp.top).offset(2)
             make.leading.equalTo(7)
-            make.width.equalToSuperview()
+            
             make.height.equalTo(20)
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(dateLabel.snp.bottom).offset(1)
+            make.bottom.equalTo(imageView.snp.bottom).inset(0)
             make.leading.equalTo(7)
             make.width.equalToSuperview()
             
         }
         cosmosView.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.top).inset(10)
-            make.leading.equalTo(imageView.snp.leading).offset(3)
+            make.top.equalTo(imageView.snp.bottom).offset(5)
+            //make.top.equalTo(contentView.snp.top).inset(0)
+            make.leading.equalTo(imageView.snp.leading).offset(7)
+            make.centerX.equalTo(contentView)
+            //make.width.equalTo(80)
+            //make.right.equalTo(imageView.snp.right).inset(7)
         }
         deleteCheckmark.snp.makeConstraints { make in
             make.size.equalTo(50)
             make.center.equalTo(imageView)
         }
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let gradientLayer = imageView.layer.sublayers?.first as? CAGradientLayer {
+            gradientLayer.frame = imageView.bounds
+        }
+    }
+
     
 }
 

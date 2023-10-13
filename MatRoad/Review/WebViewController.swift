@@ -45,22 +45,6 @@ class WebViewController: UIViewController, WKUIDelegate {
         webView.load(request)
         print("==9==", urlToLoad)
         
-//        // 네비게이션바 설정
-//        let appearance = UINavigationBarAppearance()
-//        appearance.backgroundColor = .black
-//        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-//        navigationController?.navigationBar.isTranslucent = false
-//        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-//        navigationController?.navigationBar.standardAppearance = appearance
-//        navigationController?.navigationBar.tintColor = .white
-//
-//        // 백버튼 설정
-//        let backButton = UIButton(type: .system)
-//        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-//        backButton.addTarget(self, action: #selector(backToMainView), for: .touchUpInside)
-//        backButton.tintColor = .white
-//        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-//        navigationItem.leftBarButtonItem = backBarButtonItem
     }
     
     @objc func backToMainView() {
