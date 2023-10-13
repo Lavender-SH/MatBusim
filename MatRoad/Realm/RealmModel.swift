@@ -20,11 +20,12 @@ class ReviewTable: Object {
     @Persisted var imageView2URL: String?  // 이미지 데이터 대신 이미지의 파일 경로(URL)를 저장
     @Persisted var latitude: String?  // 위도
     @Persisted var longitude: String? // 경도
+    @Persisted var visitCount: Int?
     @Persisted var album: LinkingObjects<AlbumTable> = LinkingObjects(fromType: AlbumTable.self, property: "reviews")
 
 
 
-    convenience init(storeName: String, internetSettle: String, starCount: Double, rateNumber: Double, reviewDate: Date, memo: String, imageView1URL: String?, imageView2URL: String?, latitude: String?, longitude: String?) {
+    convenience init(storeName: String, internetSettle: String, starCount: Double, rateNumber: Double, reviewDate: Date, memo: String, imageView1URL: String?, imageView2URL: String?, latitude: String?, longitude: String?, visitCount: Int?) {
         self.init()
         
         self.storeName = storeName
@@ -37,6 +38,7 @@ class ReviewTable: Object {
         self.imageView2URL = imageView2URL
         self.latitude = latitude
         self.longitude = longitude
+        self.visitCount = visitCount
     }
 
 }

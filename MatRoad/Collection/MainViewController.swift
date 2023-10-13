@@ -290,10 +290,12 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             reviewVC.memo = review.memo
             reviewVC.imageView1URL = review.imageView1URL
             reviewVC.imageView2URL = review.imageView2URL
+            reviewVC.visitCount = review.visitCount
             
             present(reviewVC, animated: true, completion: nil)
         }
     }
+
     
     
 }

@@ -70,6 +70,7 @@ class ReviewTableRepository: ReviewTableRepositoryType {
                 existing.memo = review.memo
                 existing.imageView1URL = review.imageView1URL
                 existing.imageView2URL = review.imageView2URL
+                existing.visitCount = review.visitCount
             }
         } else {
             // Save new review

@@ -23,6 +23,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     var starCount: Double?
     var rateNumber: Double?
     var reviewDate: Date?
+    var visitCount: Int?
     var memo: String?
     var isEditMode: Bool = false
     var selectedReviewId: ObjectId?
@@ -32,6 +33,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     let repository = ReviewTableRepository()
     //AlubmTable alubm 고유 _id
     var selectedAlbumId: ObjectId?
+
     
     override func loadView() {
         self.view = reviewView
@@ -66,6 +68,9 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         if let imageUrlString2 = imageView2URL, let imageUrl2 = URL(string: imageUrlString2) {
             reviewView.imageView2.kf.setImage(with: imageUrl2)
         }
+        if let visitCount = visitCount {
+            reviewView.visitCountButton.setTitle("   \(visitCount)", for: .normal)
+            }
         //
         reviewView.internetButton.addTarget(self, action: #selector(openWebView), for: .touchUpInside)
         
@@ -79,12 +84,15 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         let tapGesture3 = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture3)
+        //메모에 입력되면 버튼의 색을 바꾸기 위해 델리게이트 설정
+        reviewView.memoTextView.delegate = self
     }
     
     override func configureView() {
         reviewView.dateButton.addTarget(self, action: #selector(dateButtonTapped), for: .touchUpInside)
         reviewView.saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         reviewView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        reviewView.visitCountButton.addTarget(self, action: #selector(visitCountButtonTapped), for: .touchUpInside)
     }
     
     @objc func dateButtonTapped() {
@@ -111,9 +119,33 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         alertController.addAction(cancelAction)
-        
+
+        updateSaveButtonBorderColor()
         self.present(alertController, animated: true, completion: nil)
     }
+    
+    @objc func visitCountButtonTapped() {
+        let alertController = UIAlertController(title: "방문 횟수 선택", message: "\n\n\n\n\n\n\n\n\n\n\n\n", preferredStyle: .actionSheet)
+        let pickerView = UIPickerView()
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        
+        let pickerViewSize = pickerView.sizeThatFits(CGSize.zero)
+        pickerView.frame = CGRect(x: (alertController.view.bounds.size.width - pickerViewSize.width) * 0.5, y: 20, width:pickerViewSize.width, height: pickerViewSize.height)
+        alertController.view.addSubview(pickerView)
+        
+        let okAction = UIAlertAction(title: "저장", style: .default) { _ in
+            let selectedRow = pickerView.selectedRow(inComponent: 0)
+            self.reviewView.visitCountButton.setTitle("   \(selectedRow + 1)", for: .normal)
+        }
+        alertController.addAction(okAction)
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
+    }
+
     // MARK: - 웹뷰 버튼 함수
     @objc func openWebView() {
         guard var urlString = placeURL else {
@@ -204,6 +236,8 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
             return
         }
         
+
+        
         // 4. 이미지 유효성 검사
         if reviewView.imageView1.image == nil {
             showAlert(message: "이미지를 넣어주세요!")
@@ -220,8 +254,15 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         let imageView1Data = repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView1.image ?? UIImage())
         let imageView2Data = repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView2.image ?? UIImage())
         
+        //방문횟수
+        let visitCountText = reviewView.visitCountButton.title(for: .normal)
+        guard let visitCount = Int(visitCountText?.trimmingCharacters(in: .whitespaces) ?? "") else {
+            showAlert(message: "방문 횟수를 입력해주세요!")
+            return
+        }
+        
         // 7. ReviewTable 객체를 생성.
-        let review = ReviewTable(storeName: storeName, internetSettle: internetSettle, starCount: starCount, rateNumber: rateNumber, reviewDate: reviewDate, memo: memo, imageView1URL: imageView1Data, imageView2URL: imageView2Data, latitude: placeLatitude, longitude: placeLongitude)
+        let review = ReviewTable(storeName: storeName, internetSettle: internetSettle, starCount: starCount, rateNumber: rateNumber, reviewDate: reviewDate, memo: memo, imageView1URL: imageView1Data, imageView2URL: imageView2Data, latitude: placeLatitude, longitude: placeLongitude, visitCount: visitCount)
         
         // 8. Realm에 저장.
         if isEditMode, let id = selectedReviewId, let existingReview = repository.fetch().first(where: { $0._id == id }) {
@@ -246,6 +287,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
                 newReview.memo = memo
                 newReview.imageView1URL = imageView1Data
                 newReview.imageView2URL = imageView2Data
+                newReview.visitCount = visitCount
 
                 try! realm.write {
                     album.reviews.append(newReview)
@@ -264,9 +306,22 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         present(alertController, animated: true, completion: nil)
     }
     
+    //조건이 만족되면 저장버튼의 색깔을 바꿈
+    func updateSaveButtonBorderColor() {
+        if reviewView.cosmosView.rating > 0,
+           reviewView.dateButton.title(for: .normal) != "  맛집을 방문한 날짜를 입력해보세요.",
+           reviewView.memoTextView.text.count >= 1 {
+            reviewView.saveButton.layer.borderColor = UIColor.white.cgColor
+            reviewView.saveButton.setTitleColor(.white, for: .normal)
+        } else {
+            reviewView.saveButton.layer.borderColor = UIColor.darkGray.cgColor
+        }
+    }
+
+    
     
 }
-
+//이미지 사이즈 조절
 extension UIImage {
     func scale(to size: CGSize) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
@@ -276,5 +331,24 @@ extension UIImage {
         return scaledImage
     }
 }
+//메모에 입력되면 저장버튼 색 바꾸기
+extension ReviewViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        updateSaveButtonBorderColor()
+    }
+}
 
+extension ReviewViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 100
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return "\(row + 1)"
+    }
+}
 
