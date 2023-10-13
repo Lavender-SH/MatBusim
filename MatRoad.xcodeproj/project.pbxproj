@@ -43,6 +43,7 @@
 		0277C2E32AD71588004BD44D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0277C2E22AD71588004BD44D /* LaunchScreen.storyboard */; };
 		0277C32B2AD943A8004BD44D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277C3292AD943A8004BD44D /* MapViewController.swift */; };
 		0277C32C2AD943A8004BD44D /* ImageAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277C32A2AD943A8004BD44D /* ImageAnnotationView.swift */; };
+		0277C32F2AD943E0004BD44D /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277C32E2AD943E0004BD44D /* SettingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		0277C2E22AD71588004BD44D /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0277C3292AD943A8004BD44D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0277C32A2AD943A8004BD44D /* ImageAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAnnotationView.swift; sourceTree = "<group>"; };
+		0277C32E2AD943E0004BD44D /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				024B592F2ACDD539004319EA /* Search */,
 				024B59362ACDD559004319EA /* Review */,
 				0277C3282AD943A8004BD44D /* Map */,
+				0277C32D2AD943E0004BD44D /* Setting */,
 				0208CE7A2AC14FB7000563D8 /* Assets.xcassets */,
 				0277C2E22AD71588004BD44D /* LaunchScreen.storyboard */,
 				0208CE7F2AC14FB7000563D8 /* Info.plist */,
@@ -201,6 +204,14 @@
 				0277C32A2AD943A8004BD44D /* ImageAnnotationView.swift */,
 			);
 			path = Map;
+			sourceTree = "<group>";
+		};
+		0277C32D2AD943E0004BD44D /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				0277C32E2AD943E0004BD44D /* SettingViewController.swift */,
+			);
+			path = Setting;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -341,6 +352,7 @@
 				024B59352ACDD539004319EA /* SearchTableViewCell.swift in Sources */,
 				024B59272ACDD49C004319EA /* ReviewTableRepository.swift in Sources */,
 				024B58232ACB3174004319EA /* BaseTableViewCell.swift in Sources */,
+				0277C32F2AD943E0004BD44D /* SettingViewController.swift in Sources */,
 				024B58082AC8650F004319EA /* BseView.swift in Sources */,
 				024B592D2ACDD50F004319EA /* CollectionViewCell.swift in Sources */,
 				024B58072AC8650F004319EA /* BaseViewController.swift in Sources */,

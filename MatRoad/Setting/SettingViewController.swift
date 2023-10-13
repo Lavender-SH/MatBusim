@@ -1,0 +1,256 @@
+//
+//  SettingViewController.swift
+//  MatRoad
+//
+//  Created by 이승현 on 2023/09/30.
+//
+
+import UIKit
+import SnapKit
+
+enum Section: Int, CaseIterable {
+    case theme = 0
+    case backupRestore
+    case about
+    
+    var title: String {
+        switch self {
+        case .theme: return "테마"
+        case .backupRestore: return "백업/복구"
+        case .about: return "맛슐랭"
+        }
+    }
+    
+    var items: [String] {
+        switch self {
+        case .theme: return ["다크모드", "화이트모드"]
+        case .backupRestore: return ["백업/복구하기"]
+        case .about: return ["문의/의견", "맛슐랭 1.0 Version"]
+        }
+    }
+}
+
+class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentPickerDelegate {
+    private var tableView: UITableView!
+    private var dataSource: UITableViewDiffableDataSource<Section, String>!
+    private var selectedTheme: String = "다크모드"
+  
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        makeNavigationUI()
+        configureTableView()
+        configureDataSource()
+        applyInitialSnapshots()
+        
+        let initialSnapshot = createInitialSnapshot()
+        dataSource.apply(initialSnapshot, animatingDifferences: true)
+    }
+    
+    func makeNavigationUI() {
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = UIColor(cgColor: .init(red: 0.333, green: 0.333, blue: 0.333, alpha: 1))
+        
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.shadowColor = .clear
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.isTranslucent = false
+        // "matlogo" 이미지를 네비게이션 제목 타이틀에 추가
+        let logo = UIImage(named: "matlogo")
+        let imageView = UIImageView(image: logo)
+        imageView.contentMode = .scaleAspectFit
+        
+        navigationItem.titleView = imageView
+    }
+    
+    
+    private func configureTableView() {
+        tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.delegate = self
+        tableView.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        
+        view.addSubview(tableView)
+        
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(30)
+            make.left.right.bottom.equalToSuperview()
+        }
+    }
+    
+    
+    private func configureDataSource() {
+        dataSource = UITableViewDiffableDataSource<Section, String>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            cell.textLabel?.text = item
+            cell.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+            cell.textLabel?.textColor = .white
+            
+            if item == self.selectedTheme {
+                cell.accessoryType = .checkmark
+                cell.tintColor = .white
+            } else {
+                cell.accessoryType = .none
+            }
+            
+            return cell
+        }
+        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        dataSource.defaultRowAnimation = .fade
+    }
+    
+    private func applyInitialSnapshots() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
+        Section.allCases.forEach { section in
+            snapshot.appendSections([section])
+            snapshot.appendItems(section.items)
+        }
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func createInitialSnapshot() -> NSDiffableDataSourceSnapshot<Section, String> {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
+        Section.allCases.forEach { section in
+            snapshot.appendSections([section])
+            snapshot.appendItems(section.items)
+        }
+        return snapshot
+    }
+    
+    
+    
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return Section.allCases.map { $0.title }
+    }
+    
+    // MARK: - 테이블뷰 헤더
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return Section(rawValue: section)?.title
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        
+        let titleLabel = UILabel()
+        titleLabel.text = Section(rawValue: section)?.title
+        titleLabel.textColor = .white
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerView.addSubview(titleLabel)
+        
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(headerView).offset(16)
+            make.trailing.equalTo(headerView).offset(-16)
+            make.top.bottom.equalTo(headerView)
+        }
+        
+        return headerView
+    }
+    
+    func visibleSectionHeaders(in tableView: UITableView) -> [UITableViewHeaderFooterView] {
+        return (0..<tableView.numberOfSections).compactMap { section in
+            let rect = tableView.rectForHeader(inSection: section)
+            if tableView.bounds.intersects(rect) {
+                return tableView.headerView(forSection: section)
+            }
+            return nil
+        }
+    }
+    
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 20
+    }
+    
+    
+    
+    // MARK: - 다크모드&화이트모드
+    func applyTheme(_ theme: String) {
+        if theme == "다크모드" {
+            navigationController?.navigationBar.barTintColor = .darkGray
+            navigationController?.navigationBar.tintColor = .white
+            navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+            tableView.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+            tabBarController?.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+            tabBarController?.tabBar.tintColor = .white
+            tabBarController?.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+            view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = .darkGray
+            
+            tableView.visibleCells.forEach { cell in
+                cell.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+                cell.textLabel?.textColor = .white
+            }
+            visibleSectionHeaders(in: tableView).forEach { header in
+                header.tintColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+                header.textLabel?.textColor = .white
+            }
+            
+            
+        } else {
+            navigationController?.navigationBar.barTintColor = .white
+            navigationController?.navigationBar.tintColor = .black
+            navigationController?.navigationBar.backgroundColor = UIColor(white: 0.9, alpha: 1)
+            navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+            tableView.backgroundColor = UIColor(white: 0.95, alpha: 1)
+            tableView.separatorColor = UIColor(white: 0.85, alpha: 1)
+            tabBarController?.tabBar.barTintColor = UIColor(white: 0.9, alpha: 1)
+            tabBarController?.tabBar.backgroundColor = UIColor(white: 0.85, alpha: 1)
+            tabBarController?.tabBar.tintColor = .black
+            view.backgroundColor = UIColor(white: 0.9, alpha: 1)
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = UIColor(cgColor: .init(red: 0.777, green: 0.777, blue: 0.777, alpha: 1))
+            
+            
+            tableView.visibleCells.forEach { cell in
+                cell.backgroundColor = UIColor(white: 1, alpha: 1)
+                cell.textLabel?.textColor = .black
+            }
+            visibleSectionHeaders(in: tableView).forEach { header in
+                header.tintColor = .black
+                header.textLabel?.textColor = .black
+                header.backgroundColor = .white
+            }
+            
+            
+        }
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            guard let section = Section(rawValue: indexPath.section) else { return }
+            switch section {
+            case .theme:
+                let selectedItem = dataSource.itemIdentifier(for: indexPath)
+                selectedTheme = selectedItem ?? "다크모드"
+                applyTheme(selectedTheme)
+                var snapshot = dataSource.snapshot()
+                snapshot.reloadSections([section])
+                dataSource.apply(snapshot, animatingDifferences: true)
+            case .backupRestore:
+                if indexPath.row == 0 {
+                    let backUpVC = BackUpViewController()
+                    navigationController?.pushViewController(backUpVC, animated: true)
+                }
+            default:
+                break
+            }
+        }
+        
+}
+
+
