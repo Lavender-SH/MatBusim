@@ -503,24 +503,46 @@ extension MainViewController: UISearchBarDelegate {
         mainView.collectionView.reloadData()
     }
     
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if searchText.isEmpty {
+//            if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
+//                reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbumId)
+//            } else {
+//                reviewItems = repository.fetch()
+//            }
+//            mainView.collectionView.reloadData()
+//        } else {
+//            if isAllSelected {
+//                reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+//            } else {
+//                if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
+//                    reviewItems = repository.fetch().filter("ANY album._id == %@ AND storeName CONTAINS[c] %@", matchingAlbumId, searchText)
+//                }
+//            }
+//        }
+//        mainView.collectionView.reloadData()
+//    }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
+            if !isAllSelected && UserDefaults.standard.string(forKey: "selectedAlbumId") == nil {
+                reviewItems = repository.fetch()
+            } else if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
                 reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbumId)
             } else {
                 reviewItems = repository.fetch()
             }
         } else {
-            if isAllSelected {
+            if !isAllSelected && UserDefaults.standard.string(forKey: "selectedAlbumId") == nil {
                 reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
-            } else {
-                if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
-                    reviewItems = repository.fetch().filter("ANY album._id == %@ AND storeName CONTAINS[c] %@", matchingAlbumId, searchText)
-                }
+            } else if isAllSelected {
+                reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+            } else if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
+                reviewItems = repository.fetch().filter("ANY album._id == %@ AND storeName CONTAINS[c] %@", matchingAlbumId, searchText)
             }
         }
         mainView.collectionView.reloadData()
     }
+
 
     
     

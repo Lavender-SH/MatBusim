@@ -11,12 +11,19 @@ import SnapKit
 class CollectionView: BaseView {
     lazy var searchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = ""
+        searchBar.placeholder = "내가 추가한 맛집 검색"
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+        textField.font = UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
+        }
         searchBar.layer.shadowColor = UIColor.clear.cgColor
         searchBar.showsCancelButton = true
-        searchBar.barTintColor = .clear
+        searchBar.tintColor = .clear
+        searchBar.backgroundColor = .clear
+        searchBar.searchBarStyle = .minimal // 서치바 스타일을 minimal로 설정하여 기본 배경을 제거.
+        searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default) // 배경 이미지를 빈 이미지로 설정
         searchBar.searchTextField.textColor = .white
         searchBar.searchTextField.font = UIFont.systemFont(ofSize: 13)
+        
 
         if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
             cancelButton.setTitle("취소", for: .normal)

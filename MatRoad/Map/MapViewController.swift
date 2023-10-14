@@ -16,20 +16,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     let reviewRepository = ReviewTableRepository()
     let locationManager = CLLocationManager()
     let moveToCurrentLocationButton = UIButton()
+    let searchBar = UISearchBar()
+    var isAtCurrentLocation: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         mapView.delegate = self
         view.addSubview(mapView)
+        
         mapView.frame = view.bounds
         mapView.showsUserLocation = true
         mapView.cameraZoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 4000000)
-        addLogoToMapView()
         loadAnnotations()
-        
+        setupSearchBar()
+        addLogoToMapView()
         setupLocationManager()
         setupMoveToCurrentLocationButton()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,13 +58,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 newAnnotations.append(annotation)
             }
         }
-
+        
         // 기존에 있던 어노테이션 중 새로운 어노테이션에 없는 것만 제거
         let annotationsToRemove = currentAnnotations.filter { annotation in
             !newAnnotations.contains { $0.coordinate.latitude == annotation.coordinate.latitude && $0.coordinate.longitude == annotation.coordinate.longitude }
         }
         mapView.removeAnnotations(annotationsToRemove)
-
+        
         // 새로운 어노테이션 중 기존에 없던 것만 추가
         let annotationsToAdd = newAnnotations.filter { newAnnotation in
             !currentAnnotations.contains { $0.coordinate.latitude == newAnnotation.coordinate.latitude && $0.coordinate.longitude == newAnnotation.coordinate.longitude }
@@ -71,7 +77,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         mapView.setRegion(region, animated: true)
     }
-
+    
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKClusterAnnotation {
@@ -99,28 +105,45 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func addLogoToMapView() {
-        let logo = UIImage(named: "matlogo")
+        let logo = UIImage(named: "투명아이콘")
         let imageView = UIImageView(image: logo)
         mapView.addSubview(imageView)
+        //        let matLogo = UIImage(named: "matlogo")
+        //        let imageView2 = UIImageView(image: matLogo)
+        //       mapView.addSubview(imageView2)
         
-    
         imageView.snp.makeConstraints { make in
-            make.top.equalTo(mapView).offset(50)
-            make.centerX.equalToSuperview()
-            make.width.equalTo(156.33)
-            make.height.equalTo(44)
+            make.top.equalTo(mapView).offset(10)
+            //            //make.centerX.equalToSuperview()
+            //            //make.left.equalTo(searchBar.snp.right)
+            //            //make.width.equalTo(156.33)
+            //make.left.equalTo(searchBar.snp.right).offset(10)
+            make.right.equalToSuperview().inset(5)
+            //            //make.width.equalTo(120)
+            //make.height.equalTo(100)
+            
+            //            make.center.equalToSuperview()
+            make.size.equalTo(120)
             
         }
+        //        imageView2.snp.makeConstraints { make in
+        //            make.top.equalTo(mapView).offset(20)
+        //            make.left.equalTo(searchBar.snp.right)
+        //            make.width.equalTo(156.33)
+        //            make.height.equalTo(44)
+        //
+        //
+        //        }
     }
     // MARK: - 내 위치로 이동기능
     func setupLocationManager() {
-            locationManager.delegate = self
-            locationManager.requestWhenInUseAuthorization()
-            //줌을 축소해도 다시 확대되게 만듬
-            //locationManager.desiredAccuracy = kCLLocationAccuracyBest // 최고 정확도로 위치 업데이트
-            //locationManager.distanceFilter = 10 // 위치가 10미터 이상 움직였을 때만 업데이트
-            locationManager.startUpdatingLocation()
-        }
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        //줌을 축소해도 다시 확대되게 만듬
+        //locationManager.desiredAccuracy = kCLLocationAccuracyBest // 최고 정확도로 위치 업데이트
+        //locationManager.distanceFilter = 10 // 위치가 10미터 이상 움직였을 때만 업데이트
+        locationManager.startUpdatingLocation()
+    }
     func setupMoveToCurrentLocationButton() {
         moveToCurrentLocationButton.setImage(UIImage(systemName: "location.fill"), for: .normal) // 위치 서비스 아이콘으로 설정
         moveToCurrentLocationButton.tintColor = .gray
@@ -136,20 +159,42 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     @objc func moveToCurrentLocation() {
-        if let currentLocation = locationManager.location?.coordinate {
-            let region = MKCoordinateRegion(center: currentLocation, latitudinalMeters: 1500, longitudinalMeters: 1500)
+        if isAtCurrentLocation {
+            // 지정된 위치로 이동
+            let center = CLLocationCoordinate2D(latitude: 36.5, longitude: 127.8)
+            let span = MKCoordinateSpan(latitudeDelta: 10 / 1.6, longitudeDelta: 10 / 1.6)
+            let region = MKCoordinateRegion(center: center, span: span)
             mapView.setRegion(region, animated: true)
+            isAtCurrentLocation = false
+        } else {
+            // 현재 위치로 이동
+            if let currentLocation = locationManager.location?.coordinate {
+                let region = MKCoordinateRegion(center: currentLocation, latitudinalMeters: 1500, longitudinalMeters: 1500)
+                mapView.setRegion(region, animated: true)
+                isAtCurrentLocation = true
+            }
         }
     }
+    @objc func dismissKeyboard() {
+        searchBar.resignFirstResponder()
+    }
     
-       
+    
 }
 extension MapViewController {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let annotation = view.annotation as? MKPointAnnotation else { return }
+        //어노테이션이 움직이는 애니메이션 효과
+        UIView.animate(withDuration: 0.2, animations: {
+            view.transform = CGAffineTransform(translationX: 0, y: -10)
+        }) { _ in
+            UIView.animate(withDuration: 0.2) {
+                view.transform = CGAffineTransform.identity
+            }
+        }
         
         let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
-            mapView.setRegion(region, animated: true)
+        mapView.setRegion(region, animated: true)
         
         if let review = reviewRepository.fetch().first(where: { $0.storeName == annotation.title && $0.imageView1URL == annotation.subtitle }) {
             let reviewVC = ReviewViewController()
@@ -168,6 +213,53 @@ extension MapViewController {
             reviewVC.visitCount = review.visitCount
             
             present(reviewVC, animated: true, completion: nil)
+        }
+    }
+}
+
+// MARK: - 서치바 확장
+extension MapViewController: UISearchBarDelegate {
+    func setupSearchBar() {
+        searchBar.delegate = self
+        searchBar.placeholder = "맛집을 검색하면 지도가 확대됩니다!"
+        searchBar.tintColor = .clear
+        searchBar.backgroundColor = .clear
+        searchBar.searchBarStyle = .minimal
+        searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+            textField.font = UIFont.systemFont(ofSize: 13) //플레이스 홀더 글씨 크기
+        }
+        view.addSubview(searchBar)
+        
+        searchBar.snp.makeConstraints { make in
+            //make.top.equalTo(80)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            //make.left.equalToSuperview()
+            //make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
+            make.width.equalTo(240)
+            make.height.equalTo(54)
+            //make.center.equalToSuperview()
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            // 검색어가 없을 때 지정된 위치로 돌아오기
+            let center = CLLocationCoordinate2D(latitude: 36.5, longitude: 127.8)
+            let span = MKCoordinateSpan(latitudeDelta: 10 / 1.6, longitudeDelta: 10 / 1.6)
+            let region = MKCoordinateRegion(center: center, span: span)
+            mapView.setRegion(region, animated: true)
+            return
+        }
+        
+        let reviews = reviewRepository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+        guard let review = reviews.first else { return }
+        
+        if let latitude = Double(review.latitude ?? ""), let longitude = Double(review.longitude ?? "") {
+            let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+            mapView.setRegion(region, animated: true)
         }
     }
 }
