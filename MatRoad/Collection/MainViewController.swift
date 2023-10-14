@@ -220,9 +220,9 @@ class MainViewController: BaseViewController {
         mainView.collectionView.reloadData()
     }
     @objc func cancelButtonTapped() {
-
+        
     }
-
+    
     
     @objc func endEditMode() {
         isDeleteMode = false
@@ -482,25 +482,46 @@ extension MainViewController: UISearchBarDelegate {
             mainView.collectionView.reloadData()
             return
         }
-        reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+        
+        if isAllSelected {
+            reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+        } else {
+            if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
+                reviewItems = repository.fetch().filter("ANY album._id == %@ AND storeName CONTAINS[c] %@", matchingAlbumId, searchText)
+            }
+        }
+        
         mainView.collectionView.reloadData()
-        
-        
     }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        reviewItems = repository.fetch()
+        if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
+            reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbumId)
+        } else {
+            reviewItems = repository.fetch()
+        }
         mainView.collectionView.reloadData()
-        
     }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            reviewItems = repository.fetch()
+            if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
+                reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbumId)
+            } else {
+                reviewItems = repository.fetch()
+            }
         } else {
-            reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+            if isAllSelected {
+                reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+            } else {
+                if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
+                    reviewItems = repository.fetch().filter("ANY album._id == %@ AND storeName CONTAINS[c] %@", matchingAlbumId, searchText)
+                }
+            }
         }
         mainView.collectionView.reloadData()
     }
 
     
+    
 }
-
