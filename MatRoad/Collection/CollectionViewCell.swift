@@ -90,7 +90,9 @@ class CollectionViewCell: BaseCollectionViewCell {
     
     override func setConstraints() {
         imageView.snp.makeConstraints { make in
-            make.horizontalEdges.equalTo(contentView)
+            //make.horizontalEdges.equalTo(contentView)
+            make.left.equalTo(contentView).offset(2)
+            make.right.equalTo(contentView).offset(-2)
             make.top.equalTo(contentView.snp.top).inset(0)
             make.height.equalTo(180)
         }

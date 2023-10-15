@@ -52,7 +52,8 @@ class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        view.backgroundColor = UIColor(named: "ddd")
+        //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         
         // reviewItems 초기화
         reviewItems = repository.fetch()
@@ -453,6 +454,18 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         sideMenu?.dismiss(animated: true, completion: nil)
         
         selectedSideMenuIndexPath = indexPath
+        
+        // 체크마크 관련 로직 추가
+        if let previousSelectedIndexPath = selectedSideMenuIndexPath {
+            tableView.cellForRow(at: previousSelectedIndexPath)?.accessoryType = .none
+        }
+        
+        // "+ 앨범 추가" 셀을 제외하고 체크마크 표시
+        if selectedAlbum != "+ 앨범 추가" {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+            selectedSideMenuIndexPath = indexPath
+        }
+        
         tableView.reloadData()
         
         

@@ -75,7 +75,7 @@ class CollectionView: BaseView {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
         view.collectionViewLayout = collectionViewLayout()
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        view.backgroundColor = UIColor(named: "ddd") //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         return view
     }()
     

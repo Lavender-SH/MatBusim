@@ -24,7 +24,7 @@ enum Section: Int, CaseIterable {
     
     var items: [String] {
         switch self {
-        case .theme: return ["다크모드", "화이트모드"]
+        case .theme: return ["라이트모드", "다크모드"]
         case .backupRestore: return ["백업/복구하기"]
         case .about: return ["문의/의견", "맛슐랭 1.0 Version"]
         }
@@ -34,7 +34,7 @@ enum Section: Int, CaseIterable {
 class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentPickerDelegate, MFMailComposeViewControllerDelegate {
     private var tableView: UITableView!
     private var dataSource: UITableViewDiffableDataSource<Section, String>!
-    private var selectedTheme: String = "다크모드"
+    private var selectedTheme: String = "라이트모드"
   
     
     override func viewDidLoad() {
@@ -139,7 +139,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        headerView.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        headerView.backgroundColor = UIColor(named: "ddd")//UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         
         let titleLabel = UILabel()
         titleLabel.text = Section(rawValue: section)?.title
@@ -180,54 +180,14 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     
     // MARK: - 다크모드&화이트모드
     func applyTheme(_ theme: String) {
-        if theme == "다크모드" {
-            navigationController?.navigationBar.barTintColor = .darkGray
-            navigationController?.navigationBar.tintColor = .white
-            navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-            tableView.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
-            tabBarController?.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
-            tabBarController?.tabBar.tintColor = .white
-            tabBarController?.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
-            view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
-            let appearance = UINavigationBarAppearance()
-            appearance.backgroundColor = .darkGray
-            
-            tableView.visibleCells.forEach { cell in
-                cell.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
-                cell.textLabel?.textColor = .white
-            }
-            visibleSectionHeaders(in: tableView).forEach { header in
-                header.tintColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
-                header.textLabel?.textColor = .white
-            }
-            
-            
+        if theme == "라이트모드" {
+            overrideUserInterfaceStyle = .light
+            UserDefaults.standard.set("light", forKey: "appTheme")
+            //print("666")
         } else {
-            navigationController?.navigationBar.barTintColor = .white
-            navigationController?.navigationBar.tintColor = .black
-            navigationController?.navigationBar.backgroundColor = UIColor(white: 0.9, alpha: 1)
-            navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
-            tableView.backgroundColor = UIColor(white: 0.95, alpha: 1)
-            tableView.separatorColor = UIColor(white: 0.85, alpha: 1)
-            tabBarController?.tabBar.barTintColor = UIColor(white: 0.9, alpha: 1)
-            tabBarController?.tabBar.backgroundColor = UIColor(white: 0.85, alpha: 1)
-            tabBarController?.tabBar.tintColor = .black
-            view.backgroundColor = UIColor(white: 0.9, alpha: 1)
-            let appearance = UINavigationBarAppearance()
-            appearance.backgroundColor = UIColor(cgColor: .init(red: 0.777, green: 0.777, blue: 0.777, alpha: 1))
-            
-            
-            tableView.visibleCells.forEach { cell in
-                cell.backgroundColor = UIColor(white: 1, alpha: 1)
-                cell.textLabel?.textColor = .black
-            }
-            visibleSectionHeaders(in: tableView).forEach { header in
-                header.tintColor = .black
-                header.textLabel?.textColor = .black
-                header.backgroundColor = .white
-            }
-            
-            
+            overrideUserInterfaceStyle = .dark
+            UserDefaults.standard.set("dark", forKey: "appTheme")
+            //print("777")
         }
     }
     
@@ -237,7 +197,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
             switch section {
             case .theme:
                 let selectedItem = dataSource.itemIdentifier(for: indexPath)
-                selectedTheme = selectedItem ?? "다크모드"
+                selectedTheme = selectedItem ?? "라이트모드"
                 applyTheme(selectedTheme)
                 var snapshot = dataSource.snapshot()
                 snapshot.reloadSections([section])
