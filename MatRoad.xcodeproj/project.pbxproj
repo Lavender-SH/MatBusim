@@ -226,10 +226,10 @@
 		0277C3302AD94420004BD44D /* BackUp */ = {
 			isa = PBXGroup;
 			children = (
-				0277C3312AD94420004BD44D /* BackUpView.swift */,
-				0277C3322AD94420004BD44D /* FileManager+Extension.swift */,
-				0277C3332AD94420004BD44D /* BackUpTableViewCell.swift */,
 				0277C3342AD94420004BD44D /* BackUpViewController.swift */,
+				0277C3312AD94420004BD44D /* BackUpView.swift */,
+				0277C3332AD94420004BD44D /* BackUpTableViewCell.swift */,
+				0277C3322AD94420004BD44D /* FileManager+Extension.swift */,
 			);
 			path = BackUp;
 			sourceTree = "<group>";

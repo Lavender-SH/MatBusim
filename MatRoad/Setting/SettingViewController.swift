@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import MessageUI
 
 enum Section: Int, CaseIterable {
     case theme = 0
@@ -30,7 +31,7 @@ enum Section: Int, CaseIterable {
     }
 }
 
-class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentPickerDelegate {
+class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentPickerDelegate, MFMailComposeViewControllerDelegate {
     private var tableView: UITableView!
     private var dataSource: UITableViewDiffableDataSource<Section, String>!
     private var selectedTheme: String = "다크모드"
@@ -246,11 +247,30 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
                     let backUpVC = BackUpViewController()
                     navigationController?.pushViewController(backUpVC, animated: true)
                 }
-            default:
-                break
+            case .about:
+                if indexPath.row == 0 { // "문의/의견" 항목을 선택했을 때
+                    sendEmail()
+                }
+            //default: break
             }
         }
+    
+    // MARK: - Email
+    func sendEmail() {
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            mail.setToRecipients(["susie204@naver.com"])
+            mail.setSubject("맛슐랭 / 문의,의견")
+            mail.setMessageBody("안녕하세요, 맛슐랭에 대한 문의나 의견을 작성해 주세요.", isHTML: false)
+            present(mail, animated: true)
+        } else {
+            print("Email services are not available")
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true)
+    }
         
 }
-
-

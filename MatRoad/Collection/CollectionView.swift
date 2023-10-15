@@ -121,8 +121,7 @@ class CollectionView: BaseView {
         
 
     }
-    
-    
+
     
     private func collectionViewLayout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()

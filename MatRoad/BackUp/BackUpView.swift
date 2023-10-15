@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class BackUpView: BaseView {
-    
+
     private let backUpLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 15)
@@ -18,7 +18,7 @@ class BackUpView: BaseView {
         label.text = "백업/복구"
         return label
     }()
-    
+
     let backUpTextView: UITextView = {
         let textView = UITextView()
         textView.textColor = .gray
@@ -28,7 +28,7 @@ class BackUpView: BaseView {
         textView.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
         return textView
     }()
-    
+
     let backUpButton: UIButton = {
         let view = UIButton()
         view.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
@@ -40,7 +40,7 @@ class BackUpView: BaseView {
         view.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         return view
     }()
-    
+
     let restoreButton: UIButton = {
         let view = UIButton()
         view.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
@@ -52,7 +52,7 @@ class BackUpView: BaseView {
         view.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         return view
     }()
-    
+
     let backupTableView: UITableView = {
         let view = UITableView()
         view.rowHeight = 50
@@ -61,7 +61,7 @@ class BackUpView: BaseView {
         view.separatorColor = .darkGray
         return view
     }()
-    
+
     override func configureView() {
         addSubview(backupTableView)
         addSubview(backUpButton)
@@ -69,7 +69,7 @@ class BackUpView: BaseView {
         addSubview(backUpTextView)
         addSubview(restoreButton)
     }
-    
+
     override func setConstraints() {
         backUpLabel.snp.makeConstraints { make in
             make.top.equalTo(20)
@@ -97,8 +97,9 @@ class BackUpView: BaseView {
             make.width.equalTo(backUpButton.snp.width) // backUpButton과 동일한 넓이
             make.height.equalTo(40)
         }
-        
+
     }
-    
+
 }
+
 

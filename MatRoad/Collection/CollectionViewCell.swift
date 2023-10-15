@@ -69,6 +69,13 @@ class CollectionViewCell: BaseCollectionViewCell {
         imageView.isHidden = true
         return imageView
     }()
+    let transCheckmark: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "checkmark.circle.fill")
+        imageView.tintColor = .red
+        imageView.isHidden = true
+        return imageView
+    }()
     
     
     override func configureView() {
@@ -77,6 +84,7 @@ class CollectionViewCell: BaseCollectionViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(cosmosView)
         contentView.addSubview(deleteCheckmark)
+        contentView.addSubview(transCheckmark)
         
     }
     
@@ -110,6 +118,11 @@ class CollectionViewCell: BaseCollectionViewCell {
             make.size.equalTo(50)
             make.center.equalTo(imageView)
         }
+        transCheckmark.snp.makeConstraints { make in
+            make.size.equalTo(50)
+            make.center.equalTo(imageView)
+        }
+        
     }
     
     override func layoutSubviews() {

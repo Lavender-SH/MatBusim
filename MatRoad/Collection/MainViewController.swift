@@ -27,6 +27,12 @@ class MainViewController: BaseViewController {
     // 삭제 및 완료 버튼 추가
     var deleteBarButton: UIBarButtonItem!
     var doneBarButton: UIBarButtonItem!
+    //이동 //⭐️이동 ver2
+    var isTransferMode = false
+    var selectedItemsToTranse: Set<IndexPath> = []
+    // 이동 및 완료 버튼 추가 //⭐️이동 ver2
+    var transBarButton: UIBarButtonItem!
+    var transDoneBarButton: UIBarButtonItem!
     // 사이드 메뉴 변수
     var sideMenu: SideMenuNavigationController?
     var sideMenuTableViewController: UITableViewController!
@@ -72,6 +78,10 @@ class MainViewController: BaseViewController {
         // 삭제 및 완료 버튼 초기화
         deleteBarButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(deleteSelectedItems))
         doneBarButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(endEditMode))
+        //⭐️이동 ver2
+        transBarButton = UIBarButtonItem(title: "이동", style: .plain, target: self, action: #selector(transSelectedItems))
+        transDoneBarButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(endTransferMode))
+        
         
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: NSNotification.Name("didRestoreBackup"), object: nil)
         
@@ -96,6 +106,10 @@ class MainViewController: BaseViewController {
         mainView.latestButton.addTarget(self, action: #selector(sortByLatest), for: .touchUpInside)
         mainView.pastButton.addTarget(self, action: #selector(sortByPast), for: .touchUpInside)
         
+        mainView.ratingButton.addTarget(self, action: #selector(ratingButtonTapped), for: .touchUpInside)
+        mainView.latestButton.addTarget(self, action: #selector(latestButtonTapped), for: .touchUpInside)
+        mainView.pastButton.addTarget(self, action: #selector(pastButtonTapped), for: .touchUpInside)
+        
         if let cancelButton = mainView.searchBar.value(forKey: "cancelButton") as? UIButton {
             cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: UIControl.Event.touchUpInside)
         }
@@ -117,11 +131,11 @@ class MainViewController: BaseViewController {
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.app"), style: .plain, target: self, action: #selector(reviewPlusButtonTapped))
         let deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
         let albumButton = UIBarButtonItem(image: UIImage(systemName: "tray"), style: .plain, target: self, action: #selector(albumButtonTapped))
-        let albumButton2 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
+        let albumButton2 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped)) //transModeButtonTapped
         let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         
         navigationItem.rightBarButtonItems = [plusButton, deleteButton]
-        navigationItem.leftBarButtonItems = [albumButton, albumButton2, albumButton3]
+        navigationItem.leftBarButtonItems = [albumButton, albumButton2]
         
         
         let logo = UIImage(named: "matlogo")
@@ -161,10 +175,6 @@ class MainViewController: BaseViewController {
         sideMenu = SideMenuNavigationController(rootViewController: sideMenuTableViewController)
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
-        
-        //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutside))
-        //        tapGesture.cancelsTouchesInView = false
-        //        sideMenuTableViewController.view.addGestureRecognizer(tapGesture)
     }
     
     // MARK: - 데이터추가 버튼
@@ -190,15 +200,30 @@ class MainViewController: BaseViewController {
     @objc func reviewDeleteButtonTapped() {
         isDeleteMode.toggle()
         if isDeleteMode {
-            // 편집 모드 시작
+            // 삭제 모드 시작
             tabBarController?.tabBar.isHidden = false
             navigationItem.rightBarButtonItems = [doneBarButton, deleteBarButton]
         } else {
-            // 편집 모드 종료
+            // 삭제 모드 종료
             endEditMode()
         }
         mainView.collectionView.reloadData()
     }
+    
+    //⭐️이동 ver2
+    @objc func transModeButtonTapped() {
+        isTransferMode.toggle()
+        if isTransferMode {
+            // 이동 모드 시작
+            tabBarController?.tabBar.isHidden = false
+            navigationItem.rightBarButtonItems = [transDoneBarButton, transBarButton]
+        } else {
+            // 이동 모드 종료
+            endTransferMode()
+        }
+        mainView.collectionView.reloadData()
+    }
+
     
     @objc func albumButtonTapped() {
         present(sideMenu!, animated: true)
@@ -219,6 +244,30 @@ class MainViewController: BaseViewController {
         reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: true)
         mainView.collectionView.reloadData()
     }
+    
+    @objc func ratingButtonTapped() {
+        updateButtonStyles(selected: mainView.ratingButton, others: [mainView.latestButton, mainView.pastButton])
+    }
+
+    @objc func latestButtonTapped() {
+        updateButtonStyles(selected: mainView.latestButton, others: [mainView.ratingButton, mainView.pastButton])
+    }
+
+    @objc func pastButtonTapped() {
+        updateButtonStyles(selected: mainView.pastButton, others: [mainView.ratingButton, mainView.latestButton])
+    }
+
+    func updateButtonStyles(selected: UIButton, others: [UIButton]) {
+        selected.setTitleColor(.white, for: .normal)
+        selected.layer.borderColor = UIColor.white.cgColor
+
+        for button in others {
+            button.setTitleColor(.gray, for: .normal)
+            button.layer.borderColor = UIColor.gray.cgColor
+        }
+    }
+
+    
     @objc func cancelButtonTapped() {
         
     }
@@ -231,7 +280,15 @@ class MainViewController: BaseViewController {
         selectedItemsToDelete.removeAll()
         mainView.collectionView.reloadData()
     }
-    
+    //⭐️이동 ver2
+    @objc func endTransferMode() {
+        isTransferMode = false
+        tabBarController?.tabBar.isHidden = false
+        makeNavigationUI()
+        //selectedItemsToDelete.removeAll()
+        mainView.collectionView.reloadData()
+    }
+
     @objc func deleteSelectedItems() {
         // 선택된 항목의 인덱스를 내림차순으로 정렬
         let sortedIndexPaths = selectedItemsToDelete.sorted(by: >)
@@ -241,6 +298,12 @@ class MainViewController: BaseViewController {
         }
         selectedItemsToDelete.removeAll()
         mainView.collectionView.reloadData()
+    }
+    
+    //⭐️이동 ver2
+    @objc func transSelectedItems() {
+        isTransferMode = true
+        present(sideMenu!, animated: true)
     }
     
     deinit {
@@ -277,7 +340,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         //삭제할때
         cell.deleteCheckmark.isHidden = !isDeleteMode
         cell.deleteCheckmark.tintColor = selectedItemsToDelete.contains(indexPath) ? .orange : .lightGray
-        
+        //이동할때 //⭐️이동 ver2
+        cell.transCheckmark.isHidden = !isTransferMode
+        cell.transCheckmark.tintColor = selectedItemsToTranse.contains(indexPath) ? .blue : .lightGray
         return cell
     }
     // MARK: - 메인화면 컬렉션뷰에서 리뷰수정하기
@@ -287,6 +352,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 selectedItemsToDelete.remove(indexPath)
             } else {
                 selectedItemsToDelete.insert(indexPath)
+            }
+            collectionView.reloadItems(at: [indexPath])
+        } else if isTransferMode {
+            if selectedItemsToTranse.contains(indexPath) {
+                selectedItemsToTranse.remove(indexPath)
+            } else {
+                selectedItemsToTranse.insert(indexPath)
             }
             collectionView.reloadItems(at: [indexPath])
         } else {
@@ -309,7 +381,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             present(reviewVC, animated: true, completion: nil)
         }
     }
-    
     
     
 }
@@ -383,6 +454,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         selectedSideMenuIndexPath = indexPath
         tableView.reloadData()
+        
+        
+        //⭐️이동 ver2
+        if isTransferMode {
+            
+        }
+        
+        
     }
     
     
@@ -503,25 +582,6 @@ extension MainViewController: UISearchBarDelegate {
         mainView.collectionView.reloadData()
     }
     
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchText.isEmpty {
-//            if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
-//                reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbumId)
-//            } else {
-//                reviewItems = repository.fetch()
-//            }
-//            mainView.collectionView.reloadData()
-//        } else {
-//            if isAllSelected {
-//                reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
-//            } else {
-//                if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
-//                    reviewItems = repository.fetch().filter("ANY album._id == %@ AND storeName CONTAINS[c] %@", matchingAlbumId, searchText)
-//                }
-//            }
-//        }
-//        mainView.collectionView.reloadData()
-//    }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             if !isAllSelected && UserDefaults.standard.string(forKey: "selectedAlbumId") == nil {

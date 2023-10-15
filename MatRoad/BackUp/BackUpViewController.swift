@@ -50,7 +50,7 @@ class BackUpViewController: BaseViewController {
         navigationItem.titleView = imageView
     }
     
-    
+    // MARK: - 백업 버튼
     @objc func backupButtonTapped() {
         //1. 백업하고자 하는 파일들의 경로 배열 생성
         var urlPaths = [URL]()
@@ -100,7 +100,7 @@ class BackUpViewController: BaseViewController {
             print("압축 해제 실패: \(error)")
         }
     }
-    
+    // MARK: - 복구버튼
     @objc func restoreButtonTapped() {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.archive], asCopy: true)
         documentPicker.delegate = self
@@ -177,7 +177,7 @@ extension BackUpViewController: UIDocumentPickerDelegate {
                     NotificationCenter.default.post(name: NSNotification.Name("didRestoreBackup"), object: nil)
                 })
             } catch {
-                print(456456456)
+                //print(456456456)
                 print(error)
                 print("압축 해제 실패")
             }
@@ -208,7 +208,6 @@ extension BackUpViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return list
     }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return fetchZipList().count
