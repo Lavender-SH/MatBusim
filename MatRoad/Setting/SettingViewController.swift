@@ -35,7 +35,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     private var tableView: UITableView!
     private var dataSource: UITableViewDiffableDataSource<Section, String>!
     private var selectedTheme: String = "라이트모드"
-  
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -182,47 +182,59 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     func applyTheme(_ theme: String) {
         if theme == "라이트모드" {
             overrideUserInterfaceStyle = .light
-            UserDefaults.standard.set("light", forKey: "appTheme")
+            //UserDefaults.standard.set("light", forKey: "appTheme")
             //print("666")
         } else {
             overrideUserInterfaceStyle = .dark
-            UserDefaults.standard.set("dark", forKey: "appTheme")
+            //UserDefaults.standard.set("dark", forKey: "appTheme")
             //print("777")
         }
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            guard let section = Section(rawValue: indexPath.section) else { return }
-            switch section {
-            case .theme:
-                let selectedItem = dataSource.itemIdentifier(for: indexPath)
-                selectedTheme = selectedItem ?? "라이트모드"
-                applyTheme(selectedTheme)
-                var snapshot = dataSource.snapshot()
-                snapshot.reloadSections([section])
-                dataSource.apply(snapshot, animatingDifferences: true)
-            case .backupRestore:
-                if indexPath.row == 0 {
-                    let backUpVC = BackUpViewController()
-                    navigationController?.pushViewController(backUpVC, animated: true)
-                }
-            case .about:
-                if indexPath.row == 0 { // "문의/의견" 항목을 선택했을 때
-                    sendEmail()
-                }
-            //default: break
+        guard let section = Section(rawValue: indexPath.section) else { return }
+        switch section {
+        case .theme:
+            let selectedItem = dataSource.itemIdentifier(for: indexPath)
+            selectedTheme = selectedItem ?? "라이트모드"
+            applyTheme(selectedTheme)
+            var snapshot = dataSource.snapshot()
+            snapshot.reloadSections([section])
+            dataSource.apply(snapshot, animatingDifferences: true)
+        case .backupRestore:
+            if indexPath.row == 0 {
+                let backUpVC = BackUpViewController()
+                navigationController?.pushViewController(backUpVC, animated: true)
             }
+        case .about:
+            if indexPath.row == 0 { // "문의/의견" 항목을 선택했을 때
+                sendEmail()
+            }
+            //default: break
         }
+    }
     
     // MARK: - Email
     func sendEmail() {
+        let bodyString = """
+                         문의 사항 및 의견을 작성해주세요.
+                         
+                         
+                         
+                         -------------------
+                         Device Model : \(Utils.getDeviceModelName())
+                         Device OS : \(UIDevice.current.systemVersion)
+                         App Version : \(Utils.getAppVersion())
+                         -------------------
+                         """
+        
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
             mail.setToRecipients(["susie204@naver.com"])
             mail.setSubject("맛슐랭 / 문의,의견")
-            mail.setMessageBody("안녕하세요, 맛슐랭에 대한 문의나 의견을 작성해 주세요.", isHTML: false)
+            mail.setMessageBody(bodyString, isHTML: false)
             present(mail, animated: true)
         } else {
             print("Email services are not available")
@@ -232,5 +244,40 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true)
     }
+    
+}
+
+// MARK: - Email Utils
+final class Utils {
+    static func getAppVersion() -> String {
+        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+    }
+    
+    static func getBuildVersion() -> String {
+        return Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+    }
+    
+    static func getDeviceIdentifier() -> String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
         
+        return identifier
+    }
+    
+    static func getDeviceModelName() -> String {
+        let device = UIDevice.current
+        let selName = "_\("deviceInfo")ForKey:"
+        let selector = NSSelectorFromString(selName)
+        
+        if device.responds(to: selector) { // [옵셔널 체크 실시]
+            let modelName = String(describing: device.perform(selector, with: "marketing-name").takeRetainedValue())
+            return modelName
+        }
+        return "알 수 없음"
+    }
 }
