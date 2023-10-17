@@ -16,6 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        let savedTheme = UserDefaults.standard.string(forKey: "appTheme") ?? "light"
+        window?.overrideUserInterfaceStyle = savedTheme == "light" ? .light : .dark
  
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
@@ -36,10 +38,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         tabBarVC.setViewControllers([vc1, vc2, vc3], animated: false)
         tabBarVC.modalPresentationStyle = .fullScreen
-        tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+        tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)) //UIColor(named: "TabBar")
         tabBarVC.tabBar.tintColor = UIColor.white
         tabBarVC.tabBar.unselectedItemTintColor = UIColor.gray
-        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)) //UIColor(named: "TabBar")
         tabBarVC.tabBar.isTranslucent = false
         //tabBarVC.tabBarItem.title = "검색"
 
@@ -86,7 +88,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
+    
+    
 
 
 }
+extension UIImage {
+    static func from(color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()!
+        context.setFillColor(color.cgColor)
+        context.fill(rect)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img!
+    }
+}
+
 

@@ -253,23 +253,23 @@ class ReviewView: BaseView {
         
         imageView1.snp.makeConstraints { make in
             make.top.equalTo(alertView.snp.top).inset(15)
-            make.left.equalTo(alertView.snp.left).inset(10)
+            make.left.equalTo(alertView.snp.left).inset(18)
             make.height.equalTo(200)
-            make.width.equalTo(alertView).multipliedBy(0.49).offset(-10)
+            make.width.equalTo(alertView).multipliedBy(0.47).offset(-10)
         }
 
         imageView2.snp.makeConstraints { make in
             make.top.equalTo(alertView.snp.top).inset(15)
             make.left.equalTo(imageView1.snp.right).offset(-10)
-            make.right.equalTo(alertView.snp.right).inset(10)
+            make.right.equalTo(alertView.snp.right).inset(18)
             make.height.equalTo(200)
-            make.width.equalTo(alertView).multipliedBy(0.49).offset(-10)
+            make.width.equalTo(alertView).multipliedBy(0.47).offset(-10)
         }
 
         homeImage.snp.makeConstraints { make in
-            make.top.equalTo(imageView1.snp.bottom).offset(10)
-            make.left.equalTo(alertView.snp.left).inset(10)
-            make.size.equalTo(30)
+            make.top.equalTo(imageView1.snp.bottom).offset(16)
+            make.left.equalTo(alertView.snp.left).inset(24)
+            make.size.equalTo(23)
         }
 
         storeNameLabel.snp.makeConstraints { make in
@@ -280,9 +280,9 @@ class ReviewView: BaseView {
         }
 
         internetImage.snp.makeConstraints { make in
-            make.top.equalTo(homeImage.snp.bottom).offset(10)
-            make.left.equalTo(alertView.snp.left).inset(10)
-            make.size.equalTo(30)
+            make.top.equalTo(homeImage.snp.bottom).offset(16)
+            make.left.equalTo(alertView.snp.left).inset(24)
+            make.size.equalTo(23)
         }
 
         internetButton.snp.makeConstraints { make in

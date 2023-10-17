@@ -75,7 +75,7 @@ class CollectionView: BaseView {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
         view.collectionViewLayout = collectionViewLayout()
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))//UIColor(named: "White")
         return view
     }()
     
@@ -126,8 +126,8 @@ class CollectionView: BaseView {
     private func collectionViewLayout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 10
-        let size = UIScreen.main.bounds.width - 30
+        layout.minimumInteritemSpacing = 5
+        let size = UIScreen.main.bounds.width - 20
         layout.itemSize = CGSize(width: size / 3, height: 195)
         //layer.cornerRadius = 30
         return layout

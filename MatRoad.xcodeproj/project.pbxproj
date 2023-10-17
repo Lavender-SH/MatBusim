@@ -40,6 +40,8 @@
 		024B593B2ACDD559004319EA /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59382ACDD559004319EA /* WebViewController.swift */; };
 		024B593C2ACDD559004319EA /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024B59392ACDD559004319EA /* ReviewView.swift */; };
 		024B593F2AD01991004319EA /* SideMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 024B593E2AD01991004319EA /* SideMenu */; };
+		0258CA052ADE6C7D00EE2750 /* SideMenuNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0258CA042ADE6C7D00EE2750 /* SideMenuNavigation.swift */; };
+		0258CA072ADE6CDD00EE2750 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0258CA062ADE6CDD00EE2750 /* SideMenuViewController.swift */; };
 		0277C2E32AD71588004BD44D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0277C2E22AD71588004BD44D /* LaunchScreen.storyboard */; };
 		0277C32B2AD943A8004BD44D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277C3292AD943A8004BD44D /* MapViewController.swift */; };
 		0277C32C2AD943A8004BD44D /* ImageAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277C32A2AD943A8004BD44D /* ImageAnnotationView.swift */; };
@@ -76,6 +78,8 @@
 		024B59372ACDD559004319EA /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		024B59382ACDD559004319EA /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		024B59392ACDD559004319EA /* ReviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewView.swift; sourceTree = "<group>"; };
+		0258CA042ADE6C7D00EE2750 /* SideMenuNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuNavigation.swift; sourceTree = "<group>"; };
+		0258CA062ADE6CDD00EE2750 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		0277C2E22AD71588004BD44D /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0277C3292AD943A8004BD44D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0277C32A2AD943A8004BD44D /* ImageAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAnnotationView.swift; sourceTree = "<group>"; };
@@ -132,6 +136,7 @@
 				024B58172ACAE8CB004319EA /* Network */,
 				024B58022AC864E5004319EA /* Base */,
 				024B59282ACDD50F004319EA /* Collection */,
+				0258CA032ADE6C2400EE2750 /* Side */,
 				024B592F2ACDD539004319EA /* Search */,
 				024B59362ACDD559004319EA /* Review */,
 				0277C3282AD943A8004BD44D /* Map */,
@@ -204,6 +209,15 @@
 				024B59382ACDD559004319EA /* WebViewController.swift */,
 			);
 			path = Review;
+			sourceTree = "<group>";
+		};
+		0258CA032ADE6C2400EE2750 /* Side */ = {
+			isa = PBXGroup;
+			children = (
+				0258CA042ADE6C7D00EE2750 /* SideMenuNavigation.swift */,
+				0258CA062ADE6CDD00EE2750 /* SideMenuViewController.swift */,
+			);
+			path = Side;
 			sourceTree = "<group>";
 		};
 		0277C3282AD943A8004BD44D /* Map */ = {
@@ -284,11 +298,12 @@
 			};
 			buildConfigurationList = 0208CE692AC14FB6000563D8 /* Build configuration list for PBXProject "MatRoad" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 0208CE652AC14FB6000563D8;
 			packageReferences = (
@@ -360,6 +375,7 @@
 				024B581B2ACAE99B004319EA /* API Key.swift in Sources */,
 				024B593B2ACDD559004319EA /* WebViewController.swift in Sources */,
 				024B592C2ACDD50F004319EA /* CollectionView.swift in Sources */,
+				0258CA072ADE6CDD00EE2750 /* SideMenuViewController.swift in Sources */,
 				024B58192ACAE8F6004319EA /* NetworkManager.swift in Sources */,
 				024B593C2ACDD559004319EA /* ReviewView.swift in Sources */,
 				024B592E2ACDD50F004319EA /* MainViewController.swift in Sources */,
@@ -375,6 +391,7 @@
 				024B58232ACB3174004319EA /* BaseTableViewCell.swift in Sources */,
 				0277C32F2AD943E0004BD44D /* SettingViewController.swift in Sources */,
 				024B58082AC8650F004319EA /* BseView.swift in Sources */,
+				0258CA052ADE6C7D00EE2750 /* SideMenuNavigation.swift in Sources */,
 				0277C3352AD94420004BD44D /* BackUpView.swift in Sources */,
 				024B592D2ACDD50F004319EA /* CollectionViewCell.swift in Sources */,
 				0277C3382AD94420004BD44D /* BackUpViewController.swift in Sources */,
@@ -513,7 +530,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MatRoad/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "맛슐랭";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앱에서 사진 라이브러리에 접근하려 합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 주변 장소를 보다 명시적으로 나타내기 위해 현재 위치 정보를 수집하여, 위치 정보는 앱 내에서만 사용되고 저장되지 않습니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앱에서 사진을 선택하기 위해 앨범 접근 권한이 필요합니다!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -546,7 +564,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MatRoad/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "맛슐랭";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앱에서 사진 라이브러리에 접근하려 합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 주변 장소를 보다 명시적으로 나타내기 위해 현재 위치 정보를 수집하여, 위치 정보는 앱 내에서만 사용되고 저장되지 않습니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앱에서 사진을 선택하기 위해 앨범 접근 권한이 필요합니다!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

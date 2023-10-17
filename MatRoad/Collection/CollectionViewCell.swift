@@ -18,7 +18,7 @@ class CollectionViewCell: BaseCollectionViewCell {
         view.layer.cornerRadius = 16.5
         view.clipsToBounds = true
         view.backgroundColor = .clear
-        
+
         // 그라디언트 레이어 추가
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]

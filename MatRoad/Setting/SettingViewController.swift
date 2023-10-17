@@ -139,7 +139,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        headerView.backgroundColor = UIColor(named: "ddd")//UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        headerView.backgroundColor = UIColor(named: "White")//UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         
         let titleLabel = UILabel()
         titleLabel.text = Section(rawValue: section)?.title
@@ -181,16 +181,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     // MARK: - 다크모드&화이트모드
     func applyTheme(_ theme: String) {
         if theme == "라이트모드" {
-            overrideUserInterfaceStyle = .light
-            //UserDefaults.standard.set("light", forKey: "appTheme")
-            //print("666")
+            UserDefaults.standard.set("light", forKey: "appTheme")
         } else {
-            overrideUserInterfaceStyle = .dark
-            //UserDefaults.standard.set("dark", forKey: "appTheme")
-            //print("777")
+            UserDefaults.standard.set("dark", forKey: "appTheme")
         }
+        //window에도 적용
+        guard let window = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+        let windows = window.windows.first
+        windows?.overrideUserInterfaceStyle = theme == "라이트모드" ? .light : .dark
     }
-    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let section = Section(rawValue: indexPath.section) else { return }

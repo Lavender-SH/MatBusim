@@ -52,7 +52,7 @@ class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))// UIColor(named: "White")
         
         // reviewItems 초기화
         reviewItems = repository.fetch()
@@ -133,16 +133,15 @@ class MainViewController: BaseViewController {
         let albumButton = UIBarButtonItem(image: UIImage(systemName: "tray"), style: .plain, target: self, action: #selector(albumButtonTapped))
         let albumButton2 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped)) //transModeButtonTapped
         let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
+        let albumButton4 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         
         navigationItem.rightBarButtonItems = [plusButton, deleteButton]
-        navigationItem.leftBarButtonItems = [albumButton, albumButton2]
+        navigationItem.leftBarButtonItems = [albumButton, albumButton2, albumButton4]
         
         
         let logo = UIImage(named: "matlogo")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
-        
-        
         navigationItem.titleView = imageView
     }
     

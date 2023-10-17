@@ -22,11 +22,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.isNavigationBarHidden = true
         mapView.delegate = self
         view.addSubview(mapView)
         
-        mapView.frame = view.bounds
         mapView.showsUserLocation = true
+        mapView.userTrackingMode = .follow
+        
+        mapView.frame = view.bounds
         mapView.cameraZoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 4000000)
         loadAnnotations()
         setupSearchBar()
@@ -108,32 +111,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let logo = UIImage(named: "투명아이콘")
         let imageView = UIImageView(image: logo)
         mapView.addSubview(imageView)
-        //        let matLogo = UIImage(named: "matlogo")
-        //        let imageView2 = UIImageView(image: matLogo)
-        //       mapView.addSubview(imageView2)
-        
+
         imageView.snp.makeConstraints { make in
-            make.top.equalTo(mapView).offset(10)
-            //            //make.centerX.equalToSuperview()
-            //            //make.left.equalTo(searchBar.snp.right)
-            //            //make.width.equalTo(156.33)
-            //make.left.equalTo(searchBar.snp.right).offset(10)
-            make.right.equalToSuperview().inset(5)
-            //            //make.width.equalTo(120)
-            //make.height.equalTo(100)
-            
-            //            make.center.equalToSuperview()
-            make.size.equalTo(120)
-            
+            make.bottom.equalTo(mapView).offset(-60)
+            make.leading.equalTo(mapView).offset(0)
+            make.width.height.equalTo(120)
         }
-        //        imageView2.snp.makeConstraints { make in
-        //            make.top.equalTo(mapView).offset(20)
-        //            make.left.equalTo(searchBar.snp.right)
-        //            make.width.equalTo(156.33)
-        //            make.height.equalTo(44)
-        //
-        //
-        //        }
+
     }
     // MARK: - 내 위치로 이동기능
     func setupLocationManager() {
@@ -145,8 +129,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         locationManager.startUpdatingLocation()
     }
     func setupMoveToCurrentLocationButton() {
-        moveToCurrentLocationButton.setImage(UIImage(systemName: "location.fill"), for: .normal) // 위치 서비스 아이콘으로 설정
-        moveToCurrentLocationButton.tintColor = .gray
+        moveToCurrentLocationButton.setImage(UIImage(systemName: "scope"), for: .normal) // 위치 서비스 아이콘으로 설정
+        moveToCurrentLocationButton.tintColor = .black
         moveToCurrentLocationButton.backgroundColor = .white
         moveToCurrentLocationButton.layer.cornerRadius = 20
         moveToCurrentLocationButton.addTarget(self, action: #selector(moveToCurrentLocation), for: .touchUpInside)
@@ -181,6 +165,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
 }
+
+// MARK: - 맵뷰 리뷰화면 띄우기
 extension MapViewController {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let annotation = view.annotation as? MKPointAnnotation else { return }
@@ -232,14 +218,10 @@ extension MapViewController: UISearchBarDelegate {
         view.addSubview(searchBar)
         
         searchBar.snp.makeConstraints { make in
-            //make.top.equalTo(80)
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            //make.left.equalToSuperview()
-            //make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
-            make.width.equalTo(240)
-            make.height.equalTo(54)
-            //make.center.equalToSuperview()
+            make.top.equalTo(53)
+            make.horizontalEdges.equalToSuperview()
+            make.height.equalTo(44)
+
         }
     }
     
