@@ -153,7 +153,7 @@ class MainViewController: BaseViewController {
         sideMenuTableViewController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SideMenuCell")
         
         // 테이블 뷰와 셀의 배경색을 black으로 설정
-        sideMenuTableViewController.tableView.backgroundColor = .black
+        sideMenuTableViewController.tableView.backgroundColor = UIColor(named: "slide")
         sideMenuTableViewController.tableView.separatorColor = .darkGray // 구분선을 흰색으로 설정
         
         // 셀 구분선이 왼쪽 끝까지 보이게 설정
@@ -169,11 +169,14 @@ class MainViewController: BaseViewController {
         sideMenuTableViewController.navigationController?.navigationBar.standardAppearance = appearance
         sideMenuTableViewController.navigationController?.navigationBar.compactAppearance = appearance
         sideMenuTableViewController.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        sideMenuTableViewController.navigationController?.navigationBar.tintColor = .white
+        sideMenuTableViewController.navigationController?.navigationBar.tintColor = .blue
+        
         
         sideMenu = SideMenuNavigationController(rootViewController: sideMenuTableViewController)
+        sideMenu?.navigationBar.barTintColor = .black //⭐️
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
+        
     }
     
     // MARK: - 데이터추가 버튼

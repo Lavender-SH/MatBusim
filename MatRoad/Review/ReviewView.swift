@@ -120,7 +120,7 @@ class ReviewView: BaseView {
     
     let dateButton: UIButton = {
         let button = UIButton()
-        button.setTitle("  맛집을 방문한 날짜를 입력하기", for: .normal)
+        button.setTitle("  맛집을 방문한 날짜를 입력해보세요.", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         button.titleLabel?.textAlignment = .left
             button.contentHorizontalAlignment = .left

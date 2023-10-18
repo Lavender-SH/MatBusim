@@ -30,8 +30,9 @@ class NetworkManager {
             
             switch response.result {
             case .success(let value):
-                let filteredDocuments = value.documents.filter { $0.categoryGroupCode == .fd6 || $0.categoryGroupCode == .ce7 }
-                        completion(filteredDocuments)
+                completion(value.documents)
+//                let filteredDocuments = value.documents.filter { $0.categoryGroupCode == .fd6 || $0.categoryGroupCode == .ce7 }
+//                        completion(filteredDocuments)
             case .failure(let error):
                 print("Error: \(error)")
                 completion(nil)

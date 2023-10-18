@@ -38,10 +38,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         tabBarVC.setViewControllers([vc1, vc2, vc3], animated: false)
         tabBarVC.modalPresentationStyle = .fullScreen
-        tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)) //UIColor(named: "TabBar")
+        tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)) //UIColor(named: "TabBar")
         tabBarVC.tabBar.tintColor = UIColor.white
         tabBarVC.tabBar.unselectedItemTintColor = UIColor.gray
-        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)) //UIColor(named: "TabBar")
+        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)) //UIColor(named: "TabBar")
         tabBarVC.tabBar.isTranslucent = false
         //tabBarVC.tabBarItem.title = "검색"
 
