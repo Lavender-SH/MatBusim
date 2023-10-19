@@ -24,7 +24,7 @@ class ReviewView: BaseView {
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .lightGray
         view.image = UIImage(named: "food1")
         view.contentMode = .scaleAspectFill
         return view
@@ -35,7 +35,7 @@ class ReviewView: BaseView {
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .lightGray
         view.image = UIImage(named: "food2")
         view.contentMode = .scaleAspectFill
         return view
@@ -51,7 +51,7 @@ class ReviewView: BaseView {
     let storeNameLabel = {
         let view = UILabel()
         view.textColor = .white
-        view.font = UIFont.boldSystemFont(ofSize: 19)
+        view.font = UIFont.boldSystemFont(ofSize: 20)
         view.textAlignment = .center
         view.backgroundColor = .clear
         return view
@@ -74,7 +74,7 @@ class ReviewView: BaseView {
     let rateLabel = {
         let view = UILabel()
         view.textColor = .white
-        view.font = UIFont.systemFont(ofSize: 17)
+        view.font = UIFont.boldSystemFont(ofSize: 18)
         view.text = "Rate"
         view.backgroundColor = .clear
         view.textAlignment = .center
@@ -111,7 +111,7 @@ class ReviewView: BaseView {
     let dateLabel = {
         let view = UILabel()
         view.textColor = .white
-        view.font = UIFont.systemFont(ofSize: 17)
+        view.font = UIFont.boldSystemFont(ofSize: 18)
         view.text = "Date"
         view.backgroundColor = .clear
         view.textAlignment = .center
@@ -120,8 +120,8 @@ class ReviewView: BaseView {
     
     let dateButton: UIButton = {
         let button = UIButton()
-        button.setTitle("  맛집을 방문한 날짜를 입력해보세요.", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        button.setTitle("  방문한 날짜를 입력해보세요.", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         button.titleLabel?.textAlignment = .left
             button.contentHorizontalAlignment = .left
         button.setTitleColor(.white, for: .normal)
@@ -130,32 +130,46 @@ class ReviewView: BaseView {
             button.tintColor = .white
         return button
     }()
+    
     let visitCountLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 17)
-        label.text = "Visits"
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.text = "Visits:    1"
         label.backgroundColor = .clear
         label.textAlignment = .center
         return label
     }()
-
-    let visitCountButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("   1", for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
-        button.titleLabel?.textAlignment = .left
-        button.contentHorizontalAlignment = .left
-        button.setTitleColor(.white, for: .normal)
-        let visitImage = UIImage(systemName: "figure.run")
-        button.setImage(visitImage, for: .normal)
-        button.tintColor = .white
-        return button
+//    얼럿스타일
+//    let visitCountButton: UIButton = {
+//        let button = UIButton()
+//        button.setTitle("   1", for: .normal)
+//        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+//        button.titleLabel?.textAlignment = .left
+//        button.contentHorizontalAlignment = .left
+//        button.setTitleColor(.white, for: .normal)
+//        let visitImage = UIImage(systemName: "figure.run")
+//        button.setImage(visitImage, for: .normal)
+//        button.tintColor = .white
+//        return button
+//    }()
+    
+    let visitCountStepper: UIStepper = {
+        let stepper = UIStepper()
+        stepper.minimumValue = 1
+        stepper.maximumValue = 100  // 최대값 설정
+        stepper.stepValue = 1       // 스테퍼의 값이 변경될 때마다 변화하는 값
+        stepper.value = 1           // 초기값 설정
+        stepper.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 0.7)
+        stepper.layer.cornerRadius = 10
+        stepper.layer.cornerCurve = .continuous
+        return stepper
     }()
+
     let memoLabel = {
         let view = UILabel()
         view.textColor = .white
-        view.font = UIFont.systemFont(ofSize: 16)
+        view.font = UIFont.boldSystemFont(ofSize: 18)
         view.text = "Memo"
         view.backgroundColor = .clear
         view.textAlignment = .center
@@ -170,6 +184,7 @@ class ReviewView: BaseView {
         textView.layer.cornerRadius = 10
         textView.clipsToBounds = true
         textView.textColor = .white
+        textView.font = UIFont.systemFont(ofSize: 14)
         return textView
     }()
     let cancelButton: UIButton = {
@@ -223,7 +238,7 @@ class ReviewView: BaseView {
         alertView.addSubview(saveButton)
         alertView.addSubview(handleView)
         alertView.addSubview(visitCountLabel)
-        alertView.addSubview(visitCountButton)
+        alertView.addSubview(visitCountStepper)
         
         
         cosmosView.didFinishTouchingCosmos = { [weak self] rating in
@@ -269,7 +284,7 @@ class ReviewView: BaseView {
         homeImage.snp.makeConstraints { make in
             make.top.equalTo(imageView1.snp.bottom).offset(16)
             make.left.equalTo(alertView.snp.left).inset(24)
-            make.size.equalTo(23)
+            make.size.equalTo(24)
         }
 
         storeNameLabel.snp.makeConstraints { make in
@@ -282,7 +297,7 @@ class ReviewView: BaseView {
         internetImage.snp.makeConstraints { make in
             make.top.equalTo(homeImage.snp.bottom).offset(16)
             make.left.equalTo(alertView.snp.left).inset(24)
-            make.size.equalTo(23)
+            make.size.equalTo(24)
         }
 
         internetButton.snp.makeConstraints { make in
@@ -329,16 +344,20 @@ class ReviewView: BaseView {
 
         visitCountLabel.snp.makeConstraints { make in
             make.centerY.equalTo(dateLabel)
+            //make.left.equalTo(dateButton)
             make.left.equalTo(alertView.snp.centerX).offset(65)
-            make.width.equalTo(45)
+            make.width.equalTo(100)
             make.height.equalTo(40)
         }
 
-        visitCountButton.snp.makeConstraints { make in
-            make.centerY.equalTo(visitCountLabel)
-            make.left.equalTo(visitCountLabel.snp.right).offset(6)
-            make.right.equalTo(alertView.snp.right).inset(10)
-            make.height.equalTo(40)
+        visitCountStepper.snp.makeConstraints { make in
+            make.top.equalTo(visitCountLabel.snp.bottom).offset(5)
+            //make.centerX.equalTo(visitCountLabel)
+            //make.left.equalTo(visitCountLabel.snp.right).offset(6)
+            make.left.equalTo(alertView.snp.centerX).offset(70)
+            //make.right.equalTo(alertView.snp.right).inset(30)
+            make.height.equalTo(32)
+            make.width.equalTo(94)
         }
 
         memoLabel.snp.makeConstraints { make in

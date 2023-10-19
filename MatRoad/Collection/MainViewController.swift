@@ -52,7 +52,8 @@ class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))// UIColor(named: "White")
+
+        view.backgroundColor = UIColor(named: "White") //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         
         // reviewItems 초기화
         reviewItems = repository.fetch()
@@ -103,12 +104,12 @@ class MainViewController: BaseViewController {
     
     override func configureView() {
         mainView.ratingButton.addTarget(self, action: #selector(sortByRating), for: .touchUpInside)
-        mainView.latestButton.addTarget(self, action: #selector(sortByLatest), for: .touchUpInside)
-        mainView.pastButton.addTarget(self, action: #selector(sortByPast), for: .touchUpInside)
+        mainView.visitsButton.addTarget(self, action: #selector(sortByLatest), for: .touchUpInside)
+        mainView.timeButton.addTarget(self, action: #selector(sortByPast), for: .touchUpInside)
         
         mainView.ratingButton.addTarget(self, action: #selector(ratingButtonTapped), for: .touchUpInside)
-        mainView.latestButton.addTarget(self, action: #selector(latestButtonTapped), for: .touchUpInside)
-        mainView.pastButton.addTarget(self, action: #selector(pastButtonTapped), for: .touchUpInside)
+        mainView.visitsButton.addTarget(self, action: #selector(latestButtonTapped), for: .touchUpInside)
+        mainView.timeButton.addTarget(self, action: #selector(pastButtonTapped), for: .touchUpInside)
         
         if let cancelButton = mainView.searchBar.value(forKey: "cancelButton") as? UIButton {
             cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: UIControl.Event.touchUpInside)
@@ -118,7 +119,7 @@ class MainViewController: BaseViewController {
     // MARK: - 네비게이션UI
     func makeNavigationUI() {
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = .darkGray
+        appearance.backgroundColor = UIColor(named: "TabBar") //UIColor(named: "TabBar")
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.shadowColor = .clear
@@ -238,25 +239,27 @@ class MainViewController: BaseViewController {
     }
     
     @objc func sortByLatest() {
-        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
+        isAscendingOrder.toggle()
+        reviewItems = repository.fetch().sorted(byKeyPath: "visitCount", ascending: isAscendingOrder)
         mainView.collectionView.reloadData()
     }
     
     @objc func sortByPast() {
-        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: true)
+        isAscendingOrder.toggle()
+        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
         mainView.collectionView.reloadData()
     }
     
     @objc func ratingButtonTapped() {
-        updateButtonStyles(selected: mainView.ratingButton, others: [mainView.latestButton, mainView.pastButton])
+        updateButtonStyles(selected: mainView.ratingButton, others: [mainView.visitsButton, mainView.timeButton])
     }
 
     @objc func latestButtonTapped() {
-        updateButtonStyles(selected: mainView.latestButton, others: [mainView.ratingButton, mainView.pastButton])
+        updateButtonStyles(selected: mainView.visitsButton, others: [mainView.ratingButton, mainView.timeButton])
     }
 
     @objc func pastButtonTapped() {
-        updateButtonStyles(selected: mainView.pastButton, others: [mainView.ratingButton, mainView.latestButton])
+        updateButtonStyles(selected: mainView.timeButton, others: [mainView.ratingButton, mainView.visitsButton])
     }
 
     func updateButtonStyles(selected: UIButton, others: [UIButton]) {
@@ -349,6 +352,12 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     // MARK: - 메인화면 컬렉션뷰에서 리뷰수정하기
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+//        let review = reviewItems[indexPath.row]
+//        let reviewVC = ReviewViewController()
+//
+//        reviewVC.reviewView.visitCountStepper.value = Double(review.visitCount ?? 1)
+//        
         if isDeleteMode {
             if selectedItemsToDelete.contains(indexPath) {
                 selectedItemsToDelete.remove(indexPath)
@@ -366,6 +375,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         } else {
             let review = reviewItems[indexPath.row]
             let reviewVC = ReviewViewController()
+            
+            reviewVC.reviewView.visitCountStepper.value = Double(review.visitCount ?? 1)
             
             reviewVC.isEditMode = true //수정할때
             reviewVC.selectedReviewId = review._id
@@ -567,7 +578,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
 }
-// MARK: - 서치바 관련함수
+//// MARK: - 서치바 관련함수
 extension MainViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchText = searchBar.text, !searchText.isEmpty else {
@@ -576,48 +587,48 @@ extension MainViewController: UISearchBarDelegate {
             return
         }
         
+        let storeNamePredicate = NSPredicate(format: "storeName CONTAINS[c] %@", searchText)
+        let memoPredicate = NSPredicate(format: "memo CONTAINS[c] %@", searchText)
+        let combinedPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [storeNamePredicate, memoPredicate])
+        
         if isAllSelected {
-            reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+            reviewItems = repository.fetch().filter(combinedPredicate)
         } else {
             if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
-                reviewItems = repository.fetch().filter("ANY album._id == %@ AND storeName CONTAINS[c] %@", matchingAlbumId, searchText)
+                let albumPredicate = NSPredicate(format: "ANY album._id == %@", matchingAlbumId)
+                let finalPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [albumPredicate, combinedPredicate])
+                reviewItems = repository.fetch().filter(finalPredicate)
             }
         }
         
         mainView.collectionView.reloadData()
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
-            reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbumId)
-        } else {
-            reviewItems = repository.fetch()
-        }
-        mainView.collectionView.reloadData()
-    }
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        let storeNamePredicate = NSPredicate(format: "storeName CONTAINS[c] %@", searchText)
+        let memoPredicate = NSPredicate(format: "memo CONTAINS[c] %@", searchText)
+        let combinedPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [storeNamePredicate, memoPredicate])
+        
         if searchText.isEmpty {
             if !isAllSelected && UserDefaults.standard.string(forKey: "selectedAlbumId") == nil {
                 reviewItems = repository.fetch()
             } else if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
-                reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbumId)
+                let albumPredicate = NSPredicate(format: "ANY album._id == %@", matchingAlbumId)
+                reviewItems = repository.fetch().filter(albumPredicate)
             } else {
                 reviewItems = repository.fetch()
             }
         } else {
             if !isAllSelected && UserDefaults.standard.string(forKey: "selectedAlbumId") == nil {
-                reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+                reviewItems = repository.fetch().filter(combinedPredicate)
             } else if isAllSelected {
-                reviewItems = repository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+                reviewItems = repository.fetch().filter(combinedPredicate)
             } else if let albumId = UserDefaults.standard.string(forKey: "selectedAlbumId"), let matchingAlbumId = try? ObjectId(string: albumId) {
-                reviewItems = repository.fetch().filter("ANY album._id == %@ AND storeName CONTAINS[c] %@", matchingAlbumId, searchText)
+                let albumPredicate = NSPredicate(format: "ANY album._id == %@", matchingAlbumId)
+                let finalPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [albumPredicate, combinedPredicate])
+                reviewItems = repository.fetch().filter(finalPredicate)
             }
         }
         mainView.collectionView.reloadData()
     }
-
-
-    
-    
 }

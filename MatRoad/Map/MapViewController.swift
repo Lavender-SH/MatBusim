@@ -22,10 +22,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //항상 라이트모드 유지
+        self.overrideUserInterfaceStyle = .light
+    
         mapView = MKMapView()
         mapView.delegate = self
         mapView.showsUserLocation = true
+        mapView.userTrackingMode = .follow
         self.view.addSubview(mapView)
         
         navigationController?.isNavigationBarHidden = true
@@ -358,7 +361,12 @@ extension MapViewController: UISearchBarDelegate {
             return
         }
         
-        let reviews = reviewRepository.fetch().filter("storeName CONTAINS[c] %@", searchText)
+        // storeName과 memo 모두를 검색가능하게
+        let storeNamePredicate = NSPredicate(format: "storeName CONTAINS[c] %@", searchText)
+        let memoPredicate = NSPredicate(format: "memo CONTAINS[c] %@", searchText)
+        let combinedPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [storeNamePredicate, memoPredicate])
+        
+        let reviews = reviewRepository.fetch().filter(combinedPredicate)
         guard let review = reviews.first else { return }
         
         if let latitude = Double(review.latitude ?? ""), let longitude = Double(review.longitude ?? "") {
@@ -367,68 +375,69 @@ extension MapViewController: UISearchBarDelegate {
             mapView.setRegion(region, animated: true)
         }
     }
+    
+    
+    
+    //// MARK: - 위치 관련 이벤트를 처리하는 메서드들을 구현하고 있는 프로토콜 확장. 각 메서드는 사용자의 위치 정보 및 위치 권한 변경에 대한 처리를 담당
+    //extension MapViewController {
+    //    // 5. 사용자의 위치 정보를 성공적으로 가져왔을 때 호출됨
+    //    // 한번만 실행되지 않는다. iOS 위치 업데이트가 필요한 시점에 알아서 여러번 호출
+    //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    //        print(#function)
+    //        if let coordinate = locations.last?.coordinate {
+    //            let lat = coordinate.latitude //위도
+    //            let lon = coordinate.longitude //경도
+    //            print(lat, lon)
+    //            print(coordinate)
+    //            //날씨api호출
+    //        }
+    //        locationManager.stopUpdatingLocation()
+    //        //stopUpdatingLocation()을 호출하여 위치 업데이트를 중단함. 이렇게 하면 한 번 위치를 가져온 후 업데이트를 중단할 수 있다.
+    //    }
+    //    // 사용자의 위치를 가지고 오지 못한 경우
+    //    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    //
+    //    }
+    //    // 사용자의 권한 상태가 바뀔 때를 알려줌
+    //    // 거부했다가 설정에서 변경을 했거나, 혹은 notDetermined 상태에서 허용을 했거나
+    //    // 허용해서 위치를 가지고 오는 도중에, 설정에서 거부를 하고 앱으로 다시 돌아올 때 등
+    //    // iOS 14 이상
+    //    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    //        print(#function)
+    //        checkDeviceLocationAuthorization() //위치 권한 상태를 확인하고 처리.
+    //
+    //    }
+    //
+    //    func locationManager2(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    //        if status == .authorizedWhenInUse || status == .authorizedAlways {
+    //            // 위치 정보 접근 권한이 다시 허용되었을 때 처리할 작업
+    //        }
+    //    }
+    //
+    //    //사용자의 위치 권한 상태가 변경되었을 때(iOS 14 미만), 호출됨. iOS 14 이상에서는 위의 locationManagerDidChangeAuthorization를 사용하므로
+    //    //이 메서드는 deprecated된 상태. 위치 권한 변경에 따른 추가 처리를 이곳에서 구현할 수 있다.
+    //    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    //
+    //    }
+    //}
+    //
+    //// MARK: - MKMapViewDelegate 프로토콜을 확장, 지도 뷰에 관련된 이벤트를 처리하는 메서드
+    //// 지도 영역이 변경되거나 어노테이션을 선택할 때 필요한 로직을 이 메서드들 내에서 구현
+    //extension MapViewController {
+    //    //지도의 표시 영역이 변경되었을 때 호출
+    //    /// - Parameters:
+    //    ///   - mapView: 변경된 지도 뷰의 인스턴스
+    //    ///   - animated: 지도 표시 영역이 애니메이션으로 변경되었는지 여부를 나타냄
+    //    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+    //        print(#function)
+    //    }
+    //
+    //    //지도 상에서 어노테이션(annotation)을 선택했을 때 호출
+    //    func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
+    //        print(#function)
+    //    }
+    //    //  func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    //    //    print(#function)
+    //    //  }
+    //}
 }
-
-
-//// MARK: - 위치 관련 이벤트를 처리하는 메서드들을 구현하고 있는 프로토콜 확장. 각 메서드는 사용자의 위치 정보 및 위치 권한 변경에 대한 처리를 담당
-//extension MapViewController {
-//    // 5. 사용자의 위치 정보를 성공적으로 가져왔을 때 호출됨
-//    // 한번만 실행되지 않는다. iOS 위치 업데이트가 필요한 시점에 알아서 여러번 호출
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        print(#function)
-//        if let coordinate = locations.last?.coordinate {
-//            let lat = coordinate.latitude //위도
-//            let lon = coordinate.longitude //경도
-//            print(lat, lon)
-//            print(coordinate)
-//            //날씨api호출
-//        }
-//        locationManager.stopUpdatingLocation()
-//        //stopUpdatingLocation()을 호출하여 위치 업데이트를 중단함. 이렇게 하면 한 번 위치를 가져온 후 업데이트를 중단할 수 있다.
-//    }
-//    // 사용자의 위치를 가지고 오지 못한 경우
-//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-//
-//    }
-//    // 사용자의 권한 상태가 바뀔 때를 알려줌
-//    // 거부했다가 설정에서 변경을 했거나, 혹은 notDetermined 상태에서 허용을 했거나
-//    // 허용해서 위치를 가지고 오는 도중에, 설정에서 거부를 하고 앱으로 다시 돌아올 때 등
-//    // iOS 14 이상
-//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-//        print(#function)
-//        checkDeviceLocationAuthorization() //위치 권한 상태를 확인하고 처리.
-//
-//    }
-//
-//    func locationManager2(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-//        if status == .authorizedWhenInUse || status == .authorizedAlways {
-//            // 위치 정보 접근 권한이 다시 허용되었을 때 처리할 작업
-//        }
-//    }
-//
-//    //사용자의 위치 권한 상태가 변경되었을 때(iOS 14 미만), 호출됨. iOS 14 이상에서는 위의 locationManagerDidChangeAuthorization를 사용하므로
-//    //이 메서드는 deprecated된 상태. 위치 권한 변경에 따른 추가 처리를 이곳에서 구현할 수 있다.
-//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-//
-//    }
-//}
-//
-//// MARK: - MKMapViewDelegate 프로토콜을 확장, 지도 뷰에 관련된 이벤트를 처리하는 메서드
-//// 지도 영역이 변경되거나 어노테이션을 선택할 때 필요한 로직을 이 메서드들 내에서 구현
-//extension MapViewController {
-//    //지도의 표시 영역이 변경되었을 때 호출
-//    /// - Parameters:
-//    ///   - mapView: 변경된 지도 뷰의 인스턴스
-//    ///   - animated: 지도 표시 영역이 애니메이션으로 변경되었는지 여부를 나타냄
-//    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-//        print(#function)
-//    }
-//
-//    //지도 상에서 어노테이션(annotation)을 선택했을 때 호출
-//    func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
-//        print(#function)
-//    }
-//    //  func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//    //    print(#function)
-//    //  }
-//}

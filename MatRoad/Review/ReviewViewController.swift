@@ -69,7 +69,8 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
             reviewView.imageView2.kf.setImage(with: imageUrl2)
         }
         if let visitCount = visitCount {
-            reviewView.visitCountButton.setTitle("   \(visitCount)", for: .normal)
+            //reviewView.visitCountButton.setTitle("   \(visitCount)", for: .normal)
+            reviewView.visitCountLabel.text = "Visits:   \(visitCount)"
         }
         //
         reviewView.internetButton.addTarget(self, action: #selector(openWebView), for: .touchUpInside)
@@ -86,13 +87,18 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         self.view.addGestureRecognizer(tapGesture3)
         //메모에 입력되면 버튼의 색을 바꾸기 위해 델리게이트 설정
         reviewView.memoTextView.delegate = self
+        
+        //키보드 올라가면 화면 올리기
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func configureView() {
         reviewView.dateButton.addTarget(self, action: #selector(dateButtonTapped), for: .touchUpInside)
         reviewView.saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         reviewView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-        reviewView.visitCountButton.addTarget(self, action: #selector(visitCountButtonTapped), for: .touchUpInside)
+        reviewView.visitCountStepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
+    
     }
     
     @objc func dateButtonTapped() {
@@ -127,28 +133,33 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         updateSaveButtonBorderColor()
         self.present(alertController, animated: true, completion: nil)
     }
+    // MARK: - 방문횟수 얼럿 스타일
+//    @objc func visitCountButtonTapped() {
+//        let alertController = UIAlertController(title: "방문 횟수 선택", message: "\n\n\n\n\n\n\n\n\n\n\n\n", preferredStyle: .actionSheet)
+//        let pickerView = UIPickerView()
+//        pickerView.delegate = self
+//        pickerView.dataSource = self
+//
+//        let pickerViewSize = pickerView.sizeThatFits(CGSize.zero)
+//        pickerView.frame = CGRect(x: (alertController.view.bounds.size.width - pickerViewSize.width) * 0.5, y: 20, width:pickerViewSize.width, height: pickerViewSize.height)
+//        alertController.view.addSubview(pickerView)
+//
+//        let okAction = UIAlertAction(title: "저장", style: .default) { _ in
+//            let selectedRow = pickerView.selectedRow(inComponent: 0)
+//            self.reviewView.visitCountButton.setTitle("   \(selectedRow + 1)", for: .normal)
+//        }
+//        alertController.addAction(okAction)
+//
+//        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+//        alertController.addAction(cancelAction)
+//
+//        self.present(alertController, animated: true, completion: nil)
+//    }
     
-    @objc func visitCountButtonTapped() {
-        let alertController = UIAlertController(title: "방문 횟수 선택", message: "\n\n\n\n\n\n\n\n\n\n\n\n", preferredStyle: .actionSheet)
-        let pickerView = UIPickerView()
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        
-        let pickerViewSize = pickerView.sizeThatFits(CGSize.zero)
-        pickerView.frame = CGRect(x: (alertController.view.bounds.size.width - pickerViewSize.width) * 0.5, y: 20, width:pickerViewSize.width, height: pickerViewSize.height)
-        alertController.view.addSubview(pickerView)
-        
-        let okAction = UIAlertAction(title: "저장", style: .default) { _ in
-            let selectedRow = pickerView.selectedRow(inComponent: 0)
-            self.reviewView.visitCountButton.setTitle("   \(selectedRow + 1)", for: .normal)
-        }
-        alertController.addAction(okAction)
-        
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        alertController.addAction(cancelAction)
-        
-        self.present(alertController, animated: true, completion: nil)
+    @objc func stepperValueChanged(sender: UIStepper) {
+        reviewView.visitCountLabel.text = "Visits:   \(Int(sender.value))"
     }
+
     
     // MARK: - 웹뷰 버튼 함수
     @objc func openWebView() {
@@ -195,9 +206,30 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         dismiss(animated: true, completion: nil)
     }
     
+    // MARK: - 키보드 관련 함수
     @objc func dismissKeyboard() {
         self.view.endEditing(true)
     }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height / 3 // Adjust this value as needed
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     @objc func cancelButtonTapped(){
         dismiss(animated: true, completion: nil)
     }
@@ -246,11 +278,21 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         let imageView2Data = repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView2.image ?? UIImage())
         
         //방문횟수
-        let visitCountText = reviewView.visitCountButton.title(for: .normal)
-        guard let visitCount = Int(visitCountText?.trimmingCharacters(in: .whitespaces) ?? "") else {
-            showAlert(message: "방문 횟수를 입력해주세요!")
-            return
-        }
+//        let visitCountText = reviewView.visitCountButton.title(for: .normal)
+//        guard let visitCount = Int(visitCountText?.trimmingCharacters(in: .whitespaces) ?? "") else {
+//            showAlert(message: "방문 횟수를 입력해주세요!")
+//            return
+//        }
+        
+//        let visitCountText = reviewView.visitCountButton.title(for: .normal)
+//        let visitCountText = "Visits:   \(Int(reviewView.visitCountStepper.value))"
+//           guard let visitCount = Int(visitCountText) else {
+//               showAlert(message: "방문 횟수를 입력해주세요!")
+//               return
+//           }
+        let visitCount = Int(reviewView.visitCountStepper.value)
+
+
         
         // 7. ReviewTable 객체를 생성.
         let review = ReviewTable(storeName: storeName, internetSettle: internetSettle, starCount: starCount, rateNumber: rateNumber, reviewDate: reviewDate, memo: memo, imageView1URL: imageView1Data, imageView2URL: imageView2Data, latitude: placeLatitude, longitude: placeLongitude, visitCount: visitCount)

@@ -39,18 +39,22 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = UIColor(named: "logoBack")
+        
         makeNavigationUI()
         configureTableView()
         configureDataSource()
         applyInitialSnapshots()
+        addLogoToView()
         
         let initialSnapshot = createInitialSnapshot()
         dataSource.apply(initialSnapshot, animatingDifferences: true)
     }
-    
+    // MARK: - 네비게이션UI
     func makeNavigationUI() {
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = UIColor(cgColor: .init(red: 0.333, green: 0.333, blue: 0.333, alpha: 1))
+        appearance.backgroundColor = UIColor(named: "TabBar")//UIColor(cgColor: .init(red: 0.333, green: 0.333, blue: 0.333, alpha: 1))
         
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
@@ -72,7 +76,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     private func configureTableView() {
         tableView = UITableView(frame: .zero, style: .grouped)
         tableView.delegate = self
-        tableView.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        tableView.backgroundColor = UIColor(named: "settingBack") //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
@@ -80,8 +84,20 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(30)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(100)
             make.left.right.bottom.equalToSuperview()
+        }
+    }
+    
+    private func addLogoToView() {
+        let logo = UIImage(named: "투명아이콘")
+        let imageView2 = UIImageView(image: logo)
+        view.addSubview(imageView2)
+
+        imageView2.snp.makeConstraints { make in
+            make.top.equalTo(view).offset(-25)
+            make.centerX.equalTo(view)
+            make.size.equalTo(150)
         }
     }
     
@@ -90,7 +106,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
         dataSource = UITableViewDiffableDataSource<Section, String>(tableView: tableView) { (tableView, indexPath, item) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             cell.textLabel?.text = item
-            cell.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+            cell.backgroundColor = UIColor(named: "settingCell")
             cell.textLabel?.textColor = .white
             
             if item == self.selectedTheme {
@@ -139,7 +155,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        headerView.backgroundColor = UIColor(named: "White")//UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        headerView.backgroundColor = UIColor(named: "settingTableHeader")//UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         
         let titleLabel = UILabel()
         titleLabel.text = Section(rawValue: section)?.title

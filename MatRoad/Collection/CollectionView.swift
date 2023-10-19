@@ -11,7 +11,7 @@ import SnapKit
 class CollectionView: BaseView {
     lazy var searchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "추가한 맛집 검색"
+        searchBar.placeholder = "맛집 키워드 검색"
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
         textField.font = UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
         }
@@ -27,6 +27,7 @@ class CollectionView: BaseView {
 
         if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
             cancelButton.setTitle("취소", for: .normal)
+            cancelButton.setTitleColor(UIColor(named: "cancelButton"), for: .highlighted)
             cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
             cancelButton.tintColor = .white
         }
@@ -45,9 +46,9 @@ class CollectionView: BaseView {
         return button
     }()
     
-    let latestButton: UIButton = {
+    let visitsButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("최신순", for: .normal)
+        button.setTitle("방문순", for: .normal)
         button.setTitleColor(.gray, for: .normal)
         button.backgroundColor = .clear
         button.layer.borderWidth = 1
@@ -57,9 +58,9 @@ class CollectionView: BaseView {
         return button
     }()
     
-    let pastButton: UIButton = {
+    let timeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("과거순", for: .normal)
+        button.setTitle("시간순", for: .normal)
         button.setTitleColor(.gray, for: .normal)
         button.backgroundColor = .clear
         button.layer.borderWidth = 1
@@ -75,7 +76,7 @@ class CollectionView: BaseView {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
         view.collectionViewLayout = collectionViewLayout()
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))//UIColor(named: "White")
+        view.backgroundColor = UIColor(named: "White")//UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         return view
     }()
     
@@ -83,8 +84,8 @@ class CollectionView: BaseView {
     override func configureView() {
         addSubview(collectionView)
         addSubview(ratingButton)
-        addSubview(latestButton)
-        addSubview(pastButton)
+        addSubview(visitsButton)
+        addSubview(timeButton)
         addSubview(searchBar)
     }
     
@@ -97,7 +98,7 @@ class CollectionView: BaseView {
         searchBar.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.left.equalToSuperview()
-            make.right.equalTo(pastButton.snp.left).offset(-15)
+            make.right.equalTo(timeButton.snp.left).offset(-15)
             make.height.equalTo(45)
         }
         ratingButton.snp.makeConstraints { make in
@@ -106,15 +107,15 @@ class CollectionView: BaseView {
             make.width.equalTo(50)
             make.height.equalTo(24)
         }
-        latestButton.snp.makeConstraints { make in
+        visitsButton.snp.makeConstraints { make in
             make.top.equalTo(10)
             make.right.equalTo(ratingButton.snp.left).offset(-13)
             make.width.equalTo(50)
             make.height.equalTo(24)
         }
-        pastButton.snp.makeConstraints { make in
+        timeButton.snp.makeConstraints { make in
             make.top.equalTo(10)
-            make.right.equalTo(latestButton.snp.left).offset(-13)
+            make.right.equalTo(visitsButton.snp.left).offset(-13)
             make.width.equalTo(50)
             make.height.equalTo(24)
         }

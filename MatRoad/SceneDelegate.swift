@@ -16,8 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        let savedTheme = UserDefaults.standard.string(forKey: "appTheme") ?? "light"
-        window?.overrideUserInterfaceStyle = savedTheme == "light" ? .light : .dark
+        
+        //써도 되고 안써도 됨
+//        let savedTheme = UserDefaults.standard.string(forKey: "appTheme") ?? "light"
+//        window?.overrideUserInterfaceStyle = savedTheme == "light" ? .light : .dark
  
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
@@ -31,6 +33,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vc2 = UINavigationController(rootViewController: MapViewController())
         let vc3 = UINavigationController(rootViewController: SettingsViewController())
         
+        // ...
+
+        // 탭바 설정 부분 아래에 추가
+//        if let navigationController = vc1 as? UINavigationController {
+//            navigationController.navigationBar.overrideUserInterfaceStyle = .light
+//        }
+//        if let navigationController = vc2 as? UINavigationController {
+//            navigationController.navigationBar.overrideUserInterfaceStyle = .light
+//        }
+//        if let navigationController = vc3 as? UINavigationController {
+//            navigationController.navigationBar.overrideUserInterfaceStyle = .light
+//        }
+//
+//        tabBarVC.tabBar.overrideUserInterfaceStyle = .light
+
+        // ...
+
+        
         
         //vc1.title = "검색"
         //vc2.title = "좋아요"
@@ -38,12 +58,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         tabBarVC.setViewControllers([vc1, vc2, vc3], animated: false)
         tabBarVC.modalPresentationStyle = .fullScreen
-        tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)) //UIColor(named: "TabBar")
-        tabBarVC.tabBar.tintColor = UIColor.white
+        tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.8, green: 0.8, blue: 0.8, alpha: 1))
+        tabBarVC.tabBar.tintColor = UIColor(named: "gold")
         tabBarVC.tabBar.unselectedItemTintColor = UIColor.gray
-        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)) //UIColor(named: "TabBar")
         tabBarVC.tabBar.isTranslucent = false
+        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.8, green: 0.8, blue: 0.8, alpha: 1))//UIColor(named: "TabBarTintColor") //⭐️
         //tabBarVC.tabBarItem.title = "검색"
+        
+        
 
         
         guard let items = tabBarVC.tabBar.items else { return }
@@ -51,10 +73,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         items[1].image = UIImage(systemName: "map")
         items[2].image = UIImage(systemName: "gearshape")
         
-        let bottomInset: CGFloat = 6
         for item in items {
-            item.imageInsets = UIEdgeInsets(top: bottomInset, left: 0, bottom: -bottomInset, right: 0)
+            item.title = nil
+            item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         }
+
         
         window?.rootViewController = tabBarVC
         window?.makeKeyAndVisible()
