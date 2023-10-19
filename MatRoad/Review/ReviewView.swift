@@ -189,27 +189,29 @@ class ReviewView: BaseView {
     }()
     let cancelButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.darkGray, for: .normal)
+        button.setTitleColor(.gray, for: .normal)
         button.setTitle("취소", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .center
-        button.layer.borderColor = UIColor.darkGray.cgColor
+        button.layer.borderColor = UIColor.gray.cgColor
         button.layer.borderWidth = 0.5
         button.layer.cornerRadius = 16.5
         button.layer.cornerCurve = .continuous
+        button.layer.borderWidth = 2.0
         return button
     }()
     let saveButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.darkGray, for: .normal)
+        button.setTitleColor(.gray, for: .normal)
         button.setTitle("저장", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .center
-        button.layer.borderColor = UIColor.darkGray.cgColor
+        button.layer.borderColor = UIColor.gray.cgColor
         button.layer.borderWidth = 0.5
         button.clipsToBounds = true
         button.layer.cornerRadius = 16.5
         button.layer.cornerCurve = .continuous
+        button.layer.borderWidth = 2.0
         return button
     }()
     let handleView: UIView = {
@@ -377,7 +379,7 @@ class ReviewView: BaseView {
         cancelButton.snp.makeConstraints { make in
             make.top.equalTo(memoTextView.snp.bottom).offset(10)
             make.left.equalTo(alertView.snp.left).inset(15)
-            make.bottom.equalTo(alertView.snp.bottom).offset(-20)
+            make.bottom.equalTo(alertView.snp.bottom).offset(-60)
             make.width.equalTo(alertView).multipliedBy(0.45)
             make.height.equalTo(40)
         }
@@ -385,7 +387,7 @@ class ReviewView: BaseView {
         saveButton.snp.makeConstraints { make in
             make.top.equalTo(memoTextView.snp.bottom).offset(10)
             make.right.equalTo(alertView.snp.right).inset(15)
-            make.bottom.equalTo(alertView.snp.bottom).offset(-20)
+            make.bottom.equalTo(alertView.snp.bottom).offset(-60)
             make.width.equalTo(alertView).multipliedBy(0.45)
             make.height.equalTo(40)
         }

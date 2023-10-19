@@ -43,7 +43,7 @@ class MainViewController: BaseViewController {
     var selectedReview: ReviewTable?
     var isAllSelected: Bool = false
     var selectedSideMenuIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
-    var isAscendingOrder: Bool = false //별점 내림차순 오름차순
+    var isAscendingOrder: Bool = true //별점 내림차순 오름차순
     
     override func loadView() {
         self.view = mainView
@@ -56,7 +56,7 @@ class MainViewController: BaseViewController {
         view.backgroundColor = UIColor(named: "White") //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         
         // reviewItems 초기화
-        reviewItems = repository.fetch()
+        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
         makeNavigationUI()
         setupSideMenu()
         mainView.collectionView.delegate = self
@@ -92,6 +92,8 @@ class MainViewController: BaseViewController {
         
         print(realm.configuration.fileURL)
         
+        mainView.timeButton.setTitleColor(.white, for: .normal)
+        mainView.timeButton.layer.borderColor = UIColor.white.cgColor
     }
     
     @objc func refreshData() {

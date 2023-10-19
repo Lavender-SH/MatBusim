@@ -9,17 +9,18 @@ import UIKit
 import MapKit
 import RealmSwift
 import Kingfisher
+import SnapKit
 
 class ImageAnnotationView: MKAnnotationView {
-
+    
     private var imageView: UIImageView!
-
+    
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        self.frame = CGRect(x: 0, y: 0, width: 55, height: 55)
+        self.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         self.layer.cornerRadius = 10
         self.clipsToBounds = true
-
+        
         imageView = UIImageView(frame: self.bounds)
         imageView.contentMode = .scaleAspectFill
         self.addSubview(imageView)
@@ -34,31 +35,64 @@ class ImageAnnotationView: MKAnnotationView {
     }
 }
 
+class customView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = .clear
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class ImageClusterView: MKAnnotationView {
     private var imageView: UIImageView!
     private var countLabel: UILabel!
-
+    
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        self.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
-        self.layer.cornerRadius = 10
+        self.frame = CGRect(x: 0, y: 0, width: 58, height: 58)
+        self.backgroundColor = .clear
         self.clipsToBounds = true
-
-        imageView = UIImageView(frame: self.bounds)
+        
+        let aView = customView(frame: self.bounds)
+        self.addSubview(aView)
+        
+        imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        self.addSubview(imageView)
-
-        countLabel = UILabel(frame: self.bounds)
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
+        aView.addSubview(imageView)
+        
+        imageView.snp.makeConstraints { make in
+            make.left.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.width.equalTo(50)
+            make.height.equalTo(50)
+        }
+        
+        countLabel = UILabel()
         countLabel.textAlignment = .center
         countLabel.textColor = .white
-        countLabel.font = UIFont.boldSystemFont(ofSize: 19)
-        self.addSubview(countLabel)
+        countLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        countLabel.backgroundColor = UIColor(named: "countGold")
+        countLabel.layer.cornerRadius = 10
+        countLabel.clipsToBounds = true
+        aView.addSubview(countLabel)
+        
+        countLabel.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(2)
+            make.top.equalToSuperview().inset(2)
+            make.width.equalTo(20)
+            make.height.equalTo(20)
+        }
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override var annotation: MKAnnotation? {
         willSet {
             if let cluster = newValue as? MKClusterAnnotation {
@@ -72,6 +106,3 @@ class ImageClusterView: MKAnnotationView {
         }
     }
 }
-
-
-
