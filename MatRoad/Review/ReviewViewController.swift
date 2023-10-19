@@ -85,6 +85,11 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         let tapGesture3 = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture3)
+        
+        let storeNameTapGesture = UITapGestureRecognizer(target: self, action: #selector(openWebView))
+        reviewView.storeNameLabel.isUserInteractionEnabled = true
+        reviewView.storeNameLabel.addGestureRecognizer(storeNameTapGesture)
+
         //메모에 입력되면 버튼의 색을 바꾸기 위해 델리게이트 설정
         reviewView.memoTextView.delegate = self
         

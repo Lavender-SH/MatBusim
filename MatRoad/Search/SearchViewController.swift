@@ -156,8 +156,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         let webviewVC = WebViewController(url: url)
         webviewVC.urlToLoad = url // URL 타입으로 전달
         
-        //present(reviewVC, animated: true, completion: nil)
-        navigationController?.pushViewController(reviewVC, animated: true)
+        present(reviewVC, animated: true, completion: nil)
+        
+        //navigationController?.pushViewController(reviewVC, animated: true)
     }
     
 }

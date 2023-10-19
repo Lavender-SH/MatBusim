@@ -333,19 +333,23 @@ extension MapViewController {
 extension MapViewController: UISearchBarDelegate {
     func setupSearchBar() {
         searchBar.delegate = self
-        searchBar.placeholder = "맛집을 검색하면 지도가 확대됩니다!"
-        searchBar.tintColor = .clear
-        searchBar.backgroundColor = .clear
+        searchBar.placeholder = "맛집의 이름과 메모의 내용을 검색하면 지도가 확대됩니다!"
+        searchBar.tintColor = .white
+        searchBar.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.8)
         searchBar.searchBarStyle = .minimal
-        searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
+        //searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
+        searchBar.layer.cornerRadius = 10
+        searchBar.layer.cornerCurve = .continuous
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.font = UIFont.systemFont(ofSize: 13) //플레이스 홀더 글씨 크기
         }
         view.addSubview(searchBar)
         
         searchBar.snp.makeConstraints { make in
-            make.top.equalTo(53)
-            make.horizontalEdges.equalToSuperview()
+            make.top.equalTo(50)
+            //make.horizontalEdges.equalToSuperview()
+            make.right.equalToSuperview().inset(10)
+            make.left.equalToSuperview().inset(10)
             make.height.equalTo(44)
             
         }

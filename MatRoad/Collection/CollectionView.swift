@@ -27,8 +27,8 @@ class CollectionView: BaseView {
 
         if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
             cancelButton.setTitle("취소", for: .normal)
-            cancelButton.setTitleColor(UIColor(named: "cancelButton"), for: .highlighted)
-            cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            cancelButton.setTitleColor(UIColor(named: "cancelButton"), for: .normal)
+            cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
             cancelButton.tintColor = .white
         }
         return searchBar
@@ -93,12 +93,13 @@ class CollectionView: BaseView {
         collectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
             make.top.equalTo(ratingButton.snp.bottom).offset(13)
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
         }
         searchBar.snp.makeConstraints { make in
             make.top.equalToSuperview()
+            
             make.left.equalToSuperview()
-            make.right.equalTo(timeButton.snp.left).offset(-15)
+            make.right.equalTo(timeButton.snp.left).offset(-5)
             make.height.equalTo(45)
         }
         ratingButton.snp.makeConstraints { make in

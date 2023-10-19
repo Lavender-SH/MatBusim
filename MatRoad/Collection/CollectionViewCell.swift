@@ -66,6 +66,7 @@ class CollectionViewCell: BaseCollectionViewCell {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "checkmark.circle.fill")
         imageView.tintColor = .red
+        //imageView.backgroundColor = .gray
         imageView.isHidden = true
         return imageView
     }()
@@ -98,13 +99,13 @@ class CollectionViewCell: BaseCollectionViewCell {
         }
         dateLabel.snp.makeConstraints { make in
             make.bottom.equalTo(titleLabel.snp.top).offset(2)
-            make.leading.equalTo(7)
+            make.leading.equalTo(10)
             
             make.height.equalTo(20)
         }
         titleLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(imageView.snp.bottom).inset(0)
-            make.leading.equalTo(7)
+            make.bottom.equalTo(imageView.snp.bottom).inset(3)
+            make.leading.equalTo(10)
             make.width.equalToSuperview()
             
         }

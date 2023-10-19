@@ -34,7 +34,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vc3 = UINavigationController(rootViewController: SettingsViewController())
         
         // ...
-
+        window?.backgroundColor = UIColor(named: "White")
+  
         // 탭바 설정 부분 아래에 추가
 //        if let navigationController = vc1 as? UINavigationController {
 //            navigationController.navigationBar.overrideUserInterfaceStyle = .light
@@ -58,12 +59,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         tabBarVC.setViewControllers([vc1, vc2, vc3], animated: false)
         tabBarVC.modalPresentationStyle = .fullScreen
-        tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.8, green: 0.8, blue: 0.8, alpha: 1))
+        //tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.8, green: 0.8, blue: 0.8, alpha: 1))
         tabBarVC.tabBar.tintColor = UIColor(named: "gold")
         tabBarVC.tabBar.unselectedItemTintColor = UIColor.gray
         tabBarVC.tabBar.isTranslucent = false
-        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.8, green: 0.8, blue: 0.8, alpha: 1))//UIColor(named: "TabBarTintColor") //⭐️
-        //tabBarVC.tabBarItem.title = "검색"
+        tabBarVC.tabBar.barTintColor = UIColor(cgColor: .init(red: 0.8, green: 0.8, blue: 0.8, alpha: 1))
+        //tabBarVC.tabBar.layer.cornerRadius = 40
+        //UITabBar.appearance().clipsToBounds = true
         
         
 

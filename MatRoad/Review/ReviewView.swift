@@ -185,6 +185,7 @@ class ReviewView: BaseView {
         textView.clipsToBounds = true
         textView.textColor = .white
         textView.font = UIFont.systemFont(ofSize: 14)
+        textView.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
         return textView
     }()
     let cancelButton: UIButton = {
@@ -364,7 +365,7 @@ class ReviewView: BaseView {
 
         memoLabel.snp.makeConstraints { make in
             make.top.equalTo(dateLabel.snp.bottom).offset(10)
-            make.left.equalTo(alertView.snp.left).inset(10)
+            make.left.equalTo(alertView.snp.left).inset(13)
             make.width.equalTo(60)
             make.height.equalTo(30)
         }
