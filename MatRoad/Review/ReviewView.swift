@@ -13,7 +13,7 @@ class ReviewView: BaseView {
     
     lazy var alertView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.03, green: 0.03, blue: 0.03, alpha: 0.8))
+        view.backgroundColor = UIColor(named: "reviewBack")
         view.layer.cornerRadius = 16.5
         view.layer.cornerCurve = .continuous
         return view
@@ -24,7 +24,7 @@ class ReviewView: BaseView {
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
-        view.backgroundColor = .lightGray
+        view.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
         view.image = UIImage(named: "food1")
         view.contentMode = .scaleAspectFill
         return view
@@ -35,7 +35,7 @@ class ReviewView: BaseView {
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
-        view.backgroundColor = .lightGray
+        view.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
         view.image = UIImage(named: "food2")
         view.contentMode = .scaleAspectFill
         return view
@@ -43,14 +43,14 @@ class ReviewView: BaseView {
     
     let homeImage = {
         let view = UIImageView()
-        view.tintColor = .white
+        view.tintColor = UIColor(named: "textColor")
         view.image = UIImage(systemName: "house")
         return view
     }()
     
     let storeNameLabel = {
         let view = UILabel()
-        view.textColor = .white
+        view.textColor = UIColor(named: "textColor")
         view.font = UIFont.boldSystemFont(ofSize: 20)
         view.textAlignment = .center
         view.backgroundColor = .clear
@@ -59,13 +59,13 @@ class ReviewView: BaseView {
     
     let internetImage = {
         let view = UIImageView()
-        view.tintColor = .white
+        view.tintColor = UIColor(named: "textColor")
         view.image = UIImage(systemName: "globe")
         return view
     }()
     let internetButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "textColor"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         button.contentHorizontalAlignment = .center
         return button
@@ -73,7 +73,7 @@ class ReviewView: BaseView {
 
     let rateLabel = {
         let view = UILabel()
-        view.textColor = .white
+        view.textColor = UIColor(named: "textColor")
         view.font = UIFont.boldSystemFont(ofSize: 18)
         view.text = "Rate"
         view.backgroundColor = .clear
@@ -111,7 +111,7 @@ class ReviewView: BaseView {
     
     let rateNumberLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = UIColor(named: "textColor")
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textAlignment = .center
         label.text = "0.0"
@@ -121,7 +121,7 @@ class ReviewView: BaseView {
     
     let dateLabel = {
         let view = UILabel()
-        view.textColor = .white
+        view.textColor = UIColor(named: "textColor")
         view.font = UIFont.boldSystemFont(ofSize: 18)
         view.text = "Date"
         view.backgroundColor = .clear
@@ -134,17 +134,17 @@ class ReviewView: BaseView {
         button.setTitle("  방문한 날짜를 입력해보세요.", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         button.titleLabel?.textAlignment = .left
-            button.contentHorizontalAlignment = .left
-        button.setTitleColor(.white, for: .normal)
+        button.contentHorizontalAlignment = .left
+        button.setTitleColor(UIColor(named: "textColor"), for: .normal)
         let calendarImage = UIImage(systemName: "calendar")
-            button.setImage(calendarImage, for: .normal)
-            button.tintColor = .white
+        button.setImage(calendarImage, for: .normal)
+        button.tintColor = UIColor(named: "검흰")
         return button
     }()
     
     let visitCountLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = UIColor(named: "textColor")
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.text = "Visits:    1"
         label.backgroundColor = .clear
@@ -174,12 +174,14 @@ class ReviewView: BaseView {
         stepper.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 0.7)
         stepper.layer.cornerRadius = 10
         stepper.layer.cornerCurve = .continuous
+        stepper.tintColor = UIColor(named: "textColor")
+        stepper.backgroundColor = UIColor(named: "stepperBack")
         return stepper
     }()
 
     let memoLabel = {
         let view = UILabel()
-        view.textColor = .white
+        view.textColor = UIColor(named: "textColor")
         view.font = UIFont.boldSystemFont(ofSize: 18)
         view.text = "Memo"
         view.backgroundColor = .clear
@@ -190,45 +192,43 @@ class ReviewView: BaseView {
     let memoTextView: UITextView = {
         let textView = UITextView()
         textView.layer.borderColor = UIColor.gray.cgColor
-        textView.backgroundColor = .black
+        textView.backgroundColor = UIColor(named: "memoBack")
         textView.layer.borderWidth = 2.0
         textView.layer.cornerRadius = 10
         textView.clipsToBounds = true
-        textView.textColor = .white
+        textView.textColor = UIColor(named: "검흰")
         textView.font = UIFont.systemFont(ofSize: 14)
         textView.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
         return textView
     }()
     let cancelButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.gray, for: .normal)
+        button.setTitleColor(UIColor(named: "saveButton"), for: .normal)
         button.setTitle("취소", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .center
-        button.layer.borderColor = UIColor.gray.cgColor
-        button.layer.borderWidth = 0.5
+        button.layer.borderColor = UIColor(named: "saveButton")?.cgColor
         button.layer.cornerRadius = 16.5
         button.layer.cornerCurve = .continuous
-        button.layer.borderWidth = 2.0
+        button.layer.borderWidth = 1.5
         return button
     }()
     let saveButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.gray, for: .normal)
+        button.setTitleColor(UIColor(named: "saveButton"), for: .normal)
         button.setTitle("저장", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .center
-        button.layer.borderColor = UIColor.gray.cgColor
-        button.layer.borderWidth = 0.5
+        button.layer.borderColor = UIColor(named: "saveButton")?.cgColor
         button.clipsToBounds = true
         button.layer.cornerRadius = 16.5
         button.layer.cornerCurve = .continuous
-        button.layer.borderWidth = 2.0
+        button.layer.borderWidth = 1.5
         return button
     }()
     let handleView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "검흰")
         view.layer.cornerRadius = 3
         return view
     }()
@@ -412,8 +412,8 @@ class ReviewView: BaseView {
         cosmosView.settings.updateOnTouch = true
         cosmosView.settings.starSize = 38
         cosmosView.settings.starMargin = 5
-        cosmosView.settings.filledImage = UIImage(named: "matfill")
-        cosmosView.settings.emptyImage = UIImage(named: "matempty")
+        cosmosView.settings.filledImage = UIImage(named: "newFill")
+        cosmosView.settings.emptyImage = UIImage(named: "newEmpty")
         cosmosView.contentMode = .center
         cosmosView.rating = 0.0
         cosmosView.didTouchCosmos = { [weak self] _ in

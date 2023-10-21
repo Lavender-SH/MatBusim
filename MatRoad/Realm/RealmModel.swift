@@ -21,12 +21,8 @@ class ReviewTable: Object {
     @Persisted var latitude: String?  // 위도
     @Persisted var longitude: String? // 경도
     @Persisted var visitCount: Int?
-    // In ReviewTable class
-    @Persisted var albums: LinkingObjects<AlbumTable> = LinkingObjects(fromType: AlbumTable.self, property: "reviews")
 
-
-
-
+    @Persisted var album: LinkingObjects<AlbumTable> = LinkingObjects(fromType: AlbumTable.self, property: "reviews")
 
     convenience init(storeName: String, internetSettle: String, starCount: Double, rateNumber: Double, reviewDate: Date, memo: String, imageView1URL: String?, imageView2URL: String?, latitude: String?, longitude: String?, visitCount: Int?) {
         self.init()
@@ -43,13 +39,11 @@ class ReviewTable: Object {
         self.longitude = longitude
         self.visitCount = visitCount
     }
-
 }
-
 class AlbumTable: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var albumName: String
-    @Persisted var reviews: List<ReviewTable> // To-Many Relationship
+    @Persisted var reviews: List<ReviewTable> // To Many Relationship
     
     convenience init(albumName: String) {
         self.init()
@@ -57,6 +51,9 @@ class AlbumTable: Object {
     }
 }
 
+class UserTheme: Object {
+    @Persisted var selectedTheme: String
+}
 
 
 

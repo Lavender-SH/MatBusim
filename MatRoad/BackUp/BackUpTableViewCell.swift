@@ -14,20 +14,20 @@ class BackUpTableViewCell: BaseTableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.numberOfLines = 1
-        label.textColor = .white
+        label.textColor = UIColor(named: "파일그림")
         return label
     }()
     private let sizeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.numberOfLines = 1
-        label.textColor = .gray
+        label.textColor = UIColor(named: "파일그림")
         return label
     }()
     private let docImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "doc.text")
-        imageView.tintColor = .lightGray
+        imageView.tintColor = UIColor(named: "파일그림")
         return imageView
     }()
     

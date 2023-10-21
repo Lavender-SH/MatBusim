@@ -348,6 +348,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         navigationController?.popToRootViewController(animated: true)
         
         NotificationCenter.default.post(name: Notification.Name("ReviewUpdated"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("ReviewSavedFromSearch"), object: nil)
     }
     
     func showAlert(message: String) {
@@ -371,8 +372,10 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     
     func updateSaveButtonBorderColor() {
         if hasReviewChanged() {
-            reviewView.saveButton.layer.borderColor = UIColor.white.cgColor
-            reviewView.saveButton.setTitleColor(.white, for: .normal)
+            reviewView.saveButton.layer.borderColor = UIColor(named: "gold")?.cgColor
+            reviewView.saveButton.setTitleColor(UIColor(named: "gold"), for: .normal)
+            reviewView.saveButton.layer.borderWidth = 2.5
+            reviewView.saveButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 21)
         } else {
             reviewView.saveButton.layer.borderColor = UIColor.darkGray.cgColor
         }

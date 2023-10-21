@@ -23,7 +23,7 @@ class SearchTableViewCell: BaseTableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.numberOfLines = 1
-        label.textColor = .white
+        label.textColor = UIColor(named: "textColor")
         return label
     }()
     
@@ -31,7 +31,7 @@ class SearchTableViewCell: BaseTableViewCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.numberOfLines = 1
-        label.textColor = .white
+        label.textColor = UIColor(named: "textColor")
         return label
     }()
     
@@ -39,7 +39,7 @@ class SearchTableViewCell: BaseTableViewCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.numberOfLines = 1
-        label.textColor = .white
+        label.textColor = UIColor(named: "textColor")
         return label
     }()
     
@@ -47,7 +47,7 @@ class SearchTableViewCell: BaseTableViewCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.numberOfLines = 1
-        label.textColor = .white
+        label.textColor = UIColor(named: "textColor")
         return label
     }()
     

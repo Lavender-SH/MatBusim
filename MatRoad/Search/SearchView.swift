@@ -15,7 +15,7 @@ class SearchView: BaseView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.rowHeight = 70
         view.register(SearchTableViewCell.self, forCellReuseIdentifier: "SearchCell")
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+        view.backgroundColor = UIColor(named: "White")
         return view
     }()
     
@@ -23,16 +23,18 @@ class SearchView: BaseView {
         let searchBar = UISearchBar()
         searchBar.placeholder = ""
         searchBar.layer.shadowColor = UIColor.clear.cgColor
-        searchBar.showsCancelButton = true
-        searchBar.barTintColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+        //searchBar.showsCancelButton = true
+        searchBar.barTintColor = UIColor(named: "White")
         searchBar.searchTextField.textColor = .white
         searchBar.autocapitalizationType = .none
-        searchBar.placeholder = "맛집을 검색해주세요"
-        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
-            cancelButton.setTitle("취소", for: .normal)
-            cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-            cancelButton.tintColor = .white
-        }
+        searchBar.placeholder = "맛집을 검색해주세요!"
+        searchBar.searchTextField.textColor = UIColor(named: "검흰")
+//        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
+//            cancelButton.setTitle("취소", for: .normal)
+//            cancelButton.setTitleColor(UIColor(named: "cancelButton"), for: .normal)
+//            cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+//            cancelButton.tintColor = .white
+//        }
         return searchBar
     }()
     lazy var noResultsLabel: UILabel = {
@@ -55,7 +57,6 @@ class SearchView: BaseView {
     let emptyImageLabel = {
         let view = UILabel()
         view.backgroundColor = .clear
-        view.text = "+버튼을 눌러서 맛집을 등록해주세요!"
         view.textColor = .darkGray
         view.font = UIFont.systemFont(ofSize: 17)
         view.isHidden = true

@@ -24,7 +24,7 @@ class BackUpViewController: BaseViewController {
         backUpView.backupTableView.delegate = self
         backUpView.backupTableView.dataSource = self
         backUpView.backupTableView.register(BackUpTableViewCell.self, forCellReuseIdentifier: "BackUpTableViewCell")
-        view.backgroundColor = UIColor(cgColor: .init(red: 0.07, green: 0.07, blue: 0.07, alpha: 1))
+        view.backgroundColor = UIColor(named: "logoBack")
         
         backUpView.backUpButton.addTarget(self, action: #selector(backupButtonTapped), for: .touchUpInside)
         backUpView.restoreButton.addTarget(self, action: #selector(restoreButtonTapped), for: .touchUpInside)
@@ -43,7 +43,7 @@ class BackUpViewController: BaseViewController {
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.isTranslucent = false
  
-        let logo = UIImage(named: "matlogo")
+        let logo = UIImage(named: "newLogo")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
         
@@ -219,7 +219,7 @@ extension BackUpViewController: UITableViewDelegate, UITableViewDataSource {
         }
         let zipInfo = fetchZipList()[indexPath.row]
         cell.setCellData(fileName: zipInfo.name, fileSize: zipInfo.size)
-        cell.backgroundColor = UIColor(cgColor: .init(red: 0.07, green: 0.07, blue: 0.07, alpha: 1))
+        cell.backgroundColor = UIColor(named: "복구셀")
         cell.tintColor = .white
         return cell
     }

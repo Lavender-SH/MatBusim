@@ -45,7 +45,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         setupSearchBar()
         addLogoToMapView()
         setupMoveToCurrentLocationButton()
-        //checkDeviceLocationAuthorization()
+        checkDeviceLocationAuthorization()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -53,6 +53,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         NotificationCenter.default.addObserver(self, selector: #selector(reviewUpdated), name: Notification.Name("ReviewUpdated"), object: nil)
     }
     
+    //클러스트링을 유지하기 위한 결단의 칼날..
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DispatchQueue.main.async {

@@ -122,17 +122,17 @@ class ReviewTableRepository: ReviewTableRepositoryType {
     }
     
     //⭐️데이터 이동 ReviewTable -> AlbumTable
-    func addReviewToAlbum(review: ReviewTable, albumId: ObjectId) {
-        guard let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: albumId) else {
-            return
-        }
-        // Check if the review is already linked to the album
-        if !review.albums.contains(album) {
-            try! realm.write {
-                album.reviews.append(review)
-            }
-        }
-    }
+//    func addReviewToAlbum(review: ReviewTable, albumId: ObjectId) {
+//        guard let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: albumId) else {
+//            return
+//        }
+//        // Check if the review is already linked to the album
+//        if !review.albums.contains(album) {
+//            try! realm.write {
+//                album.reviews.append(review)
+//            }
+//        }
+//    }
     
     //이름으로 앨범찾기
     func fetchAlbumByName(albumName: String) -> AlbumTable? {

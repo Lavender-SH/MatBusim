@@ -16,6 +16,7 @@ class SearchViewController: BaseViewController {
     var page = 1
     var foodManager = NetworkManager.shared
     var foodItems: [Document] = []
+    deinit { NotificationCenter.default.removeObserver(self) }
     
     override func loadView() {
         self.view = searchView
@@ -23,7 +24,7 @@ class SearchViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         searchView.tableView.delegate = self
         searchView.tableView.dataSource = self
         searchView.tableView.prefetchDataSource = self
@@ -32,7 +33,10 @@ class SearchViewController: BaseViewController {
         view.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.delegate = self
         view.addGestureRecognizer(tapGesture)
+        //서치화면 -> 리뷰창 닫기 -> 메인화면으로 돌아오기
+        NotificationCenter.default.addObserver(self, selector: #selector(handleReviewSavedNotification), name: Notification.Name("ReviewSavedFromSearch"), object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -53,7 +57,7 @@ class SearchViewController: BaseViewController {
     // MARK: - 네비게이션UI
     func makeNavigationUI() {
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.9))
+        appearance.backgroundColor = UIColor(named: "Navigation")
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.shadowColor = .clear
@@ -74,6 +78,12 @@ class SearchViewController: BaseViewController {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    @objc func handleReviewSavedNotification() {
+        self.dismiss(animated: true) {
+            self.navigationController?.popToRootViewController(animated: true)
+        }
     }
 
     
@@ -128,7 +138,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         }
         let item = foodItems[indexPath.row]
         cell.configure(with: item)
-        cell.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+        cell.backgroundColor = UIColor(named: "White")
         
         return cell
     }
@@ -177,4 +187,14 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         //navigationController?.pushViewController(reviewVC, animated: true)
     }
     
+}
+
+
+extension SearchViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view is UITableViewCell || touch.view?.isDescendant(of: searchView.tableView) == true {
+            return false
+        }
+        return true
+    }
 }

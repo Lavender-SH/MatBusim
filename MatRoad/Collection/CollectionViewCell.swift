@@ -10,7 +10,15 @@ import Cosmos
 
 class CollectionViewCell: BaseCollectionViewCell {
     
-    
+    let shadowContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 3)
+        view.layer.shadowOpacity = 0.6
+        view.layer.shadowRadius = 5.0
+        return view
+    }()
     
     let imageView: UIImageView = {
         let view = UIImageView()
@@ -18,7 +26,7 @@ class CollectionViewCell: BaseCollectionViewCell {
         view.layer.cornerRadius = 16.5
         view.clipsToBounds = true
         view.backgroundColor = .clear
-
+        
         // 그라디언트 레이어 추가
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
@@ -53,7 +61,7 @@ class CollectionViewCell: BaseCollectionViewCell {
         let view = CosmosView()
         view.settings.updateOnTouch = false
         view.settings.fillMode = .precise
-        view.settings.filledImage = UIImage(named: "smallfill")
+        view.settings.filledImage = UIImage(named: "newFill")
         view.settings.emptyImage = UIImage()
         view.settings.starSize = 12 // 별의 크기 설정
         view.settings.starMargin = 1 // 별 사이의 간격 설정
@@ -80,32 +88,45 @@ class CollectionViewCell: BaseCollectionViewCell {
     
     
     override func configureView() {
-        contentView.addSubview(imageView)
+        contentView.addSubview(shadowContainerView)
+        shadowContainerView.addSubview(imageView)
+        //contentView.addSubview(imageView)
         contentView.addSubview(dateLabel)
         contentView.addSubview(titleLabel)
         contentView.addSubview(cosmosView)
         contentView.addSubview(deleteCheckmark)
         contentView.addSubview(transCheckmark)
         
+        
     }
     
     override func setConstraints() {
-        imageView.snp.makeConstraints { make in
-            //make.horizontalEdges.equalTo(contentView)
+        shadowContainerView.snp.makeConstraints { make in
             make.left.equalTo(contentView).offset(2)
             make.right.equalTo(contentView).offset(-2)
             make.top.equalTo(contentView.snp.top).inset(0)
             make.height.equalTo(180)
         }
+        imageView.snp.makeConstraints { make in
+            make.edges.equalTo(shadowContainerView) // imageView의 edges를 그림자 컨테이너 뷰에 맞춤
+        }
+        
+//        imageView.snp.makeConstraints { make in
+//            //make.horizontalEdges.equalTo(contentView)
+//            make.left.equalTo(contentView).offset(2)
+//            make.right.equalTo(contentView).offset(-2)
+//            make.top.equalTo(contentView.snp.top).inset(0)
+//            make.height.equalTo(180)
+//        }
         dateLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(titleLabel.snp.top).offset(2)
-            make.leading.equalTo(10)
+            make.bottom.equalTo(titleLabel.snp.top).offset(3)
+            make.leading.equalTo(12)
             
             make.height.equalTo(20)
         }
         titleLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(imageView.snp.bottom).inset(3)
-            make.leading.equalTo(10)
+            make.bottom.equalTo(imageView.snp.bottom).inset(4)
+            make.leading.equalTo(12)
             make.width.equalToSuperview()
             
         }
@@ -134,7 +155,7 @@ class CollectionViewCell: BaseCollectionViewCell {
             gradientLayer.frame = imageView.bounds
         }
     }
-
+    
     
 }
 

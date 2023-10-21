@@ -95,7 +95,21 @@ class MainViewController: BaseViewController {
         mainView.timeButton.setTitleColor(UIColor(named: "gold"), for: .normal)
         mainView.timeButton.layer.borderColor = UIColor(named: "gold")?.cgColor
         
+        //메인의 뷰디드로드에 선택한 테마를 전달해줘야 해결됨 sceneDelegate가 아님⭐️
+        let savedTheme = loadThemeFromRealm()
+        print(savedTheme)
+        applyTheme(savedTheme)
         
+    }
+    func loadThemeFromRealm() -> String {
+        let realm = try! Realm()
+        return realm.objects(UserTheme.self).first?.selectedTheme ?? "라이트모드"
+    }
+    
+    func applyTheme(_ theme: String) {
+        guard let window = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+        let windows = window.windows.first
+        windows?.overrideUserInterfaceStyle = theme == "라이트모드" ? .light : .dark
     }
     
     @objc func refreshData() {
@@ -123,7 +137,7 @@ class MainViewController: BaseViewController {
     // MARK: - 네비게이션UI
     func makeNavigationUI() {
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = UIColor(named: "TabBar") //UIColor(named: "TabBar")
+        appearance.backgroundColor = UIColor(named: "Navigation")
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.shadowColor = .clear
@@ -135,9 +149,9 @@ class MainViewController: BaseViewController {
         
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.app"), style: .plain, target: self, action: #selector(reviewPlusButtonTapped))
         let deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
-        let albumButton = UIBarButtonItem(image: UIImage(systemName: "tray"), style: .plain, target: self, action: #selector(albumButtonTapped))
+        let albumButton = UIBarButtonItem(image: UIImage(systemName: "photo.stack"), style: .plain, target: self, action: #selector(albumButtonTapped))
         //⭐️ 이동 ver2
-        let albumButton2 = UIBarButtonItem(image: UIImage(systemName: "repeat"), style: .plain, target: self, action: #selector(transModeButtonTapped)) //transModeButtonTapped
+        let albumButton2 = UIBarButtonItem(image: UIImage(systemName: "arrow.left.arrow.right.square"), style: .plain, target: self, action: #selector(transModeButtonTapped)) //transModeButtonTapped
         //let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         //let albumButton4 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         
@@ -145,13 +159,13 @@ class MainViewController: BaseViewController {
         navigationItem.leftBarButtonItems = [albumButton, albumButton2]//, albumButton4]
         
         
-        let logo = UIImage(named: "matlogo")
+        let logo = UIImage(named: "newLogo")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
         navigationItem.titleView = imageView
     }
     
-    
+    // MARK: - 사이드 메뉴바 세팅
     func setupSideMenu() {
         sideMenuTableViewController = UITableViewController()
         sideMenuTableViewController.tableView.delegate = self
@@ -159,29 +173,36 @@ class MainViewController: BaseViewController {
         sideMenuTableViewController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SideMenuCell")
         
         // 테이블 뷰와 셀의 배경색을 black으로 설정
-        sideMenuTableViewController.tableView.backgroundColor = UIColor(named: "slide")
+        sideMenuTableViewController.tableView.backgroundColor = UIColor(named: "TabBarTintColor")
         sideMenuTableViewController.tableView.separatorColor = .darkGray // 구분선을 흰색으로 설정
+        //sideMenuTableViewController.title = "My Album"
+                
+//        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
+//        editButton.tintColor = .white
+//        sideMenuTableViewController.navigationItem.rightBarButtonItem = editButton
         
         // 셀 구분선이 왼쪽 끝까지 보이게 설정
         sideMenuTableViewController.tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         // 네비게이션 바의 배경색을 DarkGray로 설정
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = .black
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.backgroundColor = UIColor(named: "test")
+        //appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.orange]
         appearance.shadowColor = .clear
         appearance.configureWithOpaqueBackground()
         
         sideMenuTableViewController.navigationController?.navigationBar.standardAppearance = appearance
         sideMenuTableViewController.navigationController?.navigationBar.compactAppearance = appearance
-        sideMenuTableViewController.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        //sideMenuTableViewController.navigationController?.navigationBar.scrollEdgeAppearance = appearance
         sideMenuTableViewController.navigationController?.navigationBar.tintColor = .blue
         
         
         sideMenu = SideMenuNavigationController(rootViewController: sideMenuTableViewController)
-        sideMenu?.navigationBar.barTintColor = .black //⭐️
+        sideMenu?.navigationBar.barTintColor = .black //UIColor(named: "TabBarTintColor") //⭐️
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
+        sideMenuTableViewController.edgesForExtendedLayout = [.top]
         
     }
     
@@ -329,29 +350,29 @@ class MainViewController: BaseViewController {
     }
     
     //⭐️이동 ver2
-    func moveSelectedReviewsToAlbum(album: AlbumTable) {
-        guard !selectedItemsToTranse.isEmpty else { return }
-
-        try! realm.write {
-            for review in selectedItemsToTranse {
-                // 선택한 리뷰를 선택한 앨범에 추가
-                album.reviews.append(review)
-
-                // 리뷰의 앨범 연결을 업데이트
-                if let reviewList = review.albums.first {
-                    try! realm.write {
-                        realm.delete(reviewList)
-                    }
-                }
-            }
-        }
-
-        // 선택한 리뷰 이동 모드 종료
-        endTransferMode()
-        
-        // 컬렉션 뷰 다시 로드
-        mainView.collectionView.reloadData()
-    }
+//    func moveSelectedReviewsToAlbum(album: AlbumTable) {
+//        guard !selectedItemsToTranse.isEmpty else { return }
+//
+//        try! realm.write {
+//            for review in selectedItemsToTranse {
+//                // 선택한 리뷰를 선택한 앨범에 추가
+//                album.reviews.append(review)
+//
+//                // 리뷰의 앨범 연결을 업데이트
+//                if let reviewList = review.albums.first {
+//                    try! realm.write {
+//                        realm.delete(reviewList)
+//                    }
+//                }
+//            }
+//        }
+//
+//        // 선택한 리뷰 이동 모드 종료
+//        endTransferMode()
+//
+//        // 컬렉션 뷰 다시 로드
+//        mainView.collectionView.reloadData()
+//    }
 
 
     
@@ -391,7 +412,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         //삭제할때
         cell.deleteCheckmark.isHidden = !isDeleteMode
-        cell.deleteCheckmark.tintColor = selectedItemsToDelete.contains(review) ? .orange : .lightGray
+        cell.deleteCheckmark.tintColor = selectedItemsToDelete.contains(review) ? UIColor(named: "checkColor") : .lightGray
         //이동할때 //⭐️이동 ver2
         cell.transCheckmark.isHidden = !isTransferMode
         cell.transCheckmark.tintColor = selectedItemsToTranse.contains(reviewItems[indexPath.row]) ? .blue : .lightGray
@@ -529,7 +550,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             if isTransferMode {
                 let selectedAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", albumNames[indexPath.row]).first
                 if let selectedAlbum = selectedAlbum {
-                    moveSelectedReviewsToAlbum(album: selectedAlbum)
+                    //moveSelectedReviewsToAlbum(album: selectedAlbum)
                 }
             }
 
@@ -541,14 +562,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: - 사이드메뉴바 헤더 구현
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerHeight: CGFloat = 50
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: headerHeight))
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: headerHeight)) // Adjust y-origin
         headerView.backgroundColor = .darkGray
-        
+
         let titleLabel = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.bounds.width - 60, height: headerHeight))
         titleLabel.text = "My Album"
         titleLabel.textColor = .white
         headerView.addSubview(titleLabel)
-        
+
         let editButton = UIButton(frame: CGRect(x: tableView.bounds.width - 60, y: 10, width: 50, height: 30))
         editButton.setTitle("Edit", for: .normal)
         editButton.setTitleColor(.white, for: .normal)
@@ -558,9 +579,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         editButton.clipsToBounds = true
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         headerView.addSubview(editButton)
-        
+
+        // Adjust the table view's content inset
+        tableView.contentInset = UIEdgeInsets(top: -26, left: 0, bottom: 0, right: 0)
+
         return headerView
     }
+
+
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50

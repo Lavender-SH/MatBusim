@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import MessageUI
+import RealmSwift
 
 enum Section: Int, CaseIterable {
     case theme = 0
@@ -17,7 +18,7 @@ enum Section: Int, CaseIterable {
     var title: String {
         switch self {
         case .theme: return "테마"
-        case .backupRestore: return "백업/복구"
+        case .backupRestore: return "백업/복구/공유하기"
         case .about: return "맛슐랭"
         }
     }
@@ -26,7 +27,7 @@ enum Section: Int, CaseIterable {
         switch self {
         case .theme: return ["라이트모드", "다크모드"]
         case .backupRestore: return ["백업/복구하기"]
-        case .about: return ["문의/의견", "맛슐랭 1.0 Version"]
+        case .about: return ["문의/의견", "맛슐랭 1.0.0 Version"]
         }
     }
 }
@@ -35,7 +36,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     private var tableView: UITableView!
     private var dataSource: UITableViewDiffableDataSource<Section, String>!
     private var selectedTheme: String = "라이트모드"
-    
+    var isEmailBeingSent: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,13 +49,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
         applyInitialSnapshots()
         addLogoToView()
         
+        selectedTheme = loadThemeFromRealm()
+        
         let initialSnapshot = createInitialSnapshot()
         dataSource.apply(initialSnapshot, animatingDifferences: true)
     }
     // MARK: - 네비게이션UI
     func makeNavigationUI() {
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = UIColor(named: "TabBar")//UIColor(cgColor: .init(red: 0.333, green: 0.333, blue: 0.333, alpha: 1))
+        appearance.backgroundColor = UIColor(named: "Navigation")
         
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
@@ -65,7 +68,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.isTranslucent = false
         // "matlogo" 이미지를 네비게이션 제목 타이틀에 추가
-        let logo = UIImage(named: "matlogo")
+        let logo = UIImage(named: "newLogo")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
         
@@ -116,6 +119,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
                 cell.accessoryType = .none
             }
             
+            if item == "맛슐랭 1.0.0 Version" {
+                    cell.isUserInteractionEnabled = false
+            }
+            
             return cell
         }
         
@@ -143,7 +150,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     }
     
     
-    
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         return Section.allCases.map { $0.title }
     }
@@ -155,8 +161,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        headerView.backgroundColor = UIColor(named: "settingTableHeader")//UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
-        
+        headerView.backgroundColor = UIColor(named: "settingTableHeader")
         let titleLabel = UILabel()
         titleLabel.text = Section(rawValue: section)?.title
         titleLabel.textColor = .white
@@ -213,6 +218,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
         case .theme:
             let selectedItem = dataSource.itemIdentifier(for: indexPath)
             selectedTheme = selectedItem ?? "라이트모드"
+            saveThemeToRealm(selectedTheme)
             applyTheme(selectedTheme)
             var snapshot = dataSource.snapshot()
             snapshot.reloadSections([section])
@@ -222,13 +228,37 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
                 let backUpVC = BackUpViewController()
                 navigationController?.pushViewController(backUpVC, animated: true)
             }
+            tableView.deselectRow(at: indexPath, animated: true)
         case .about:
             if indexPath.row == 0 { // "문의/의견" 항목을 선택했을 때
+                isEmailBeingSent = true
                 sendEmail()
             }
+            tableView.deselectRow(at: indexPath, animated: true)
             //default: break
         }
     }
+    // 앱을 껏다 켜도 테마를 저장하기 위해 Realm 이용
+    func saveThemeToRealm(_ theme: String) {
+        let realm = try! Realm()
+        if let userTheme = realm.objects(UserTheme.self).first {
+            try! realm.write {
+                userTheme.selectedTheme = theme
+            }
+        } else {
+            let newUserTheme = UserTheme()
+            newUserTheme.selectedTheme = theme
+            try! realm.write {
+                realm.add(newUserTheme)
+            }
+        }
+    }
+
+    func loadThemeFromRealm() -> String {
+        let realm = try! Realm()
+        return realm.objects(UserTheme.self).first?.selectedTheme ?? "라이트모드"
+    }
+
     
     // MARK: - Email
     func sendEmail() {
@@ -257,6 +287,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        isEmailBeingSent = false
         controller.dismiss(animated: true)
     }
     
@@ -265,8 +296,17 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
 // MARK: - Email Utils
 final class Utils {
     static func getAppVersion() -> String {
-        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
-    }
+            let fullVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        
+            let regexPattern = #"^(\d+\.\d+\.\d+)"#
+            if let regex = try? NSRegularExpression(pattern: regexPattern),
+               let match = regex.firstMatch(in: fullVersion, options: [], range: NSRange(location: 0, length: fullVersion.utf16.count)),
+               let range = Range(match.range(at: 1), in: fullVersion) {
+                return String(fullVersion[range])
+            }
+            
+            return fullVersion
+        }
     
     static func getBuildVersion() -> String {
         return Bundle.main.infoDictionary?["CFBundleVersion"] as! String
@@ -288,11 +328,29 @@ final class Utils {
         let device = UIDevice.current
         let selName = "_\("deviceInfo")ForKey:"
         let selector = NSSelectorFromString(selName)
-        
-        if device.responds(to: selector) { // [옵셔널 체크 실시]
-            let modelName = String(describing: device.perform(selector, with: "marketing-name").takeRetainedValue())
-            return modelName
-        }
-        return "알 수 없음"
+
+//        if device.responds(to: selector), let result = device.perform(selector, with: "marketing-name") {
+//            if let modelName = result.takeRetainedValue() as? String {
+//                return modelName
+//            }
+//        }
+        return "아이폰 기종을 적어주세요!"
     }
+    
+//    static func getDeviceModelName() -> String {
+//            let device = UIDevice.current
+//            let modelName = device.name
+//            if modelName.isEmpty {
+//                return "unknown".localized
+//            } else {
+//                return modelName
+//            }
+//        }
+
 }
+//extension String {
+//    var localized: String {
+//        return NSLocalizedString(self, comment: "")
+//    }
+//}
+

@@ -11,12 +11,12 @@ import SnapKit
 class CollectionView: BaseView {
     lazy var searchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "맛집 키워드 검색"
+        searchBar.placeholder = "  맛집 키워드 검색"
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.font = UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
         }
         searchBar.layer.shadowColor = UIColor.clear.cgColor
-        searchBar.showsCancelButton = true
+        //searchBar.showsCancelButton = true
         searchBar.tintColor = .clear
         searchBar.backgroundColor = .clear
         searchBar.searchBarStyle = .minimal // 서치바 스타일을 minimal로 설정하여 기본 배경을 제거.
@@ -24,13 +24,12 @@ class CollectionView: BaseView {
         searchBar.searchTextField.textColor = .white
         searchBar.searchTextField.font = UIFont.systemFont(ofSize: 13)
         
-        
-        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
-            cancelButton.setTitle("취소", for: .normal)
-            cancelButton.setTitleColor(UIColor(named: "cancelButton"), for: .normal)
-            cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-            cancelButton.tintColor = .white
-        }
+//        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
+//            cancelButton.setTitle("취소", for: .normal)
+//            cancelButton.setTitleColor(UIColor(named: "cancelButton"), for: .normal)
+//            cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+//            cancelButton.tintColor = .white
+//        }
         return searchBar
     }()
     
@@ -159,7 +158,7 @@ class CollectionView: BaseView {
         layout.minimumLineSpacing = 20
         layout.minimumInteritemSpacing = 5
         let size = UIScreen.main.bounds.width - 20
-        layout.itemSize = CGSize(width: size / 3, height: 195)
+        layout.itemSize = CGSize(width: size / 3, height: 192)
         //layer.cornerRadius = 30
         return layout
     }
