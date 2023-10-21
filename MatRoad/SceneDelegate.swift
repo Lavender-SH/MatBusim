@@ -18,8 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         
         //써도 되고 안써도 됨
-//        let savedTheme = UserDefaults.standard.string(forKey: "appTheme") ?? "light"
-//        window?.overrideUserInterfaceStyle = savedTheme == "light" ? .light : .dark
+        let savedTheme = UserDefaults.standard.string(forKey: "appTheme") ?? "light"
+        window?.overrideUserInterfaceStyle = savedTheme == "light" ? .light : .dark
  
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
@@ -33,7 +33,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vc2 = UINavigationController(rootViewController: MapViewController())
         let vc3 = UINavigationController(rootViewController: SettingsViewController())
         
-        // ...
         window?.backgroundColor = UIColor(named: "White")
   
         // 탭바 설정 부분 아래에 추가
@@ -49,14 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //
 //        tabBarVC.tabBar.overrideUserInterfaceStyle = .light
 
-        // ...
 
-        
-        
-        //vc1.title = "검색"
-        //vc2.title = "좋아요"
-
-        
         tabBarVC.setViewControllers([vc1, vc2, vc3], animated: false)
         tabBarVC.modalPresentationStyle = .fullScreen
         //tabBarVC.tabBar.backgroundColor = UIColor(cgColor: .init(red: 0.8, green: 0.8, blue: 0.8, alpha: 1))
@@ -69,7 +61,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
 
-        
         guard let items = tabBarVC.tabBar.items else { return }
         items[0].image = UIImage(systemName: "house")
         items[1].image = UIImage(systemName: "map")

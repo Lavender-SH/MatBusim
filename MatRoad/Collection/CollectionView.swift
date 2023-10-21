@@ -13,7 +13,7 @@ class CollectionView: BaseView {
         let searchBar = UISearchBar()
         searchBar.placeholder = "맛집 키워드 검색"
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-        textField.font = UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
+            textField.font = UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
         }
         searchBar.layer.shadowColor = UIColor.clear.cgColor
         searchBar.showsCancelButton = true
@@ -24,7 +24,7 @@ class CollectionView: BaseView {
         searchBar.searchTextField.textColor = .white
         searchBar.searchTextField.font = UIFont.systemFont(ofSize: 13)
         
-
+        
         if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
             cancelButton.setTitle("취소", for: .normal)
             cancelButton.setTitleColor(UIColor(named: "cancelButton"), for: .normal)
@@ -39,7 +39,7 @@ class CollectionView: BaseView {
         button.setTitle("별점순", for: .normal)
         button.setTitleColor(.gray, for: .normal)
         button.backgroundColor = .clear
-        button.layer.borderWidth = 1
+        button.layer.borderWidth = 2
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
@@ -51,7 +51,7 @@ class CollectionView: BaseView {
         button.setTitle("방문순", for: .normal)
         button.setTitleColor(.gray, for: .normal)
         button.backgroundColor = .clear
-        button.layer.borderWidth = 1
+        button.layer.borderWidth = 2
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
@@ -63,7 +63,7 @@ class CollectionView: BaseView {
         button.setTitle("시간순", for: .normal)
         button.setTitleColor(.gray, for: .normal)
         button.backgroundColor = .clear
-        button.layer.borderWidth = 1
+        button.layer.borderWidth = 2
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
@@ -80,6 +80,23 @@ class CollectionView: BaseView {
         return view
     }()
     
+    let emptyImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "투명아이콘")
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        return imageView
+    }()
+    
+    let emptyImageLabel = {
+        let view = UILabel()
+        view.backgroundColor = .clear
+        view.text = "+버튼을 눌러서 맛집을 등록해주세요!"
+        view.textColor = .darkGray
+        view.font = UIFont.systemFont(ofSize: 17)
+        view.isHidden = true
+        return view
+    }()
     
     override func configureView() {
         addSubview(collectionView)
@@ -87,6 +104,8 @@ class CollectionView: BaseView {
         addSubview(visitsButton)
         addSubview(timeButton)
         addSubview(searchBar)
+        addSubview(emptyImageView)
+        addSubview(emptyImageLabel)
     }
     
     override func setConstraints() {
@@ -120,10 +139,20 @@ class CollectionView: BaseView {
             make.width.equalTo(50)
             make.height.equalTo(24)
         }
+        emptyImageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(300)
+        }
+        emptyImageLabel.snp.makeConstraints { make in
+            make.top.equalTo(emptyImageView.snp.bottom).inset(50)
+            make.centerX.equalTo(emptyImageView)
+            //make.width.equalTo(300)
+        }
         
-
+        
+        
     }
-
+    
     
     private func collectionViewLayout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()

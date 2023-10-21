@@ -120,8 +120,68 @@ class ReviewTableRepository: ReviewTableRepositoryType {
     func fetchReviews(from album: AlbumTable) -> List<ReviewTable> {
         return album.reviews
     }
+    
+    //⭐️데이터 이동 ReviewTable -> AlbumTable
+    func addReviewToAlbum(review: ReviewTable, albumId: ObjectId) {
+        guard let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: albumId) else {
+            return
+        }
+        // Check if the review is already linked to the album
+        if !review.albums.contains(album) {
+            try! realm.write {
+                album.reviews.append(review)
+            }
+        }
+    }
+    
+    //이름으로 앨범찾기
+    func fetchAlbumByName(albumName: String) -> AlbumTable? {
+        return realm.objects(AlbumTable.self).filter("albumName == %@", albumName).first
+    }
+    //앨범끼리의 데이터 이동 AlbumTable -> AlbumTable
+    func moveReview(reviewId: ObjectId, fromAlbumName sourceAlbumName: String, toAlbumName targetAlbumName: String) {
+        guard let sourceAlbum = fetchAlbumByName(albumName: sourceAlbumName), let targetAlbum = fetchAlbumByName(albumName: targetAlbumName) else {
+            return
+        }
+
+        guard let review = fetchReviewById(reviewId: reviewId) else {
+            return
+        }
+
+        try! realm.write {
+            if let index = sourceAlbum.reviews.index(of: review) {
+                sourceAlbum.reviews.remove(at: index)
+                targetAlbum.reviews.append(review)
+            }
+        }
+    }
+
+
 
 
 
 }
+
+extension ReviewTableRepository {
+    // This function moves a review from ReviewTable to a specific Album in AlbumTable
+    func moveReviewToAlbum(reviewId: ObjectId, toAlbumId: ObjectId) {
+        // Fetch the review from ReviewTable using its _id
+        guard let review = fetchReviewById(reviewId: reviewId) else {
+            print("Review not found!")
+            return
+        }
+        
+        // Fetch the target album from AlbumTable using its _id
+        guard let targetAlbum = realm.object(ofType: AlbumTable.self, forPrimaryKey: toAlbumId) else {
+            print("Album not found!")
+            return
+        }
+        
+        // Associate the fetched review with the fetched album
+        try! realm.write {
+            targetAlbum.reviews.append(review)
+        }
+    }
+}
+
 

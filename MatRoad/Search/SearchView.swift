@@ -44,10 +44,30 @@ class SearchView: BaseView {
         return label
     }()
     
+    let emptyImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "투명아이콘")
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        return imageView
+    }()
+    
+    let emptyImageLabel = {
+        let view = UILabel()
+        view.backgroundColor = .clear
+        view.text = "+버튼을 눌러서 맛집을 등록해주세요!"
+        view.textColor = .darkGray
+        view.font = UIFont.systemFont(ofSize: 17)
+        view.isHidden = true
+        return view
+    }()
+    
     override func configureView() {
         addSubview(searchBar)
         addSubview(tableView)
         addSubview(noResultsLabel)
+        addSubview(emptyImageView)
+        addSubview(emptyImageLabel)
     }
     
     override func setConstraints() {
@@ -64,6 +84,17 @@ class SearchView: BaseView {
             make.center.equalToSuperview()
             make.horizontalEdges.equalToSuperview().inset(20)
         }
+        emptyImageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(300)
+        }
+        emptyImageLabel.snp.makeConstraints { make in
+            make.top.equalTo(emptyImageView.snp.bottom).inset(50)
+            make.centerX.equalTo(emptyImageView)
+            //make.width.equalTo(300)
+        }
+
+        
     }
     
 }

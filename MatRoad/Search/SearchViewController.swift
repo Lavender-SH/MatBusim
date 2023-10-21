@@ -30,6 +30,9 @@ class SearchViewController: BaseViewController {
         searchView.searchBar.delegate = self
         makeNavigationUI()
         view.backgroundColor = UIColor(cgColor: .init(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -69,6 +72,11 @@ class SearchViewController: BaseViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    
 }
 // MARK: - 확장: 서치바 관련 함수
 extension SearchViewController: UISearchBarDelegate {
@@ -102,8 +110,16 @@ extension SearchViewController: UISearchBarDelegate {
 // MARK: - 확장: 테이블뷰 관련 함수
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if foodItems.isEmpty {
+            searchView.emptyImageView.isHidden = false
+            searchView.emptyImageLabel.isHidden = false
+        } else {
+            searchView.emptyImageView.isHidden = true
+            searchView.emptyImageLabel.isHidden = true
+        }
         return foodItems.count
     }
+
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell", for: indexPath) as? SearchTableViewCell else { return UITableViewCell() }

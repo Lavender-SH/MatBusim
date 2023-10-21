@@ -21,7 +21,10 @@ class ReviewTable: Object {
     @Persisted var latitude: String?  // 위도
     @Persisted var longitude: String? // 경도
     @Persisted var visitCount: Int?
-    @Persisted var album: LinkingObjects<AlbumTable> = LinkingObjects(fromType: AlbumTable.self, property: "reviews")
+    // In ReviewTable class
+    @Persisted var albums: LinkingObjects<AlbumTable> = LinkingObjects(fromType: AlbumTable.self, property: "reviews")
+
+
 
 
 

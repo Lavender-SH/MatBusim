@@ -81,22 +81,33 @@ class ReviewView: BaseView {
         return view
     }()
     
+//    let cosmosView: CosmosView = {
+//        let view = CosmosView()
+//        view.settings.fillMode = .half // 별을 반으로 채울 수 있게 설정
+//        view.settings.updateOnTouch = true // 사용자가 탭하거나 드래그할 때 별점 업데이트
+//        view.settings.starSize = 38 // 별의 크기 설정
+//        view.settings.starMargin = 5 // 별 사이의 간격 설정
+////        view.settings.filledColor = .orange // 채워진 별의 색상 설정
+////        view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
+////        view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
+//        view.settings.filledImage = UIImage(named: "matfill")
+//        view.settings.emptyImage = UIImage(named: "matempty")
+//        view.contentMode = .center
+//        view.rating = 0.0
+//        return view
+//    }()
     
-    let cosmosView: CosmosView = {
-        let view = CosmosView()
-        view.settings.fillMode = .half // 별을 반으로 채울 수 있게 설정
-        view.settings.updateOnTouch = true // 사용자가 탭하거나 드래그할 때 별점 업데이트
-        view.settings.starSize = 38 // 별의 크기 설정
-        view.settings.starMargin = 5 // 별 사이의 간격 설정
-//        view.settings.filledColor = .orange // 채워진 별의 색상 설정
-//        view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
-//        view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
-        view.settings.filledImage = UIImage(named: "matfill")
-        view.settings.emptyImage = UIImage(named: "matempty")
-        view.contentMode = .center
-        view.rating = 0.0
-        return view
-    }()
+    //별점관련
+    let cosmosView = CosmosView()
+    var onRatingChanged: (() -> Void)?
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupCosmosView()
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    //
     
     let rateNumberLabel: UILabel = {
         let label = UILabel()
@@ -393,7 +404,23 @@ class ReviewView: BaseView {
             make.height.equalTo(40)
         }
     }
-
+    
+    
+    //별점관련 didTouchCosmos때문에 함수로 만듬
+    private func setupCosmosView() {
+        cosmosView.settings.fillMode = .half
+        cosmosView.settings.updateOnTouch = true
+        cosmosView.settings.starSize = 38
+        cosmosView.settings.starMargin = 5
+        cosmosView.settings.filledImage = UIImage(named: "matfill")
+        cosmosView.settings.emptyImage = UIImage(named: "matempty")
+        cosmosView.contentMode = .center
+        cosmosView.rating = 0.0
+        cosmosView.didTouchCosmos = { [weak self] _ in
+            self?.onRatingChanged?()
+        }
+    }
+    
     
     
     

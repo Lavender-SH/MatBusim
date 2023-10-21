@@ -23,13 +23,13 @@ class MainViewController: BaseViewController {
     var notificationToken: NotificationToken?
     //삭제
     var isDeleteMode = false
-    var selectedItemsToDelete: Set<IndexPath> = []
+    var selectedItemsToDelete: Set<ReviewTable> = []
     // 삭제 및 완료 버튼 추가
     var deleteBarButton: UIBarButtonItem!
     var doneBarButton: UIBarButtonItem!
     //이동 //⭐️이동 ver2
     var isTransferMode = false
-    var selectedItemsToTranse: Set<IndexPath> = []
+    var selectedItemsToTranse: Set<ReviewTable> = []
     // 이동 및 완료 버튼 추가 //⭐️이동 ver2
     var transBarButton: UIBarButtonItem!
     var transDoneBarButton: UIBarButtonItem!
@@ -52,7 +52,7 @@ class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+        
         view.backgroundColor = UIColor(named: "White") //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
         
         // reviewItems 초기화
@@ -92,8 +92,10 @@ class MainViewController: BaseViewController {
         
         print(realm.configuration.fileURL)
         
-        mainView.timeButton.setTitleColor(.white, for: .normal)
-        mainView.timeButton.layer.borderColor = UIColor.white.cgColor
+        mainView.timeButton.setTitleColor(UIColor(named: "gold"), for: .normal)
+        mainView.timeButton.layer.borderColor = UIColor(named: "gold")?.cgColor
+        
+        
     }
     
     @objc func refreshData() {
@@ -134,12 +136,13 @@ class MainViewController: BaseViewController {
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.app"), style: .plain, target: self, action: #selector(reviewPlusButtonTapped))
         let deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
         let albumButton = UIBarButtonItem(image: UIImage(systemName: "tray"), style: .plain, target: self, action: #selector(albumButtonTapped))
-        let albumButton2 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped)) //transModeButtonTapped
-        let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
-        let albumButton4 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
+        //⭐️ 이동 ver2
+        let albumButton2 = UIBarButtonItem(image: UIImage(systemName: "repeat"), style: .plain, target: self, action: #selector(transModeButtonTapped)) //transModeButtonTapped
+        //let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
+        //let albumButton4 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         
         navigationItem.rightBarButtonItems = [plusButton, deleteButton]
-        navigationItem.leftBarButtonItems = [albumButton, albumButton2, albumButton4]
+        navigationItem.leftBarButtonItems = [albumButton, albumButton2]//, albumButton4]
         
         
         let logo = UIImage(named: "matlogo")
@@ -228,7 +231,7 @@ class MainViewController: BaseViewController {
         }
         mainView.collectionView.reloadData()
     }
-
+    
     
     @objc func albumButtonTapped() {
         present(sideMenu!, animated: true)
@@ -255,25 +258,25 @@ class MainViewController: BaseViewController {
     @objc func ratingButtonTapped() {
         updateButtonStyles(selected: mainView.ratingButton, others: [mainView.visitsButton, mainView.timeButton])
     }
-
+    
     @objc func latestButtonTapped() {
         updateButtonStyles(selected: mainView.visitsButton, others: [mainView.ratingButton, mainView.timeButton])
     }
-
+    
     @objc func pastButtonTapped() {
         updateButtonStyles(selected: mainView.timeButton, others: [mainView.ratingButton, mainView.visitsButton])
     }
-
+    
     func updateButtonStyles(selected: UIButton, others: [UIButton]) {
-        selected.setTitleColor(.white, for: .normal)
-        selected.layer.borderColor = UIColor.white.cgColor
-
+        selected.setTitleColor(UIColor(named: "gold"), for: .normal)
+        selected.layer.borderColor = UIColor(named: "gold")?.cgColor
+        
         for button in others {
             button.setTitleColor(.gray, for: .normal)
             button.layer.borderColor = UIColor.gray.cgColor
         }
     }
-
+    
     
     @objc func cancelButtonTapped() {
         
@@ -295,34 +298,76 @@ class MainViewController: BaseViewController {
         //selectedItemsToDelete.removeAll()
         mainView.collectionView.reloadData()
     }
-
+    
     @objc func deleteSelectedItems() {
-        // 선택된 항목의 인덱스를 내림차순으로 정렬
-        let sortedIndexPaths = selectedItemsToDelete.sorted(by: >)
-        for indexPath in sortedIndexPaths {
-            let review = reviewItems[indexPath.row]
+        for review in selectedItemsToDelete {
             repository.deleteReview(review)
         }
         selectedItemsToDelete.removeAll()
         mainView.collectionView.reloadData()
     }
     
-    //⭐️이동 ver2
+//    //⭐️이동 ver2
+//    @objc func transSelectedItems() {
+//        isTransferMode = true
+//        present(sideMenu!, animated: true)
+//    }
+    
     @objc func transSelectedItems() {
+        // 이동 모드 시작
         isTransferMode = true
+        // 이동 모드에서는 완료 버튼 대신 앨범 선택 메뉴 표시
+        navigationItem.rightBarButtonItems = [transDoneBarButton]
+        mainView.collectionView.reloadData()
+        // 앨범 선택 메뉴 표시
         present(sideMenu!, animated: true)
     }
+
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("didRestoreBackup"), object: nil)
     }
+    
+    //⭐️이동 ver2
+    func moveSelectedReviewsToAlbum(album: AlbumTable) {
+        guard !selectedItemsToTranse.isEmpty else { return }
+
+        try! realm.write {
+            for review in selectedItemsToTranse {
+                // 선택한 리뷰를 선택한 앨범에 추가
+                album.reviews.append(review)
+
+                // 리뷰의 앨범 연결을 업데이트
+                if let reviewList = review.albums.first {
+                    try! realm.write {
+                        realm.delete(reviewList)
+                    }
+                }
+            }
+        }
+
+        // 선택한 리뷰 이동 모드 종료
+        endTransferMode()
+        
+        // 컬렉션 뷰 다시 로드
+        mainView.collectionView.reloadData()
+    }
+
+
     
 }
 
 // MARK: - 확장: 컬렉션뷰 관련 함수
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return selectedReview != nil ? 1 : reviewItems.count
+        if let _ = selectedReview {
+            return 1
+        } else {
+            let count = reviewItems.count
+            mainView.emptyImageView.isHidden = count != 0
+            mainView.emptyImageLabel.isHidden = count != 0 
+            return count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -346,32 +391,28 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         //삭제할때
         cell.deleteCheckmark.isHidden = !isDeleteMode
-        cell.deleteCheckmark.tintColor = selectedItemsToDelete.contains(indexPath) ? .orange : .lightGray
+        cell.deleteCheckmark.tintColor = selectedItemsToDelete.contains(review) ? .orange : .lightGray
         //이동할때 //⭐️이동 ver2
         cell.transCheckmark.isHidden = !isTransferMode
-        cell.transCheckmark.tintColor = selectedItemsToTranse.contains(indexPath) ? .blue : .lightGray
+        cell.transCheckmark.tintColor = selectedItemsToTranse.contains(reviewItems[indexPath.row]) ? .blue : .lightGray
         return cell
     }
     // MARK: - 메인화면 컬렉션뷰에서 리뷰수정하기
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-//        let review = reviewItems[indexPath.row]
-//        let reviewVC = ReviewViewController()
-//
-//        reviewVC.reviewView.visitCountStepper.value = Double(review.visitCount ?? 1)
-//        
         if isDeleteMode {
-            if selectedItemsToDelete.contains(indexPath) {
-                selectedItemsToDelete.remove(indexPath)
+            let review = reviewItems[indexPath.row]
+            if selectedItemsToDelete.contains(review) {
+                selectedItemsToDelete.remove(review)
             } else {
-                selectedItemsToDelete.insert(indexPath)
+                selectedItemsToDelete.insert(review)
             }
             collectionView.reloadItems(at: [indexPath])
         } else if isTransferMode {
-            if selectedItemsToTranse.contains(indexPath) {
-                selectedItemsToTranse.remove(indexPath)
+            if selectedItemsToTranse.contains(reviewItems[indexPath.row]) {
+                selectedItemsToTranse.remove(reviewItems[indexPath.row])
             } else {
-                selectedItemsToTranse.insert(indexPath)
+                selectedItemsToTranse.insert(reviewItems[indexPath.row])
             }
             collectionView.reloadItems(at: [indexPath])
         } else {
@@ -484,9 +525,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         
         //⭐️이동 ver2
-        if isTransferMode {
-            
-        }
+        // 이동 모드에서 앨범 선택 시 이동 메서드 호출
+            if isTransferMode {
+                let selectedAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", albumNames[indexPath.row]).first
+                if let selectedAlbum = selectedAlbum {
+                    moveSelectedReviewsToAlbum(album: selectedAlbum)
+                }
+            }
+
         
         
     }

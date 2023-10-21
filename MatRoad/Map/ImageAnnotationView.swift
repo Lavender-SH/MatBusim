@@ -23,7 +23,9 @@ class ImageAnnotationView: MKAnnotationView {
         
         imageView = UIImageView(frame: self.bounds)
         imageView.contentMode = .scaleAspectFill
+        imageView.isUserInteractionEnabled = false
         self.addSubview(imageView)
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -33,6 +35,8 @@ class ImageAnnotationView: MKAnnotationView {
     func setImage(with url: URL) {
         imageView?.kf.setImage(with: url)
     }
+    
+
 }
 
 class customView: UIView {

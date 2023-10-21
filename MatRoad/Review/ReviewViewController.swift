@@ -92,10 +92,17 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
 
         //메모에 입력되면 버튼의 색을 바꾸기 위해 델리게이트 설정
         reviewView.memoTextView.delegate = self
+        //별점이 바뀌면 버튼의 색이 바뀜
+        reviewView.onRatingChanged = { [weak self] in
+                self?.updateSaveButtonBorderColor()
+            }
+
         
         //키보드 올라가면 화면 올리기
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+
     }
     
     override func configureView() {
@@ -103,6 +110,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         reviewView.saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         reviewView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         reviewView.visitCountStepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
+        
     
     }
     
@@ -163,6 +171,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     
     @objc func stepperValueChanged(sender: UIStepper) {
         reviewView.visitCountLabel.text = "Visits:   \(Int(sender.value))"
+        updateSaveButtonBorderColor()
     }
 
     
@@ -337,6 +346,8 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         // 9. 저장이 완료
         dismiss(animated: true, completion: nil)
         navigationController?.popToRootViewController(animated: true)
+        
+        NotificationCenter.default.post(name: Notification.Name("ReviewUpdated"), object: nil)
     }
     
     func showAlert(message: String) {
@@ -347,16 +358,35 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     }
     
     //조건이 만족되면 저장버튼의 색깔을 바꿈
+//    func updateSaveButtonBorderColor() {
+//        if reviewView.cosmosView.rating > 0,
+//           reviewView.dateButton.title(for: .normal) != "  맛집을 방문한 날짜를 입력해보세요.",
+//           reviewView.memoTextView.text.count >= 1 {
+//            reviewView.saveButton.layer.borderColor = UIColor.white.cgColor
+//            reviewView.saveButton.setTitleColor(.white, for: .normal)
+//        } else {
+//            reviewView.saveButton.layer.borderColor = UIColor.darkGray.cgColor
+//        }
+//    }
+    
     func updateSaveButtonBorderColor() {
-        if reviewView.cosmosView.rating > 0,
-           reviewView.dateButton.title(for: .normal) != "  맛집을 방문한 날짜를 입력해보세요.",
-           reviewView.memoTextView.text.count >= 1 {
+        if hasReviewChanged() {
             reviewView.saveButton.layer.borderColor = UIColor.white.cgColor
             reviewView.saveButton.setTitleColor(.white, for: .normal)
         } else {
             reviewView.saveButton.layer.borderColor = UIColor.darkGray.cgColor
         }
     }
+
+    
+    func hasReviewChanged() -> Bool {
+        if reviewView.cosmosView.rating != starCount { return true }
+        if let dateTitle = reviewView.dateButton.title(for: .normal), dateTitle != "  \(reviewDate?.description ?? "")" { return true }
+        if reviewView.memoTextView.text != memo { return true }
+        if Int(reviewView.visitCountStepper.value) != visitCount { return true }
+        return false
+    }
+
     
     
     
