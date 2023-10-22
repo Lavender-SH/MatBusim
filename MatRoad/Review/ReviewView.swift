@@ -51,7 +51,8 @@ class ReviewView: BaseView {
     let storeNameLabel = {
         let view = UILabel()
         view.textColor = UIColor(named: "textColor")
-        view.font = UIFont.boldSystemFont(ofSize: 20)
+        //view.font = UIFont.boldSystemFont(ofSize: 20)
+        view.font = UIFont(name: "KCC-Ganpan", size: 20.0)
         view.textAlignment = .center
         view.backgroundColor = .clear
         return view
@@ -66,7 +67,8 @@ class ReviewView: BaseView {
     let internetButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIColor(named: "textColor"), for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+        //button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+        button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 13.0)
         button.contentHorizontalAlignment = .center
         return button
     }()
@@ -74,7 +76,8 @@ class ReviewView: BaseView {
     let rateLabel = {
         let view = UILabel()
         view.textColor = UIColor(named: "textColor")
-        view.font = UIFont.boldSystemFont(ofSize: 18)
+        //view.font = UIFont.boldSystemFont(ofSize: 18)
+        view.font = UIFont(name: "KCC-Ganpan", size: 18.0)
         view.text = "Rate"
         view.backgroundColor = .clear
         view.textAlignment = .center
@@ -112,7 +115,8 @@ class ReviewView: BaseView {
     let rateNumberLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "textColor")
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        //label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont(name: "KCC-Ganpan", size: 20.0)
         label.textAlignment = .center
         label.text = "0.0"
         return label
@@ -122,7 +126,8 @@ class ReviewView: BaseView {
     let dateLabel = {
         let view = UILabel()
         view.textColor = UIColor(named: "textColor")
-        view.font = UIFont.boldSystemFont(ofSize: 18)
+        //view.font = UIFont.boldSystemFont(ofSize: 18)
+        view.font = UIFont(name: "KCC-Ganpan", size: 18.0)
         view.text = "Date"
         view.backgroundColor = .clear
         view.textAlignment = .center
@@ -132,7 +137,7 @@ class ReviewView: BaseView {
     let dateButton: UIButton = {
         let button = UIButton()
         button.setTitle("  방문한 날짜를 입력해보세요.", for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+        button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 13.0) //UIFont.boldSystemFont(ofSize: 13)
         button.titleLabel?.textAlignment = .left
         button.contentHorizontalAlignment = .left
         button.setTitleColor(UIColor(named: "textColor"), for: .normal)
@@ -145,7 +150,7 @@ class ReviewView: BaseView {
     let visitCountLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "textColor")
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont(name: "KCC-Ganpan", size: 18.0) //UIFont.boldSystemFont(ofSize: 18)
         label.text = "Visits:    1"
         label.backgroundColor = .clear
         label.textAlignment = .center
@@ -182,7 +187,8 @@ class ReviewView: BaseView {
     let memoLabel = {
         let view = UILabel()
         view.textColor = UIColor(named: "textColor")
-        view.font = UIFont.boldSystemFont(ofSize: 18)
+        view.font = UIFont(name: "KCC-Ganpan", size: 18.0) //UIFont.boldSystemFont(ofSize: 18)
+        
         view.text = "Memo"
         view.backgroundColor = .clear
         view.textAlignment = .center
@@ -197,15 +203,16 @@ class ReviewView: BaseView {
         textView.layer.cornerRadius = 10
         textView.clipsToBounds = true
         textView.textColor = UIColor(named: "검흰")
-        textView.font = UIFont.systemFont(ofSize: 14)
-        textView.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
+        //textView.font = UIFont.systemFont(ofSize: 14)
+        textView.font = UIFont(name: "KCC-Ganpan", size: 14.0)
+        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         return textView
     }()
     let cancelButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIColor(named: "saveButton"), for: .normal)
         button.setTitle("취소", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 20.0)//UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .center
         button.layer.borderColor = UIColor(named: "saveButton")?.cgColor
         button.layer.cornerRadius = 16.5
@@ -217,7 +224,7 @@ class ReviewView: BaseView {
         let button = UIButton()
         button.setTitleColor(UIColor(named: "saveButton"), for: .normal)
         button.setTitle("저장", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 20.0)//UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .center
         button.layer.borderColor = UIColor(named: "saveButton")?.cgColor
         button.clipsToBounds = true
@@ -298,7 +305,7 @@ class ReviewView: BaseView {
         homeImage.snp.makeConstraints { make in
             make.top.equalTo(imageView1.snp.bottom).offset(16)
             make.left.equalTo(alertView.snp.left).inset(24)
-            make.size.equalTo(24)
+            make.size.equalTo(26)
         }
 
         storeNameLabel.snp.makeConstraints { make in
@@ -311,7 +318,7 @@ class ReviewView: BaseView {
         internetImage.snp.makeConstraints { make in
             make.top.equalTo(homeImage.snp.bottom).offset(16)
             make.left.equalTo(alertView.snp.left).inset(24)
-            make.size.equalTo(24)
+            make.size.equalTo(26)
         }
 
         internetButton.snp.makeConstraints { make in

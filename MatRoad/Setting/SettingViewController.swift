@@ -111,6 +111,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
             cell.textLabel?.text = item
             cell.backgroundColor = UIColor(named: "settingCell")
             cell.textLabel?.textColor = .white
+            cell.textLabel?.font = UIFont(name: "KCC-Ganpan", size: 14.0)
             
             if item == self.selectedTheme {
                 cell.accessoryType = .checkmark
@@ -164,6 +165,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
         headerView.backgroundColor = UIColor(named: "settingTableHeader")
         let titleLabel = UILabel()
         titleLabel.text = Section(rawValue: section)?.title
+        titleLabel.font = UIFont(name: "KCC-Ganpan", size: 16.0)
         titleLabel.textColor = .white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(titleLabel)

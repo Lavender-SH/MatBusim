@@ -40,7 +40,8 @@ class CollectionViewCell: BaseCollectionViewCell {
     let dateLabel = {
         let view = UILabel()
         view.textColor = .lightGray
-        view.font = UIFont.systemFont(ofSize: 10)
+        //view.font = UIFont.systemFont(ofSize: 10)
+        view.font = UIFont(name: "KCC-Ganpan", size: 10.0)
         view.textAlignment = .left
         view.text = ""
         return view
@@ -49,7 +50,8 @@ class CollectionViewCell: BaseCollectionViewCell {
     let titleLabel = {
         let view = UILabel()
         view.textColor = .white
-        view.font = UIFont.systemFont(ofSize: 12)
+        //view.font = UIFont.systemFont(ofSize: 12)
+        view.font = UIFont(name: "KCC-Ganpan", size: 12.0)
         view.textAlignment = .left
         view.numberOfLines = 2
         view.setContentHuggingPriority(.defaultHigh, for: .vertical)
@@ -104,7 +106,7 @@ class CollectionViewCell: BaseCollectionViewCell {
         shadowContainerView.snp.makeConstraints { make in
             make.left.equalTo(contentView).offset(2)
             make.right.equalTo(contentView).offset(-2)
-            make.top.equalTo(contentView.snp.top).inset(0)
+            make.top.equalTo(contentView.snp.top).inset(2)
             make.height.equalTo(180)
         }
         imageView.snp.makeConstraints { make in

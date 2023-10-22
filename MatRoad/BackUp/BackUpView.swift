@@ -19,7 +19,7 @@ class BackUpView: BaseView {
 
     private let backUpLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.font = UIFont(name: "KCC-Ganpan", size: 15.0)//UIFont.boldSystemFont(ofSize: 15)
         label.numberOfLines = 1
         label.textColor = .darkGray
         label.text = "백업/복구/공유하기"
@@ -33,7 +33,7 @@ class BackUpView: BaseView {
         textView.text = "생성된 백업 파일은 앱 내에서 관리되기 때문에 앱을 삭제하면 백업도 함께 사라집니다. 에어드랍, 카카오톡, 메일 등 다양한 방법으로 백업 파일을 안전하게 보관하세요. 친구, 지인의 백업파일을 받아 복구하기를 눌러 데이터를 공유할 수 있습니다. 단, 나의 기존 데이터는 사라집니다."
         //"생성된 백업 파일은 앱 내에 저장되기 때문에 앱 삭제 시\n백업 파일도 함께 삭제됩니다. \n메신저, 이메일, 클라우드 스토리지 등으로 백업 파일을 보내주세요."
         textView.textContainer.maximumNumberOfLines = 5
-        textView.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+        textView.font = UIFont(name: "KCC-Ganpan", size: 13.0)//UIFont.systemFont(ofSize: 13, weight: .heavy)
         return textView
     }()
     
@@ -54,7 +54,7 @@ class BackUpView: BaseView {
         view.layer.cornerRadius = 16.5
         view.layer.cornerCurve = .continuous
         view.layer.borderColor = UIColor.white.cgColor
-        view.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        view.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 15.0)//UIFont.boldSystemFont(ofSize: 15)
         return view
     }()
     
@@ -75,7 +75,7 @@ class BackUpView: BaseView {
         view.layer.cornerRadius = 16.5
         view.layer.cornerCurve = .continuous
         view.layer.borderColor = UIColor.white.cgColor
-        view.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        view.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 15.0)//UIFont.boldSystemFont(ofSize: 15)
         return view
     }()
 

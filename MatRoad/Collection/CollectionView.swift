@@ -13,7 +13,7 @@ class CollectionView: BaseView {
         let searchBar = UISearchBar()
         searchBar.placeholder = "  맛집 키워드 검색"
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            textField.font = UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
+            textField.font = UIFont(name: "KCC-Ganpan", size: 14.0)//UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
         }
         searchBar.layer.shadowColor = UIColor.clear.cgColor
         //searchBar.showsCancelButton = true
@@ -22,7 +22,7 @@ class CollectionView: BaseView {
         searchBar.searchBarStyle = .minimal // 서치바 스타일을 minimal로 설정하여 기본 배경을 제거.
         searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default) // 배경 이미지를 빈 이미지로 설정
         searchBar.searchTextField.textColor = .white
-        searchBar.searchTextField.font = UIFont.systemFont(ofSize: 13)
+        searchBar.searchTextField.font = UIFont(name: "KCC-Ganpan", size: 13.0)//UIFont.systemFont(ofSize: 13)
         
 //        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
 //            cancelButton.setTitle("취소", for: .normal)
@@ -41,7 +41,7 @@ class CollectionView: BaseView {
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+        button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 13.0)//UIFont.boldSystemFont(ofSize: 13)
         return button
     }()
     
@@ -53,7 +53,7 @@ class CollectionView: BaseView {
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+        button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 13.0)//UIFont.boldSystemFont(ofSize: 13)
         return button
     }()
     
@@ -65,7 +65,7 @@ class CollectionView: BaseView {
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.gray.cgColor
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+        button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 13.0)//UIFont.boldSystemFont(ofSize: 13)
         return button
     }()
     
@@ -92,7 +92,7 @@ class CollectionView: BaseView {
         view.backgroundColor = .clear
         view.text = "+버튼을 눌러서 맛집을 등록해주세요!"
         view.textColor = .darkGray
-        view.font = UIFont.systemFont(ofSize: 17)
+        view.font = UIFont(name: "KCC-Ganpan", size: 17.0)//UIFont.systemFont(ofSize: 17)
         view.isHidden = true
         return view
     }()

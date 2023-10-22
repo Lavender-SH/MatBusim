@@ -375,7 +375,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
             reviewView.saveButton.layer.borderColor = UIColor(named: "gold")?.cgColor
             reviewView.saveButton.setTitleColor(UIColor(named: "gold"), for: .normal)
             reviewView.saveButton.layer.borderWidth = 2.5
-            reviewView.saveButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 21)
+            reviewView.saveButton.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 21.0) //UIFont.boldSystemFont(ofSize: 21)
         } else {
             reviewView.saveButton.layer.borderColor = UIColor.darkGray.cgColor
         }

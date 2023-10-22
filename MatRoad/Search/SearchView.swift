@@ -58,7 +58,7 @@ class SearchView: BaseView {
         let view = UILabel()
         view.backgroundColor = .clear
         view.textColor = .darkGray
-        view.font = UIFont.systemFont(ofSize: 17)
+        view.font = UIFont(name: "KCC-Ganpan", size: 17.0)//UIFont.systemFont(ofSize: 17)
         view.isHidden = true
         return view
     }()

@@ -12,7 +12,7 @@ class BackUpTableViewCell: BaseTableViewCell {
     
     private let fileNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont(name: "KCC-Ganpan", size: 14.0)//UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.numberOfLines = 1
         label.textColor = UIColor(named: "파일그림")
         return label

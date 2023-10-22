@@ -79,7 +79,7 @@ class ImageClusterView: MKAnnotationView {
         countLabel = UILabel()
         countLabel.textAlignment = .center
         countLabel.textColor = .white
-        countLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        countLabel.font = UIFont(name: "KCC-Ganpan", size: 14.0)//UIFont.boldSystemFont(ofSize: 14)
         countLabel.backgroundColor = UIColor(named: "countGold")
         countLabel.layer.cornerRadius = 10
         countLabel.clipsToBounds = true

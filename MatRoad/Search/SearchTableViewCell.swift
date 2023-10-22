@@ -21,7 +21,7 @@ class SearchTableViewCell: BaseTableViewCell {
     
     private let placeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont(name: "KCC-Ganpan", size: 14.0)//UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.numberOfLines = 1
         label.textColor = UIColor(named: "textColor")
         return label
@@ -29,7 +29,7 @@ class SearchTableViewCell: BaseTableViewCell {
     
     private let categoryLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = UIFont(name: "KCC-Ganpan", size: 12.0)//UIFont.boldSystemFont(ofSize: 12)
         label.numberOfLines = 1
         label.textColor = UIColor(named: "textColor")
         return label
@@ -37,7 +37,7 @@ class SearchTableViewCell: BaseTableViewCell {
     
     private let roadAddressLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = UIFont(name: "KCC-Ganpan", size: 12.0)//UIFont.boldSystemFont(ofSize: 12)
         label.numberOfLines = 1
         label.textColor = UIColor(named: "textColor")
         return label
@@ -45,7 +45,7 @@ class SearchTableViewCell: BaseTableViewCell {
     
     private let phoneLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = UIFont(name: "KCC-Ganpan", size: 12.0)//UIFont.boldSystemFont(ofSize: 12)
         label.numberOfLines = 1
         label.textColor = UIColor(named: "textColor")
         return label
