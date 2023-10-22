@@ -45,6 +45,7 @@ class MainViewController: BaseViewController {
     var selectedSideMenuIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
     var isAscendingOrder: Bool = true //별점 내림차순 오름차순
     var transButton: UIBarButtonItem! //변수로 사용하기 위함 (삭제모드일때 이동버튼 누르기 막아야함)
+    var albumButton: UIBarButtonItem!
     
     override func loadView() {
         self.view = mainView
@@ -146,7 +147,7 @@ class MainViewController: BaseViewController {
         plusButton.tintColor = UIColor(named: "gold")
         let deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
         
-        let albumButton = UIBarButtonItem(image: UIImage(systemName: "photo.on.rectangle.angled"), style: .plain, target: self, action: #selector(albumButtonTapped))
+        albumButton = UIBarButtonItem(image: UIImage(systemName: "photo.on.rectangle.angled"), style: .plain, target: self, action: #selector(albumButtonTapped))
         //⭐️ 이동 ver2
         transButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.arrow.right.square"), style: .plain, target: self, action: #selector(transModeButtonTapped))
         //let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
@@ -244,7 +245,7 @@ class MainViewController: BaseViewController {
         isDeleteMode.toggle()
         if isDeleteMode {
             // 삭제 모드 시작
-            tabBarController?.tabBar.isHidden = false
+            //tabBarController?.tabBar.isHidden = false
             navigationItem.rightBarButtonItems = [deleteBarButton, doneBarButton]
             
             let alertController = UIAlertController(title: nil, message: "삭제할 데이터를 선택하고 \n삭제 버튼을 눌러주세요!", preferredStyle: .alert)
@@ -253,7 +254,7 @@ class MainViewController: BaseViewController {
             self.present(alertController, animated: true, completion: nil)
             
             transButton.isEnabled = false
-            tabBarController?.tabBar.isHidden = true
+            //tabBarController?.tabBar.isHidden = true
         } else {
             // 삭제 모드 종료
             transButton.isEnabled = true
@@ -267,7 +268,7 @@ class MainViewController: BaseViewController {
         isTransferMode.toggle()
         if isTransferMode {
             // 이동 모드 시작
-            tabBarController?.tabBar.isHidden = false
+            //tabBarController?.tabBar.isHidden = false
             navigationItem.rightBarButtonItems = [transBarButton, transDoneBarButton]
             // 현재 선택된 리뷰 항목을 이동 세트에 추가합니다.
             if let selectedIndexPaths = mainView.collectionView.indexPathsForSelectedItems {
@@ -281,10 +282,11 @@ class MainViewController: BaseViewController {
             let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
-            
-            tabBarController?.tabBar.isHidden = true
+            albumButton.isEnabled = false
+            //tabBarController?.tabBar.isHidden = true
         } else {
             // 이동 모드 종료
+            albumButton.isEnabled = true
             endTransferMode()
         }
         mainView.collectionView.reloadData()
@@ -359,7 +361,7 @@ class MainViewController: BaseViewController {
     
     @objc func endEditMode() {
         isDeleteMode = false
-        tabBarController?.tabBar.isHidden = false
+        //tabBarController?.tabBar.isHidden = false
         makeNavigationUI()
         selectedItemsToDelete.removeAll()
         transButton.isEnabled = true
@@ -368,9 +370,10 @@ class MainViewController: BaseViewController {
     //⭐️이동 ver2
     @objc func endTransferMode() {
         isTransferMode = false
-        tabBarController?.tabBar.isHidden = false
+        //tabBarController?.tabBar.isHidden = false
         makeNavigationUI()
         selectedItemsToTranse.removeAll()
+        albumButton.isEnabled = true
         mainView.collectionView.reloadData()
     }
     
@@ -395,7 +398,7 @@ class MainViewController: BaseViewController {
         
         self.present(alertController, animated: true, completion: nil)
         
-        tabBarController?.tabBar.isHidden = true
+        //tabBarController?.tabBar.isHidden = true
         
     }
     
@@ -487,6 +490,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             reviewVC.imageView2URL = review.imageView2URL
             reviewVC.visitCount = review.visitCount
             
+            reviewVC.reviewView.infoLabel.isHidden = true
+            reviewVC.reviewView.infoLabel2.isHidden = true
             present(reviewVC, animated: true, completion: nil)
         }
     }
@@ -581,17 +586,38 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         //⭐️이동 ver2
         // 이동 모드에서 앨범 선택 시 데이터 이동
+//        if isTransferMode {
+//            let targetAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", selectedAlbum).first
+//            if let targetAlbum = targetAlbum {
+//                try! realm.write {
+//                    for review in selectedItemsToTranse {
+//                        if let currentAlbum = review.album.first {
+//                            currentAlbum.reviews.remove(at: currentAlbum.reviews.index(of: review)!)
+//                        }
+//                        targetAlbum.reviews.append(review)
+//                    }
+//                }
+//                // 이동 모드 종료 및 선택 항목 초기화
+//                isTransferMode = false
+//                selectedItemsToTranse.removeAll()
+//                mainView.collectionView.reloadData()
+//                endTransferMode()
+//
+//                // 데이터 이동 완료 얼럿창 표시
+//                let alertController = UIAlertController(title: nil, message: "데이터 이동이 완료되었습니다!", preferredStyle: .alert)
+//                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+//                alertController.addAction(okAction)
+//                self.present(alertController, animated: true, completion: nil)
+//            }
+//        }
+        
+        //⭐️⭐️⭐️ 데이터 이동
         if isTransferMode {
-            let targetAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", selectedAlbum).first
-            if let targetAlbum = targetAlbum {
-                try! realm.write {
-                    for review in selectedItemsToTranse {
-                        if let currentAlbum = review.album.first {
-                            currentAlbum.reviews.remove(at: currentAlbum.reviews.index(of: review)!)
-                        }
-                        targetAlbum.reviews.append(review)
-                    }
-                }
+            let repository = ReviewTableRepository()
+            let reviewsArray = Array(selectedItemsToTranse) // Set을 Array로 변환
+            let success = repository.transferReviews(from: nil, to: selectedAlbum, reviews: reviewsArray)
+            
+            if success {
                 // 이동 모드 종료 및 선택 항목 초기화
                 isTransferMode = false
                 selectedItemsToTranse.removeAll()
@@ -599,12 +625,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                 endTransferMode()
                 
                 // 데이터 이동 완료 얼럿창 표시
-                let alertController = UIAlertController(title: nil, message: "데이터 이동이 완료되었습니다!", preferredStyle: .alert)
+                let alertController = UIAlertController(title: nil, message: "\(selectedAlbum) 앨범으로 \n데이터 이동이 완료되었습니다!", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
                 alertController.addAction(okAction)
                 self.present(alertController, animated: true, completion: nil)
             }
         }
+
         
         
     }

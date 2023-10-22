@@ -54,12 +54,19 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         reviewView.internetButton.setTitle(placeURL, for: .normal)
         reviewView.cosmosView.rating = starCount ?? 0.0
         reviewView.rateNumberLabel.text = "\(rateNumber ?? 0.0)"
-        if let date = reviewDate {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy년 MM월 dd일"
-            let dateString = formatter.string(from: date)
-            reviewView.dateButton.setTitle("  \(dateString)", for: .normal)
-        }
+//        if let date = reviewDate {
+//            let formatter = DateFormatter()
+//            formatter.dateFormat = "yyyy년 MM월 dd일"
+//            let dateString = formatter.string(from: date)
+//            reviewView.dateButton.setTitle("  \(dateString)", for: .normal)
+//        }
+        
+        let currentDate = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy년 MM월 dd일"
+        let dateString = formatter.string(from: currentDate)
+        reviewView.dateButton.setTitle("  \(dateString)", for: .normal)
+        
         reviewView.memoTextView.text = memo
         //
         if let imageUrlString1 = imageView1URL, let imageUrl1 = URL(string: imageUrlString1) {
@@ -70,7 +77,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         }
         if let visitCount = visitCount {
             //reviewView.visitCountButton.setTitle("   \(visitCount)", for: .normal)
-            reviewView.visitCountLabel.text = "방문횟수:   \(visitCount)"
+            reviewView.visitCountLabel.text = "방문횟수:  \(visitCount)"
         }
         //
         reviewView.internetButton.addTarget(self, action: #selector(openWebView), for: .touchUpInside)
@@ -124,6 +131,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         let calendar = Calendar.current
         datePicker.minimumDate = calendar.date(from: DateComponents(year: 1980, month: 1, day: 1))
         datePicker.maximumDate = Date()
+        datePicker.date = Date()
         
         let datePickerSize = datePicker.sizeThatFits(CGSize.zero)
         datePicker.frame = CGRect(x: (alertController.view.bounds.size.width - datePickerSize.width) * 0.5, y: 20, width: datePickerSize.width, height: datePickerSize.height)
@@ -170,7 +178,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
 //    }
     
     @objc func stepperValueChanged(sender: UIStepper) {
-        reviewView.visitCountLabel.text = "방문횟수:   \(Int(sender.value))"
+        reviewView.visitCountLabel.text = "방문횟수:  \(Int(sender.value))"
         updateSaveButtonBorderColor()
     }
 
@@ -204,6 +212,24 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         present(imagePickerController, animated: true, completion: nil)
     }
     
+//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+//        if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+//
+//            // 이미지 크기 조정
+//            let targetSize = CGSize(width: 500, height: 500)
+//            let scaledImage = selectedImage.scale(to: targetSize)
+//
+//            if picker.view.tag == reviewView.imageView1.tag {
+//                reviewView.imageView1.image = scaledImage
+//                reviewView.infoLabel.isHidden = true
+//            } else if picker.view.tag == reviewView.imageView2.tag {
+//                reviewView.imageView2.image = scaledImage
+//                reviewView.infoLabel2.isHidden = true
+//            }
+//        }
+//        dismiss(animated: true, completion: nil)
+//    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             
@@ -211,11 +237,37 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
             let targetSize = CGSize(width: 500, height: 500)
             let scaledImage = selectedImage.scale(to: targetSize)
             
-            if picker.view.tag == reviewView.imageView1.tag {
-                reviewView.imageView1.image = scaledImage
-            } else if picker.view.tag == reviewView.imageView2.tag {
-                reviewView.imageView2.image = scaledImage
-            }
+            // 회전 방향 선택 액션 시트 표시
+            let alertController = UIAlertController(title: "이미지 회전", message: "회전할 방향을 선택하세요.", preferredStyle: .actionSheet)
+            
+            // 원본 그대로 옵션 추가
+            alertController.addAction(UIAlertAction(title: "원본 그대로", style: .default, handler: { _ in
+                self.setImage(scaledImage!, forTag: picker.view.tag)
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "오른쪽으로 90도", style: .default, handler: { _ in
+                self.setImage(scaledImage!.rotated(by: .pi / 2)!, forTag: picker.view.tag)
+            }))
+            alertController.addAction(UIAlertAction(title: "왼쪽으로 90도", style: .default, handler: { _ in
+                self.setImage(scaledImage!.rotated(by: -.pi / 2)!, forTag: picker.view.tag)
+            }))
+            alertController.addAction(UIAlertAction(title: "180도", style: .default, handler: { _ in
+                self.setImage(scaledImage!.rotated(by: .pi)!, forTag: picker.view.tag)
+            }))
+            alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+            
+            picker.present(alertController, animated: true, completion: nil)
+        }
+    }
+
+
+    func setImage(_ image: UIImage, forTag tag: Int) {
+        if tag == reviewView.imageView1.tag {
+            reviewView.imageView1.image = image
+            reviewView.infoLabel.isHidden = true
+        } else if tag == reviewView.imageView2.tag {
+            reviewView.imageView2.image = image
+            reviewView.infoLabel2.isHidden = true
         }
         dismiss(animated: true, completion: nil)
     }
@@ -248,70 +300,32 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - 저장 ⭐️⭐️⭐️
     @objc func saveButtonTapped() {
         // 1. 입력된 정보를 가져옴.
-        guard let storeName = placeName,
-              let internetSettle = placeURL,
-              let reviewDateText = reviewView.dateButton.title(for: .normal),
-              let memo = reviewView.memoTextView.text else {
-            print("Some fields are missing!")
-            return
-        }
+        let storeName = placeName ?? ""
+        let internetSettle = placeURL ?? ""
+        let reviewDateText = reviewView.dateButton.title(for: .normal) ?? ""
+        let memo = reviewView.memoTextView.text ?? ""
         
         // 2. 별점 정보를 가져옴
         let starCount = reviewView.cosmosView.rating
-        if starCount == 0 {
-            showAlert(message: "별점을 입력해주세요!")
-            return
-        }
         let rateNumber = Double(reviewView.rateNumberLabel.text ?? "0.0") ?? 0.0
         
         // 3. 날짜 정보를 Date 형식으로 변환
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy년 MM월 dd일"
-        guard let reviewDate = formatter.date(from: reviewDateText) else {
-            showAlert(message: "날짜를 입력해주세요!")
-            return
-        }
-         
-        // 4. 이미지 유효성 검사
-        if reviewView.imageView1.image == nil {
-            showAlert(message: "이미지를 넣어주세요!")
-            return
-        }
+        let reviewDate = formatter.date(from: reviewDateText) ?? Date()
         
-        // 5. 메모 유효성 검사
-        if memo.isEmpty {
-            showAlert(message: "메모를 남겨주세요!")
-            return
-        }
+        // 4. 이미지 정보
+        let imageView1Data = reviewView.imageView1.image != nil ? repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView1.image!) : nil
+        let imageView2Data = reviewView.imageView2.image != nil ? repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView2.image!) : nil
         
-        // 6. 이미지 정보
-        let imageView1Data = repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView1.image ?? UIImage())
-        let imageView2Data = repository.saveImageToDocument(fileName: UUID().uuidString, image: reviewView.imageView2.image ?? UIImage())
-        
-        //방문횟수
-//        let visitCountText = reviewView.visitCountButton.title(for: .normal)
-//        guard let visitCount = Int(visitCountText?.trimmingCharacters(in: .whitespaces) ?? "") else {
-//            showAlert(message: "방문 횟수를 입력해주세요!")
-//            return
-//        }
-        
-//        let visitCountText = reviewView.visitCountButton.title(for: .normal)
-//        let visitCountText = "Visits:   \(Int(reviewView.visitCountStepper.value))"
-//           guard let visitCount = Int(visitCountText) else {
-//               showAlert(message: "방문 횟수를 입력해주세요!")
-//               return
-//           }
         let visitCount = Int(reviewView.visitCountStepper.value)
-
-
         
-        // 7. ReviewTable 객체를 생성.
+        // 5. ReviewTable 객체를 생성.
         let review = ReviewTable(storeName: storeName, internetSettle: internetSettle, starCount: starCount, rateNumber: rateNumber, reviewDate: reviewDate, memo: memo, imageView1URL: imageView1Data, imageView2URL: imageView2Data, latitude: placeLatitude, longitude: placeLongitude, visitCount: visitCount)
         
-        // 8. Realm에 저장.
+        // 6. Realm에 저장.
         if isEditMode, let id = selectedReviewId, let existingReview = repository.fetch().first(where: { $0._id == id }) {
             // 기존 리뷰를 수정.
             repository.updateOrSaveReview(review: review, isEditMode: true, existingReview: existingReview)
@@ -321,9 +335,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         }
         
         //새로운 앨범에 저장할 경우
-        //print("===333===", selectedAlbumId)
         if let albumId = selectedAlbumId, !isEditMode {
-            
             if let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: albumId) {
                 let newReview = ReviewTable()
                 newReview.storeName = storeName
@@ -343,13 +355,14 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
                 }
             }
         }
-        // 9. 저장이 완료
+        // 7. 저장이 완료
         dismiss(animated: true, completion: nil)
         navigationController?.popToRootViewController(animated: true)
         
         NotificationCenter.default.post(name: Notification.Name("ReviewUpdated"), object: nil)
         NotificationCenter.default.post(name: Notification.Name("ReviewSavedFromSearch"), object: nil)
     }
+
     
     func showAlert(message: String) {
         let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
@@ -425,3 +438,16 @@ extension ReviewViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 }
 
+
+
+extension UIImage {
+    func rotated(by radians: CGFloat) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        context.translateBy(x: size.width / 2, y: size.height / 2)
+        context.rotate(by: radians)
+        draw(in: CGRect(origin: CGPoint(x: -size.width / 2, y: -size.height / 2), size: size))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+}

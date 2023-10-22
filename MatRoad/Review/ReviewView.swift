@@ -20,22 +20,22 @@ class ReviewView: BaseView {
     }()
     
     let imageView1 = {
-        let view = UIImageView()
-        view.contentMode = .scaleToFill
+        //let view = UIImageView()
+        let view = GradientImageView(frame: .zero)
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
-        view.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+        view.backgroundColor = .white
         view.image = UIImage(named: "food1")
         view.contentMode = .scaleAspectFill
         return view
     }()
     
     let imageView2 = {
-        let view = UIImageView()
-        view.contentMode = .scaleToFill
+        //let view = UIImageView()
+        let view = GradientImageView(frame: .zero)
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
-        view.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+        view.backgroundColor = .white
         view.image = UIImage(named: "food2")
         view.contentMode = .scaleAspectFill
         return view
@@ -72,7 +72,7 @@ class ReviewView: BaseView {
         button.contentHorizontalAlignment = .center
         return button
     }()
-
+    
     let rateLabel = {
         let view = UILabel()
         view.textColor = UIColor(named: "textColor")
@@ -84,21 +84,21 @@ class ReviewView: BaseView {
         return view
     }()
     
-//    let cosmosView: CosmosView = {
-//        let view = CosmosView()
-//        view.settings.fillMode = .half // 별을 반으로 채울 수 있게 설정
-//        view.settings.updateOnTouch = true // 사용자가 탭하거나 드래그할 때 별점 업데이트
-//        view.settings.starSize = 38 // 별의 크기 설정
-//        view.settings.starMargin = 5 // 별 사이의 간격 설정
-////        view.settings.filledColor = .orange // 채워진 별의 색상 설정
-////        view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
-////        view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
-//        view.settings.filledImage = UIImage(named: "matfill")
-//        view.settings.emptyImage = UIImage(named: "matempty")
-//        view.contentMode = .center
-//        view.rating = 0.0
-//        return view
-//    }()
+    //    let cosmosView: CosmosView = {
+    //        let view = CosmosView()
+    //        view.settings.fillMode = .half // 별을 반으로 채울 수 있게 설정
+    //        view.settings.updateOnTouch = true // 사용자가 탭하거나 드래그할 때 별점 업데이트
+    //        view.settings.starSize = 38 // 별의 크기 설정
+    //        view.settings.starMargin = 5 // 별 사이의 간격 설정
+    ////        view.settings.filledColor = .orange // 채워진 별의 색상 설정
+    ////        view.settings.emptyBorderColor = .orange // 빈 별의 테두리 색상 설정
+    ////        view.settings.filledBorderColor = .yellow // 채워진 별의 테두리 색상 설정
+    //        view.settings.filledImage = UIImage(named: "matfill")
+    //        view.settings.emptyImage = UIImage(named: "matempty")
+    //        view.contentMode = .center
+    //        view.rating = 0.0
+    //        return view
+    //    }()
     
     //별점관련
     let cosmosView = CosmosView()
@@ -136,7 +136,7 @@ class ReviewView: BaseView {
     
     let dateButton: UIButton = {
         let button = UIButton()
-        button.setTitle("  방문한 날짜를 입력해보세요.", for: .normal)
+        //button.setTitle("  방문한 날짜를 입력해보세요.", for: .normal)
         button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 13.0) //UIFont.boldSystemFont(ofSize: 13)
         button.titleLabel?.textAlignment = .left
         button.contentHorizontalAlignment = .left
@@ -151,24 +151,24 @@ class ReviewView: BaseView {
         let label = UILabel()
         label.textColor = UIColor(named: "textColor")
         label.font = UIFont(name: "KCC-Ganpan", size: 18.0) //UIFont.boldSystemFont(ofSize: 18)
-        label.text = "방문횟수:   1"
+        label.text = "방문횟수:  1"
         label.backgroundColor = .clear
         label.textAlignment = .center
         return label
     }()
-//    얼럿스타일
-//    let visitCountButton: UIButton = {
-//        let button = UIButton()
-//        button.setTitle("   1", for: .normal)
-//        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
-//        button.titleLabel?.textAlignment = .left
-//        button.contentHorizontalAlignment = .left
-//        button.setTitleColor(.white, for: .normal)
-//        let visitImage = UIImage(systemName: "figure.run")
-//        button.setImage(visitImage, for: .normal)
-//        button.tintColor = .white
-//        return button
-//    }()
+    //    얼럿스타일
+    //    let visitCountButton: UIButton = {
+    //        let button = UIButton()
+    //        button.setTitle("   1", for: .normal)
+    //        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+    //        button.titleLabel?.textAlignment = .left
+    //        button.contentHorizontalAlignment = .left
+    //        button.setTitleColor(.white, for: .normal)
+    //        let visitImage = UIImage(systemName: "figure.run")
+    //        button.setImage(visitImage, for: .normal)
+    //        button.tintColor = .white
+    //        return button
+    //    }()
     
     let visitCountStepper: UIStepper = {
         let stepper = UIStepper()
@@ -183,7 +183,7 @@ class ReviewView: BaseView {
         stepper.backgroundColor = UIColor(named: "stepperBack")
         return stepper
     }()
-
+    
     let memoLabel = {
         let view = UILabel()
         view.textColor = UIColor(named: "textColor")
@@ -238,6 +238,29 @@ class ReviewView: BaseView {
         view.layer.cornerRadius = 3
         return view
     }()
+    let infoLabel = {
+        let view = UILabel()
+        view.text = "이미지를 눌러서 \n사진을 넣어주세요!"
+        view.numberOfLines = 2
+        view.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
+        view.font = UIFont(name: "KCC-Ganpan", size: 11.0)
+        view.backgroundColor = .clear
+        view.textAlignment = .center
+        view.isHidden = false
+        return view
+    }()
+    
+    let infoLabel2 = {
+        let view = UILabel()
+        view.text = "이미지를 눌러서 \n사진을 넣어주세요!"
+        view.numberOfLines = 2
+        view.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
+        view.font = UIFont(name: "KCC-Ganpan", size: 11.0)
+        view.backgroundColor = .clear
+        view.textAlignment = .center
+        view.isHidden = false
+        return view
+    }()
 
     override func configureView() {
         addSubview(alertView)
@@ -259,7 +282,8 @@ class ReviewView: BaseView {
         alertView.addSubview(handleView)
         alertView.addSubview(visitCountLabel)
         alertView.addSubview(visitCountStepper)
-        
+        alertView.addSubview(infoLabel)
+        alertView.addSubview(infoLabel2)
         
         cosmosView.didFinishTouchingCosmos = { [weak self] rating in
             print("User rated: \(rating)")
@@ -283,7 +307,7 @@ class ReviewView: BaseView {
             make.centerX.equalToSuperview()
             make.width.equalTo(150)
             make.height.equalTo(5)
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().inset(2)
         }
         
         imageView1.snp.makeConstraints { make in
@@ -365,7 +389,7 @@ class ReviewView: BaseView {
         visitCountLabel.snp.makeConstraints { make in
             make.centerY.equalTo(dateLabel)
             //make.left.equalTo(dateButton)
-            make.left.equalTo(alertView.snp.centerX).offset(68)
+            make.left.equalTo(alertView.snp.centerX).offset(51)
             make.width.equalTo(110)
             make.height.equalTo(40)
         }
@@ -374,7 +398,8 @@ class ReviewView: BaseView {
             make.top.equalTo(visitCountLabel.snp.bottom).offset(5)
             //make.centerX.equalTo(visitCountLabel)
             //make.left.equalTo(visitCountLabel.snp.right).offset(6)
-            make.left.equalTo(alertView.snp.centerX).offset(70)
+            make.left.equalTo(alertView.snp.centerX).offset(60)
+            
             //make.right.equalTo(alertView.snp.right).inset(30)
             make.height.equalTo(32)
             make.width.equalTo(94)
@@ -409,6 +434,16 @@ class ReviewView: BaseView {
             make.width.equalTo(alertView).multipliedBy(0.45)
             make.height.equalTo(40)
         }
+        
+        infoLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(imageView1)
+            make.bottom.equalTo(imageView1).inset(2)
+        }
+        
+        infoLabel2.snp.makeConstraints { make in
+            make.centerX.equalTo(imageView2)
+            make.bottom.equalTo(imageView2).inset(2)
+        }
     }
     
     
@@ -431,5 +466,36 @@ class ReviewView: BaseView {
     
     
 }
+
+
+class GradientImageView: UIImageView {
+    private var gradientLayer: CAGradientLayer!
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupGradientLayer()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupGradientLayer()
+    }
+
+    private func setupGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradientLayer.locations = [0.85, 1.0]
+        layer.insertSublayer(gradientLayer, at: 0)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = bounds
+    }
+}
+
+
+
+
 
 

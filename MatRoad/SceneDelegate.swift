@@ -28,18 +28,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // iOS 15.0 이상에서 동작하는 코드 스크롤에 상관없이 탭바의 색을 유지
         if #available(iOS 15.0, *) {
             let appearance = UITabBarAppearance()
-
+            
             appearance.configureWithOpaqueBackground()
             appearance.backgroundColor = UIColor(named: "TabBarTintColor")
             appearance.stackedLayoutAppearance.selected.iconColor = UIColor(named: "gold")!
             appearance.stackedLayoutAppearance.normal.iconColor = UIColor.gray
-
+            
             tabBarAppearance.scrollEdgeAppearance = appearance
             tabBarAppearance.standardAppearance = appearance
         }
-
-
-
+        
+        
+        
         
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
@@ -68,7 +68,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             item.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
             item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 20)
         }
-
+        
         
         window?.rootViewController = tabBarVC
         window?.makeKeyAndVisible()

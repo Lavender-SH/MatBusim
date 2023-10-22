@@ -97,15 +97,15 @@ class CollectionView: BaseView {
         return view
     }()
     
-//    lazy var noResultsLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "검색결과가 없습니다."
-//        label.font = UIFont(name: "KCC-Ganpan", size: 15.0)
-//        label.textColor = .white
-//        label.textAlignment = .center
-//        label.isHidden = true
-//        return label
-//    }()
+    lazy var noResultsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "검색결과가 없습니다."
+        label.font = UIFont(name: "KCC-Ganpan", size: 15.0)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
     
     override func configureView() {
         addSubview(collectionView)
