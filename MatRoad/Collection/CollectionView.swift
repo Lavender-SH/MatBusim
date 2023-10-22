@@ -13,7 +13,7 @@ class CollectionView: BaseView {
         let searchBar = UISearchBar()
         searchBar.placeholder = "  맛집 키워드 검색"
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            textField.font = UIFont(name: "KCC-Ganpan", size: 14.0)//UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
+            textField.font = UIFont(name: "KCC-Ganpan", size: 15.0)//UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
         }
         searchBar.layer.shadowColor = UIColor.clear.cgColor
         //searchBar.showsCancelButton = true
@@ -21,8 +21,8 @@ class CollectionView: BaseView {
         searchBar.backgroundColor = .clear
         searchBar.searchBarStyle = .minimal // 서치바 스타일을 minimal로 설정하여 기본 배경을 제거.
         searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default) // 배경 이미지를 빈 이미지로 설정
-        searchBar.searchTextField.textColor = .white
-        searchBar.searchTextField.font = UIFont(name: "KCC-Ganpan", size: 13.0)//UIFont.systemFont(ofSize: 13)
+        searchBar.searchTextField.textColor = UIColor(named: "textColor")
+        searchBar.searchTextField.font = UIFont(name: "KCC-Ganpan", size: 14.0)//UIFont.systemFont(ofSize: 13)
         
 //        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
 //            cancelButton.setTitle("취소", for: .normal)
@@ -97,6 +97,16 @@ class CollectionView: BaseView {
         return view
     }()
     
+//    lazy var noResultsLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "검색결과가 없습니다."
+//        label.font = UIFont(name: "KCC-Ganpan", size: 15.0)
+//        label.textColor = .white
+//        label.textAlignment = .center
+//        label.isHidden = true
+//        return label
+//    }()
+    
     override func configureView() {
         addSubview(collectionView)
         addSubview(ratingButton)
@@ -147,6 +157,7 @@ class CollectionView: BaseView {
             make.centerX.equalTo(emptyImageView)
             //make.width.equalTo(300)
         }
+        
         
         
         

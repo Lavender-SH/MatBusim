@@ -107,14 +107,14 @@ class BackUpView: BaseView {
         }
         
         backUpLabel.snp.makeConstraints { make in
-            make.top.equalTo(110)
+            make.top.equalTo(100)
             make.left.equalToSuperview().offset(30)
         }
         backUpTextView.snp.makeConstraints { make in
-            make.top.equalTo(backUpLabel.snp.bottom).offset(10)
+            make.top.equalTo(backUpLabel.snp.bottom).offset(5)
             make.right.equalToSuperview().offset(-20)
             make.left.equalToSuperview().offset(25)
-            make.height.equalTo(90)
+            make.height.equalTo(95)
         }
         backupTableView.snp.makeConstraints { make in
             make.bottom.horizontalEdges.equalToSuperview()

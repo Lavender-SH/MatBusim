@@ -58,6 +58,7 @@ class MainViewController: BaseViewController {
         // reviewItems 초기화
         reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
         makeNavigationUI()
+        setupBarButtonItems()
         setupSideMenu()
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
@@ -75,13 +76,6 @@ class MainViewController: BaseViewController {
                 print("Error: \(error)")
             }
         }
-        
-        // 삭제 및 완료 버튼 초기화
-        deleteBarButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(deleteSelectedItems))
-        doneBarButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(endEditMode))
-        //⭐️이동 ver2
-        transBarButton = UIBarButtonItem(title: "이동", style: .plain, target: self, action: #selector(transSelectedItems))
-        transDoneBarButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(endTransferMode))
         
         
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: NSNotification.Name("didRestoreBackup"), object: nil)
@@ -148,21 +142,44 @@ class MainViewController: BaseViewController {
         navigationController?.navigationBar.isTranslucent = false
         
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.app"), style: .plain, target: self, action: #selector(reviewPlusButtonTapped))
+        plusButton.tintColor = UIColor(named: "gold")
         let deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
-        let albumButton = UIBarButtonItem(image: UIImage(systemName: "photo.stack"), style: .plain, target: self, action: #selector(albumButtonTapped))
+        let albumButton = UIBarButtonItem(image: UIImage(systemName: "photo.on.rectangle.angled"), style: .plain, target: self, action: #selector(albumButtonTapped))
         //⭐️ 이동 ver2
-        let albumButton2 = UIBarButtonItem(image: UIImage(systemName: "arrow.left.arrow.right.square"), style: .plain, target: self, action: #selector(transModeButtonTapped)) //transModeButtonTapped
+        let transButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.arrow.right.square"), style: .plain, target: self, action: #selector(transModeButtonTapped)) //transModeButtonTapped
         //let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         //let albumButton4 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         
         navigationItem.rightBarButtonItems = [plusButton, deleteButton]
-        navigationItem.leftBarButtonItems = [albumButton, albumButton2]//, albumButton4]
+        navigationItem.leftBarButtonItems = [albumButton, transButton]//, albumButton4]
         
         
         let logo = UIImage(named: "newLogo")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
         navigationItem.titleView = imageView
+    }
+    
+    private func setupBarButtonItems() {
+        let customFont = UIFont(name: "KCC-Ganpan", size: 16.0)
+        let customColor = UIColor(named: "textColor")
+        
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: customFont as Any,
+            .foregroundColor: customColor as Any
+        ]
+        // 삭제 및 완료 버튼 초기화
+        deleteBarButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(deleteSelectedItems))
+        deleteBarButton.setTitleTextAttributes(attributes, for: .normal)
+        
+        doneBarButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(endEditMode))
+        doneBarButton.setTitleTextAttributes(attributes, for: .normal)
+        //⭐️이동 ver2
+        transBarButton = UIBarButtonItem(title: "이동", style: .plain, target: self, action: #selector(transSelectedItems))
+        transBarButton.setTitleTextAttributes(attributes, for: .normal)
+        
+        transDoneBarButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(endTransferMode))
+        transDoneBarButton.setTitleTextAttributes(attributes, for: .normal)
     }
     
     // MARK: - 사이드 메뉴바 세팅
@@ -176,10 +193,10 @@ class MainViewController: BaseViewController {
         sideMenuTableViewController.tableView.backgroundColor = UIColor(named: "TabBarTintColor")
         sideMenuTableViewController.tableView.separatorColor = .darkGray // 구분선을 흰색으로 설정
         //sideMenuTableViewController.title = "My Album"
-                
-//        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
-//        editButton.tintColor = .white
-//        sideMenuTableViewController.navigationItem.rightBarButtonItem = editButton
+        
+        //        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
+        //        editButton.tintColor = .white
+        //        sideMenuTableViewController.navigationItem.rightBarButtonItem = editButton
         
         // 셀 구분선이 왼쪽 끝까지 보이게 설정
         sideMenuTableViewController.tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -328,11 +345,11 @@ class MainViewController: BaseViewController {
         mainView.collectionView.reloadData()
     }
     
-//    //⭐️이동 ver2
-//    @objc func transSelectedItems() {
-//        isTransferMode = true
-//        present(sideMenu!, animated: true)
-//    }
+    //    //⭐️이동 ver2
+    //    @objc func transSelectedItems() {
+    //        isTransferMode = true
+    //        present(sideMenu!, animated: true)
+    //    }
     
     @objc func transSelectedItems() {
         // 이동 모드 시작
@@ -343,38 +360,38 @@ class MainViewController: BaseViewController {
         // 앨범 선택 메뉴 표시
         present(sideMenu!, animated: true)
     }
-
+    
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("didRestoreBackup"), object: nil)
     }
     
     //⭐️이동 ver2
-//    func moveSelectedReviewsToAlbum(album: AlbumTable) {
-//        guard !selectedItemsToTranse.isEmpty else { return }
-//
-//        try! realm.write {
-//            for review in selectedItemsToTranse {
-//                // 선택한 리뷰를 선택한 앨범에 추가
-//                album.reviews.append(review)
-//
-//                // 리뷰의 앨범 연결을 업데이트
-//                if let reviewList = review.albums.first {
-//                    try! realm.write {
-//                        realm.delete(reviewList)
-//                    }
-//                }
-//            }
-//        }
-//
-//        // 선택한 리뷰 이동 모드 종료
-//        endTransferMode()
-//
-//        // 컬렉션 뷰 다시 로드
-//        mainView.collectionView.reloadData()
-//    }
-
-
+    //    func moveSelectedReviewsToAlbum(album: AlbumTable) {
+    //        guard !selectedItemsToTranse.isEmpty else { return }
+    //
+    //        try! realm.write {
+    //            for review in selectedItemsToTranse {
+    //                // 선택한 리뷰를 선택한 앨범에 추가
+    //                album.reviews.append(review)
+    //
+    //                // 리뷰의 앨범 연결을 업데이트
+    //                if let reviewList = review.albums.first {
+    //                    try! realm.write {
+    //                        realm.delete(reviewList)
+    //                    }
+    //                }
+    //            }
+    //        }
+    //
+    //        // 선택한 리뷰 이동 모드 종료
+    //        endTransferMode()
+    //
+    //        // 컬렉션 뷰 다시 로드
+    //        mainView.collectionView.reloadData()
+    //    }
+    
+    
     
 }
 
@@ -386,7 +403,11 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         } else {
             let count = reviewItems.count
             mainView.emptyImageView.isHidden = count != 0
-            mainView.emptyImageLabel.isHidden = count != 0 
+            
+            if !isSearchActive {
+                mainView.emptyImageLabel.isHidden = count != 0
+            }
+            
             return count
         }
     }
@@ -472,6 +493,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.textLabel?.text = albumNames[indexPath.row]
         cell.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 0.3))
         cell.textLabel?.textColor = .white
+        cell.textLabel?.font = UIFont(name: "KCC-Ganpan", size: 16.0)
         //체크표시
         if indexPath == selectedSideMenuIndexPath {
             cell.accessoryType = .checkmark
@@ -488,9 +510,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             addButton.backgroundColor = .clear
             addButton.addTarget(self, action: #selector(addAlbumButtonTapped), for: .touchUpInside)
             addButton.layer.borderColor = UIColor.white.cgColor
-            addButton.layer.borderWidth = 1.0
+            addButton.layer.borderWidth = 2.0
             addButton.layer.cornerRadius = 10
             addButton.clipsToBounds = true
+            addButton.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 17.0)
             
             cell.addSubview(addButton)
             cell.textLabel?.text = nil // 기존 텍스트 레이블 숨기기
@@ -547,13 +570,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         //⭐️이동 ver2
         // 이동 모드에서 앨범 선택 시 이동 메서드 호출
-            if isTransferMode {
-                let selectedAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", albumNames[indexPath.row]).first
-                if let selectedAlbum = selectedAlbum {
-                    //moveSelectedReviewsToAlbum(album: selectedAlbum)
-                }
+        if isTransferMode {
+            let selectedAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", albumNames[indexPath.row]).first
+            if let selectedAlbum = selectedAlbum {
+                //moveSelectedReviewsToAlbum(album: selectedAlbum)
             }
-
+        }
+        
         
         
     }
@@ -564,29 +587,31 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let headerHeight: CGFloat = 50
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: headerHeight)) // Adjust y-origin
         headerView.backgroundColor = .darkGray
-
+        
         let titleLabel = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.bounds.width - 60, height: headerHeight))
         titleLabel.text = "My Album"
         titleLabel.textColor = .white
+        titleLabel.font = UIFont(name: "KCC-Ganpan", size: 18.0)
         headerView.addSubview(titleLabel)
-
+        
         let editButton = UIButton(frame: CGRect(x: tableView.bounds.width - 60, y: 10, width: 50, height: 30))
         editButton.setTitle("Edit", for: .normal)
         editButton.setTitleColor(.white, for: .normal)
+        editButton.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 18.0)
         editButton.layer.borderColor = UIColor.white.cgColor
-        editButton.layer.borderWidth = 1.0
+        editButton.layer.borderWidth = 2.0
         editButton.layer.cornerRadius = 10
         editButton.clipsToBounds = true
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         headerView.addSubview(editButton)
-
+        
         // Adjust the table view's content inset
         tableView.contentInset = UIEdgeInsets(top: -26, left: 0, bottom: 0, right: 0)
-
+        
         return headerView
     }
-
-
+    
+    
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
@@ -652,7 +677,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
 }
-//// MARK: - 서치바 관련함수
+// MARK: - 서치바 관련함수
 extension MainViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchText = searchBar.text, !searchText.isEmpty else {
@@ -676,6 +701,7 @@ extension MainViewController: UISearchBarDelegate {
         }
         
         mainView.collectionView.reloadData()
+        updateEmptyStateVisibility()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -704,5 +730,31 @@ extension MainViewController: UISearchBarDelegate {
             }
         }
         mainView.collectionView.reloadData()
+        updateEmptyStateVisibility()
+        
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        mainView.searchBar.text = ""
+        updateEmptyStateVisibility()
+    }
+}
+
+// MARK: - 메인뷰에서 서치바 검색했을때 검색결과 없으면 +버튼을 눌러주세요 없애기
+extension MainViewController {
+    var isSearchActive: Bool {
+        return mainView.searchBar.text?.isEmpty == false
+    }
+    
+    func updateEmptyStateVisibility() {
+        let isEmpty = reviewItems.isEmpty
+        
+        if isSearchActive {
+            
+            mainView.emptyImageLabel.isHidden = true
+        } else {
+            
+            mainView.emptyImageLabel.isHidden = !isEmpty
+        }
     }
 }

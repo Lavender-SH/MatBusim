@@ -70,7 +70,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         }
         if let visitCount = visitCount {
             //reviewView.visitCountButton.setTitle("   \(visitCount)", for: .normal)
-            reviewView.visitCountLabel.text = "Visits:   \(visitCount)"
+            reviewView.visitCountLabel.text = "방문횟수:   \(visitCount)"
         }
         //
         reviewView.internetButton.addTarget(self, action: #selector(openWebView), for: .touchUpInside)
@@ -170,7 +170,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
 //    }
     
     @objc func stepperValueChanged(sender: UIStepper) {
-        reviewView.visitCountLabel.text = "Visits:   \(Int(sender.value))"
+        reviewView.visitCountLabel.text = "방문횟수:   \(Int(sender.value))"
         updateSaveButtonBorderColor()
     }
 

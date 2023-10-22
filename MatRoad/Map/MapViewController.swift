@@ -285,6 +285,7 @@ extension MapViewController: UISearchBarDelegate {
         //searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
         searchBar.layer.cornerRadius = 10
         searchBar.layer.cornerCurve = .continuous
+        searchBar.searchTextField.textColor = UIColor(named: "textColor")
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.font = UIFont(name: "KCC-Ganpan", size: 13.0)//UIFont.systemFont(ofSize: 13) //플레이스 홀더 글씨 크기
         }

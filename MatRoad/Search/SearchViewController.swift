@@ -58,7 +58,11 @@ class SearchViewController: BaseViewController {
     func makeNavigationUI() {
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor(named: "Navigation")
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor(named: "textColor") as Any,
+            .font: UIFont(name: "KCC-Ganpan", size: 19.0) as Any
+        ]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.shadowColor = .clear
         
@@ -71,6 +75,7 @@ class SearchViewController: BaseViewController {
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(closeButtonTapped))
         navigationItem.leftBarButtonItem = backButton
     }
+
     
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)

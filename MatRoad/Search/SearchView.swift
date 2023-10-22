@@ -28,7 +28,12 @@ class SearchView: BaseView {
         searchBar.searchTextField.textColor = .white
         searchBar.autocapitalizationType = .none
         searchBar.placeholder = "맛집을 검색해주세요!"
-        searchBar.searchTextField.textColor = UIColor(named: "검흰")
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+            textField.font = UIFont(name: "KCC-Ganpan", size: 16.0)//UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
+        }
+        searchBar.searchTextField.textColor = UIColor(named: "textColor")
+        searchBar.searchTextField.font = UIFont(name: "KCC-Ganpan", size: 14.0)
+        
 //        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
 //            cancelButton.setTitle("취소", for: .normal)
 //            cancelButton.setTitleColor(UIColor(named: "cancelButton"), for: .normal)
@@ -40,6 +45,7 @@ class SearchView: BaseView {
     lazy var noResultsLabel: UILabel = {
         let label = UILabel()
         label.text = "검색결과가 없습니다."
+        label.font = UIFont(name: "KCC-Ganpan", size: 15.0)
         label.textColor = .white
         label.textAlignment = .center
         label.isHidden = true

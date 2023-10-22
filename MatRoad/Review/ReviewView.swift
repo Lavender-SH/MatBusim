@@ -78,7 +78,7 @@ class ReviewView: BaseView {
         view.textColor = UIColor(named: "textColor")
         //view.font = UIFont.boldSystemFont(ofSize: 18)
         view.font = UIFont(name: "KCC-Ganpan", size: 18.0)
-        view.text = "Rate"
+        view.text = "별점" //"Rate"
         view.backgroundColor = .clear
         view.textAlignment = .center
         return view
@@ -128,7 +128,7 @@ class ReviewView: BaseView {
         view.textColor = UIColor(named: "textColor")
         //view.font = UIFont.boldSystemFont(ofSize: 18)
         view.font = UIFont(name: "KCC-Ganpan", size: 18.0)
-        view.text = "Date"
+        view.text = "날짜" //"Date"
         view.backgroundColor = .clear
         view.textAlignment = .center
         return view
@@ -143,7 +143,7 @@ class ReviewView: BaseView {
         button.setTitleColor(UIColor(named: "textColor"), for: .normal)
         let calendarImage = UIImage(systemName: "calendar")
         button.setImage(calendarImage, for: .normal)
-        button.tintColor = UIColor(named: "검흰")
+        button.tintColor = UIColor(named: "textColor")
         return button
     }()
     
@@ -151,7 +151,7 @@ class ReviewView: BaseView {
         let label = UILabel()
         label.textColor = UIColor(named: "textColor")
         label.font = UIFont(name: "KCC-Ganpan", size: 18.0) //UIFont.boldSystemFont(ofSize: 18)
-        label.text = "Visits:    1"
+        label.text = "방문횟수:   1"
         label.backgroundColor = .clear
         label.textAlignment = .center
         return label
@@ -188,8 +188,7 @@ class ReviewView: BaseView {
         let view = UILabel()
         view.textColor = UIColor(named: "textColor")
         view.font = UIFont(name: "KCC-Ganpan", size: 18.0) //UIFont.boldSystemFont(ofSize: 18)
-        
-        view.text = "Memo"
+        view.text = "메모" //"Memo"
         view.backgroundColor = .clear
         view.textAlignment = .center
         return view
@@ -202,7 +201,7 @@ class ReviewView: BaseView {
         textView.layer.borderWidth = 2.0
         textView.layer.cornerRadius = 10
         textView.clipsToBounds = true
-        textView.textColor = UIColor(named: "검흰")
+        textView.textColor = UIColor(named: "textColor")
         //textView.font = UIFont.systemFont(ofSize: 14)
         textView.font = UIFont(name: "KCC-Ganpan", size: 14.0)
         textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -303,7 +302,7 @@ class ReviewView: BaseView {
         }
 
         homeImage.snp.makeConstraints { make in
-            make.top.equalTo(imageView1.snp.bottom).offset(16)
+            make.top.equalTo(imageView1.snp.bottom).offset(14)
             make.left.equalTo(alertView.snp.left).inset(24)
             make.size.equalTo(26)
         }
@@ -316,7 +315,7 @@ class ReviewView: BaseView {
         }
 
         internetImage.snp.makeConstraints { make in
-            make.top.equalTo(homeImage.snp.bottom).offset(16)
+            make.top.equalTo(homeImage.snp.bottom).offset(13)
             make.left.equalTo(alertView.snp.left).inset(24)
             make.size.equalTo(26)
         }
@@ -330,7 +329,7 @@ class ReviewView: BaseView {
 
         rateLabel.snp.makeConstraints { make in
             make.top.equalTo(internetImage.snp.bottom).offset(10)
-            make.left.equalTo(alertView.snp.left).inset(10)
+            make.left.equalTo(alertView.snp.left).inset(12)
             make.width.equalTo(50)
             make.height.equalTo(40)
         }
@@ -351,7 +350,7 @@ class ReviewView: BaseView {
 
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(rateLabel.snp.bottom).offset(5)
-            make.left.equalTo(alertView.snp.left).inset(10)
+            make.left.equalTo(alertView.snp.left).inset(12)
             make.width.equalTo(50)
             make.height.equalTo(40)
         }
@@ -359,14 +358,14 @@ class ReviewView: BaseView {
         dateButton.snp.makeConstraints { make in
             make.centerY.equalTo(dateLabel)
             make.left.equalTo(dateLabel.snp.right).offset(3)
-            make.right.equalTo(visitCountLabel.snp.left).offset(-1)
+            make.right.equalTo(visitCountLabel.snp.left).offset(0)
             make.height.equalTo(40)
         }
 
         visitCountLabel.snp.makeConstraints { make in
             make.centerY.equalTo(dateLabel)
             //make.left.equalTo(dateButton)
-            make.left.equalTo(alertView.snp.centerX).offset(65)
+            make.left.equalTo(alertView.snp.centerX).offset(68)
             make.width.equalTo(100)
             make.height.equalTo(40)
         }
@@ -383,7 +382,7 @@ class ReviewView: BaseView {
 
         memoLabel.snp.makeConstraints { make in
             make.top.equalTo(dateLabel.snp.bottom).offset(10)
-            make.left.equalTo(alertView.snp.left).inset(13)
+            make.left.equalTo(alertView.snp.left).inset(8)//inset(13)
             make.width.equalTo(60)
             make.height.equalTo(30)
         }

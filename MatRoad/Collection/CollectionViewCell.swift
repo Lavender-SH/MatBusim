@@ -63,7 +63,7 @@ class CollectionViewCell: BaseCollectionViewCell {
         let view = CosmosView()
         view.settings.updateOnTouch = false
         view.settings.fillMode = .precise
-        view.settings.filledImage = UIImage(named: "newFill")
+        view.settings.filledImage = UIImage(named: "smallfill")
         view.settings.emptyImage = UIImage()
         view.settings.starSize = 12 // 별의 크기 설정
         view.settings.starMargin = 1 // 별 사이의 간격 설정
@@ -129,11 +129,12 @@ class CollectionViewCell: BaseCollectionViewCell {
         titleLabel.snp.makeConstraints { make in
             make.bottom.equalTo(imageView.snp.bottom).inset(4)
             make.leading.equalTo(12)
-            make.width.equalToSuperview()
+            make.trailing.equalTo(shadowContainerView).inset(10)
+            //make.width.equalToSuperview()
             
         }
         cosmosView.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(5)
+            make.top.equalTo(imageView.snp.bottom).offset(7)
             //make.top.equalTo(contentView.snp.top).inset(0)
             make.leading.equalTo(imageView.snp.leading).offset(7)
             make.centerX.equalTo(contentView)
