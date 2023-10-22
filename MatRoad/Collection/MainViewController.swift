@@ -44,6 +44,7 @@ class MainViewController: BaseViewController {
     var isAllSelected: Bool = false
     var selectedSideMenuIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
     var isAscendingOrder: Bool = true //별점 내림차순 오름차순
+    var transButton: UIBarButtonItem! //변수로 사용하기 위함 (삭제모드일때 이동버튼 누르기 막아야함)
     
     override func loadView() {
         self.view = mainView
@@ -53,7 +54,7 @@ class MainViewController: BaseViewController {
         super.viewDidLoad()
         
         
-        view.backgroundColor = UIColor(named: "White") //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        view.backgroundColor = UIColor(named: "White")
         
         // reviewItems 초기화
         reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
@@ -123,9 +124,9 @@ class MainViewController: BaseViewController {
         mainView.visitsButton.addTarget(self, action: #selector(latestButtonTapped), for: .touchUpInside)
         mainView.timeButton.addTarget(self, action: #selector(pastButtonTapped), for: .touchUpInside)
         
-        if let cancelButton = mainView.searchBar.value(forKey: "cancelButton") as? UIButton {
-            cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: UIControl.Event.touchUpInside)
-        }
+//        if let cancelButton = mainView.searchBar.value(forKey: "cancelButton") as? UIButton {
+//            cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: UIControl.Event.touchUpInside)
+//        }
     }
     
     // MARK: - 네비게이션UI
@@ -144,14 +145,15 @@ class MainViewController: BaseViewController {
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.app"), style: .plain, target: self, action: #selector(reviewPlusButtonTapped))
         plusButton.tintColor = UIColor(named: "gold")
         let deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
+        
         let albumButton = UIBarButtonItem(image: UIImage(systemName: "photo.on.rectangle.angled"), style: .plain, target: self, action: #selector(albumButtonTapped))
         //⭐️ 이동 ver2
-        let transButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.arrow.right.square"), style: .plain, target: self, action: #selector(transModeButtonTapped)) //transModeButtonTapped
+        transButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.arrow.right.square"), style: .plain, target: self, action: #selector(transModeButtonTapped))
         //let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         //let albumButton4 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         
         navigationItem.rightBarButtonItems = [plusButton, deleteButton]
-        navigationItem.leftBarButtonItems = [albumButton, transButton]//, albumButton4]
+        navigationItem.leftBarButtonItems = [albumButton, transButton]
         
         
         let logo = UIImage(named: "newLogo")
@@ -192,11 +194,6 @@ class MainViewController: BaseViewController {
         // 테이블 뷰와 셀의 배경색을 black으로 설정
         sideMenuTableViewController.tableView.backgroundColor = UIColor(named: "TabBarTintColor")
         sideMenuTableViewController.tableView.separatorColor = .darkGray // 구분선을 흰색으로 설정
-        //sideMenuTableViewController.title = "My Album"
-        
-        //        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
-        //        editButton.tintColor = .white
-        //        sideMenuTableViewController.navigationItem.rightBarButtonItem = editButton
         
         // 셀 구분선이 왼쪽 끝까지 보이게 설정
         sideMenuTableViewController.tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -248,9 +245,18 @@ class MainViewController: BaseViewController {
         if isDeleteMode {
             // 삭제 모드 시작
             tabBarController?.tabBar.isHidden = false
-            navigationItem.rightBarButtonItems = [doneBarButton, deleteBarButton]
+            navigationItem.rightBarButtonItems = [deleteBarButton, doneBarButton]
+            
+            let alertController = UIAlertController(title: nil, message: "삭제할 데이터를 선택하고 \n삭제 버튼을 눌러주세요!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+            transButton.isEnabled = false
+            tabBarController?.tabBar.isHidden = true
         } else {
             // 삭제 모드 종료
+            transButton.isEnabled = true
             endEditMode()
         }
         mainView.collectionView.reloadData()
@@ -262,13 +268,28 @@ class MainViewController: BaseViewController {
         if isTransferMode {
             // 이동 모드 시작
             tabBarController?.tabBar.isHidden = false
-            navigationItem.rightBarButtonItems = [transDoneBarButton, transBarButton]
+            navigationItem.rightBarButtonItems = [transBarButton, transDoneBarButton]
+            // 현재 선택된 리뷰 항목을 이동 세트에 추가합니다.
+            if let selectedIndexPaths = mainView.collectionView.indexPathsForSelectedItems {
+                for indexPath in selectedIndexPaths {
+                    selectedItemsToTranse.insert(reviewItems[indexPath.row])
+                }
+            }
+
+            // 얼럿창 표시
+            let alertController = UIAlertController(title: nil, message: "이동할 데이터를 선택하고 \n이동 버튼을 눌러주세요!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+            tabBarController?.tabBar.isHidden = true
         } else {
             // 이동 모드 종료
             endTransferMode()
         }
         mainView.collectionView.reloadData()
     }
+
     
     
     @objc func albumButtonTapped() {
@@ -277,21 +298,41 @@ class MainViewController: BaseViewController {
     // MARK: - 정렬버튼
     @objc func sortByRating() {
         isAscendingOrder.toggle()
-        reviewItems = repository.fetch().sorted(byKeyPath: "starCount", ascending: isAscendingOrder)
+        if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
+           let selectedAlbumId = try? ObjectId(string: selectedAlbumIdString) {
+            reviewItems = repository.fetch().filter("ANY album._id == %@", selectedAlbumId).sorted(byKeyPath: "starCount", ascending: isAscendingOrder)
+        } else {
+            reviewItems = repository.fetch().sorted(byKeyPath: "starCount", ascending: isAscendingOrder)
+        }
+
         mainView.collectionView.reloadData()
     }
-    
+
     @objc func sortByLatest() {
         isAscendingOrder.toggle()
-        reviewItems = repository.fetch().sorted(byKeyPath: "visitCount", ascending: isAscendingOrder)
+        if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
+           let selectedAlbumId = try? ObjectId(string: selectedAlbumIdString) {
+            reviewItems = repository.fetch().filter("ANY album._id == %@", selectedAlbumId).sorted(byKeyPath: "visitCount", ascending: isAscendingOrder)
+        } else {
+            reviewItems = repository.fetch().sorted(byKeyPath: "visitCount", ascending: isAscendingOrder)
+        }
+
         mainView.collectionView.reloadData()
     }
-    
+
     @objc func sortByPast() {
         isAscendingOrder.toggle()
-        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
+        if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
+           let selectedAlbumId = try? ObjectId(string: selectedAlbumIdString) {
+            reviewItems = repository.fetch().filter("ANY album._id == %@", selectedAlbumId).sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
+        } else {
+            reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
+        }
+
         mainView.collectionView.reloadData()
     }
+
+
     
     @objc func ratingButtonTapped() {
         updateButtonStyles(selected: mainView.ratingButton, others: [mainView.visitsButton, mainView.timeButton])
@@ -316,16 +357,12 @@ class MainViewController: BaseViewController {
     }
     
     
-    @objc func cancelButtonTapped() {
-        
-    }
-    
-    
     @objc func endEditMode() {
         isDeleteMode = false
         tabBarController?.tabBar.isHidden = false
         makeNavigationUI()
         selectedItemsToDelete.removeAll()
+        transButton.isEnabled = true
         mainView.collectionView.reloadData()
     }
     //⭐️이동 ver2
@@ -333,7 +370,7 @@ class MainViewController: BaseViewController {
         isTransferMode = false
         tabBarController?.tabBar.isHidden = false
         makeNavigationUI()
-        //selectedItemsToDelete.removeAll()
+        selectedItemsToTranse.removeAll()
         mainView.collectionView.reloadData()
     }
     
@@ -344,53 +381,27 @@ class MainViewController: BaseViewController {
         selectedItemsToDelete.removeAll()
         mainView.collectionView.reloadData()
     }
-    
-    //    //⭐️이동 ver2
-    //    @objc func transSelectedItems() {
-    //        isTransferMode = true
-    //        present(sideMenu!, animated: true)
-    //    }
-    
+    //⭐️이동 ver2
     @objc func transSelectedItems() {
-        // 이동 모드 시작
-        isTransferMode = true
-        // 이동 모드에서는 완료 버튼 대신 앨범 선택 메뉴 표시
-        navigationItem.rightBarButtonItems = [transDoneBarButton]
-        mainView.collectionView.reloadData()
-        // 앨범 선택 메뉴 표시
-        present(sideMenu!, animated: true)
+        let alertController = UIAlertController(title: nil, message: "데이터를 이동할 앨범을 선택해주세요!", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        let confirmAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            self?.present(self!.sideMenu!, animated: true)
+        }
+        alertController.addAction(confirmAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+        
+        tabBarController?.tabBar.isHidden = true
+        
     }
-    
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("didRestoreBackup"), object: nil)
     }
-    
-    //⭐️이동 ver2
-    //    func moveSelectedReviewsToAlbum(album: AlbumTable) {
-    //        guard !selectedItemsToTranse.isEmpty else { return }
-    //
-    //        try! realm.write {
-    //            for review in selectedItemsToTranse {
-    //                // 선택한 리뷰를 선택한 앨범에 추가
-    //                album.reviews.append(review)
-    //
-    //                // 리뷰의 앨범 연결을 업데이트
-    //                if let reviewList = review.albums.first {
-    //                    try! realm.write {
-    //                        realm.delete(reviewList)
-    //                    }
-    //                }
-    //            }
-    //        }
-    //
-    //        // 선택한 리뷰 이동 모드 종료
-    //        endTransferMode()
-    //
-    //        // 컬렉션 뷰 다시 로드
-    //        mainView.collectionView.reloadData()
-    //    }
-    
     
     
 }
@@ -436,7 +447,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.deleteCheckmark.tintColor = selectedItemsToDelete.contains(review) ? UIColor(named: "checkColor") : .lightGray
         //이동할때 //⭐️이동 ver2
         cell.transCheckmark.isHidden = !isTransferMode
-        cell.transCheckmark.tintColor = selectedItemsToTranse.contains(reviewItems[indexPath.row]) ? .blue : .lightGray
+        cell.transCheckmark.tintColor = selectedItemsToTranse.contains(reviewItems[indexPath.row]) ? UIColor(named: "gold") : .lightGray
         return cell
     }
     // MARK: - 메인화면 컬렉션뷰에서 리뷰수정하기
@@ -569,14 +580,31 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         
         //⭐️이동 ver2
-        // 이동 모드에서 앨범 선택 시 이동 메서드 호출
+        // 이동 모드에서 앨범 선택 시 데이터 이동
         if isTransferMode {
-            let selectedAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", albumNames[indexPath.row]).first
-            if let selectedAlbum = selectedAlbum {
-                //moveSelectedReviewsToAlbum(album: selectedAlbum)
+            let targetAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", selectedAlbum).first
+            if let targetAlbum = targetAlbum {
+                try! realm.write {
+                    for review in selectedItemsToTranse {
+                        if let currentAlbum = review.album.first {
+                            currentAlbum.reviews.remove(at: currentAlbum.reviews.index(of: review)!)
+                        }
+                        targetAlbum.reviews.append(review)
+                    }
+                }
+                // 이동 모드 종료 및 선택 항목 초기화
+                isTransferMode = false
+                selectedItemsToTranse.removeAll()
+                mainView.collectionView.reloadData()
+                endTransferMode()
+                
+                // 데이터 이동 완료 얼럿창 표시
+                let alertController = UIAlertController(title: nil, message: "데이터 이동이 완료되었습니다!", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
             }
         }
-        
         
         
     }
@@ -585,7 +613,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: - 사이드메뉴바 헤더 구현
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerHeight: CGFloat = 50
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: headerHeight)) // Adjust y-origin
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: headerHeight))
         headerView.backgroundColor = .darkGray
         
         let titleLabel = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.bounds.width - 60, height: headerHeight))

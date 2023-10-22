@@ -366,7 +366,7 @@ class ReviewView: BaseView {
             make.centerY.equalTo(dateLabel)
             //make.left.equalTo(dateButton)
             make.left.equalTo(alertView.snp.centerX).offset(68)
-            make.width.equalTo(100)
+            make.width.equalTo(110)
             make.height.equalTo(40)
         }
 
