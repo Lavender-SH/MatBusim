@@ -38,7 +38,7 @@ class MainViewController: BaseViewController {
     var sideMenuTableViewController: UITableViewController!
     var albumNames: [String] {
         let albums = realm.objects(AlbumTable.self).map { $0.albumName }
-        return ["All"] + albums + ["+ 앨범 추가"]
+        return ["모두 보기"] + albums + ["+ 앨범 추가"]
     }
     var sideMenuPanGesture: UIGestureRecognizer?
     
@@ -48,6 +48,7 @@ class MainViewController: BaseViewController {
     var isAscendingOrder: Bool = true //별점 내림차순 오름차순
     var transButton: UIBarButtonItem! //변수로 사용하기 위함 (삭제모드일때 이동버튼 누르기 막아야함)
     var albumButton: UIBarButtonItem!
+    var deleteButton: UIBarButtonItem!
     
     override func loadView() {
         self.view = mainView
@@ -147,7 +148,7 @@ class MainViewController: BaseViewController {
         
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.app"), style: .plain, target: self, action: #selector(reviewPlusButtonTapped))
         plusButton.tintColor = UIColor(named: "gold")
-        let deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
+        deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
         
         albumButton = UIBarButtonItem(image: UIImage(systemName: "photo.on.rectangle.angled"), style: .plain, target: self, action: #selector(albumButtonTapped))
         //⭐️ 이동 ver2
@@ -254,6 +255,7 @@ class MainViewController: BaseViewController {
         if isDeleteMode {
             // 삭제 모드 시작
             tabBarController?.tabBar.isHidden = true
+            //self.hidesBottomBarWhenPushed = false
             navigationItem.rightBarButtonItems = [deleteBarButton, doneBarButton]
             
             let alertController = UIAlertController(title: nil, message: "삭제할 데이터를 선택하고 \n삭제 버튼을 눌러주세요!", preferredStyle: .alert)
@@ -263,6 +265,7 @@ class MainViewController: BaseViewController {
             
             transButton.isEnabled = false
             albumButton.isEnabled = false
+            deleteButton.isEnabled = false
             
         } else {
             // 삭제 모드 종료
@@ -294,6 +297,7 @@ class MainViewController: BaseViewController {
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
             albumButton.isEnabled = false
+            transButton.isEnabled = false
             tabBarController?.tabBar.isHidden = true
         } else {
             // 이동 모드 종료
@@ -386,6 +390,7 @@ class MainViewController: BaseViewController {
         makeNavigationUI()
         selectedItemsToDelete.removeAll()
         transButton.isEnabled = true
+        deleteButton.isEnabled = true
         mainView.collectionView.reloadData()
     }
     //⭐️이동 ver2
@@ -395,6 +400,7 @@ class MainViewController: BaseViewController {
         makeNavigationUI()
         selectedItemsToTranse.removeAll()
         albumButton.isEnabled = true
+        transButton.isEnabled = true
         mainView.collectionView.reloadData()
     }
     
@@ -574,7 +580,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         }
         // "+ 앨범 추가" 셀에 버튼 추가
         if indexPath.row == albumNames.count - 1 {
-            let addButton = UIButton(frame: CGRect(x: 15, y: 8, width: 200, height: 30))
+            let addButton = UIButton(frame: CGRect(x: 5, y: 5, width: 230, height: 35))
+            //let addButton = UIButton(frame: CGRect(x: 15, y: 8, width: 200, height: 30))
             addButton.contentHorizontalAlignment = .center
             addButton.setTitle(albumNames[indexPath.row], for: .normal)
             addButton.setTitleColor(.white, for: .normal)
@@ -604,7 +611,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.reloadData()
         let selectedAlbum = albumNames[indexPath.row]
         
-        if selectedAlbum == "All" {
+        if selectedAlbum == "모두 보기" {
             isAllSelected = true
             reviewItems = repository.fetch()
             UserDefaults.standard.removeObject(forKey: "selectedAlbumId")
@@ -699,7 +706,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         headerView.backgroundColor = .darkGray
         
         let titleLabel = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.bounds.width - 60, height: headerHeight))
-        titleLabel.text = "My Album"
+        titleLabel.text = "나의 앨범"
+        titleLabel.textAlignment = .center
         titleLabel.textColor = .white
         titleLabel.font = UIFont(name: "KCC-Ganpan", size: 18.0)
         headerView.addSubview(titleLabel)
