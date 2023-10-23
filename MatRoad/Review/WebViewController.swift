@@ -43,7 +43,7 @@ class WebViewController: UIViewController, WKUIDelegate {
         
         let request = URLRequest(url: urlToLoad)
         webView.load(request)
-        print("==9==", urlToLoad)
+        //print("==9==", urlToLoad)
         
     }
     

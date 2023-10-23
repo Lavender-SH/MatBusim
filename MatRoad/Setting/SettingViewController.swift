@@ -79,7 +79,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
     private func configureTableView() {
         tableView = UITableView(frame: .zero, style: .grouped)
         tableView.delegate = self
-        tableView.backgroundColor = UIColor(named: "settingBack") //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 1))
+        tableView.backgroundColor = UIColor(named: "settingBack")
         
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
@@ -306,7 +306,6 @@ final class Utils {
                let range = Range(match.range(at: 1), in: fullVersion) {
                 return String(fullVersion[range])
             }
-            
             return fullVersion
         }
     
@@ -327,32 +326,13 @@ final class Utils {
     }
     
     static func getDeviceModelName() -> String {
-        let device = UIDevice.current
-        let selName = "_\("deviceInfo")ForKey:"
-        let selector = NSSelectorFromString(selName)
-
-//        if device.responds(to: selector), let result = device.perform(selector, with: "marketing-name") {
-//            if let modelName = result.takeRetainedValue() as? String {
-//                return modelName
-//            }
-//        }
-        return "아이폰 기종을 적어주세요!"
-    }
-    
-//    static func getDeviceModelName() -> String {
-//            let device = UIDevice.current
-//            let modelName = device.name
-//            if modelName.isEmpty {
-//                return "unknown".localized
-//            } else {
-//                return modelName
-//            }
-//        }
+            let device = UIDevice.current
+            let modelName = device.name
+            if modelName.isEmpty {
+                return "알 수 없음"
+            } else {
+                return modelName
+            }
+        }
 
 }
-//extension String {
-//    var localized: String {
-//        return NSLocalizedString(self, comment: "")
-//    }
-//}
-

@@ -57,7 +57,7 @@ class BackUpViewController: BaseViewController {
         
         //2. 도큐먼트 위치
         guard let path = documentDirectoryPath() else {
-            print("도큐먼트 위치에 오류가 있습니다.")
+            //print("도큐먼트 위치에 오류가 있습니다.")
             return
         }
         //3. 백업하고자 하는 파일 경로 ex ~~~/~~/~~~/Document/default.realm
@@ -65,7 +65,7 @@ class BackUpViewController: BaseViewController {
         
         //4. 3번 경로가 유효한 지 확인
         guard FileManager.default.fileExists(atPath: realmFile.path) else {
-            print("백업할 파일이 없습니다.")
+            //print("백업할 파일이 없습니다.")
             return
         }
         //5. 압축하고자 하는 파일을 배열에 추가
@@ -80,24 +80,24 @@ class BackUpViewController: BaseViewController {
         //6. 압축
         do {
             let zipFilePath = try Zip.quickZipFiles(urlPaths, fileName: fileName)
-            print("location: \(zipFilePath)")
+            //print("location: \(zipFilePath)")
             backUpView.backupTableView.reloadData()
         } catch {
-            print("압축을 실패했어요")
+            //print("압축을 실패했어요")
         }
     }
     
     //⭐️⭐️⭐️
     func unzipAndRestore(fileURL: URL) {
         guard let destinationPath = documentDirectoryPath() else {
-            print("도큐먼트 위치에 오류가 있어요")
+            //print("도큐먼트 위치에 오류가 있어요")
             return
         }
         do {
             try Zip.unzipFile(fileURL, destination: destinationPath, overwrite: true, password: nil)
-            print("복구 완료!")
+            //print("복구 완료!")
         } catch {
-            print("압축 해제 실패: \(error)")
+            //print("압축 해제 실패: \(error)")
         }
     }
     // MARK: - 복구버튼
@@ -112,14 +112,14 @@ class BackUpViewController: BaseViewController {
 //⭐️⭐️⭐️
 extension BackUpViewController: UIDocumentPickerDelegate {
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        print(#function)
+        //print(#function)
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        print(#function, urls)
+        //print(#function, urls)
         
         guard let selectFileURL = urls.first else { // 파일앱에서의 URL
-            print("선택한 파일에 오류가 있어요")
+            //print("선택한 파일에 오류가 있어요")
             return
         }
         
@@ -139,7 +139,7 @@ extension BackUpViewController: UIDocumentPickerDelegate {
     func proceedWithRestore(using fileURL: URL) {
         
         guard let path = documentDirectoryPath() else { // 앱 도큐먼트 path
-            print("도큐먼트 위치에 오류가 있어요")
+            //print("도큐먼트 위치에 오류가 있어요")
             return
         }
         
@@ -162,7 +162,7 @@ extension BackUpViewController: UIDocumentPickerDelegate {
                     self.present(completionAlert, animated: true, completion: nil)
                 })
             } catch {
-                print(123123)
+                //print(123123)
                 print(error)
                 print("압축 해제 실패")
             }

@@ -21,7 +21,7 @@ class ReviewView: BaseView {
     
     let imageView1 = {
         //let view = UIImageView()
-        let view = GradientImageView(frame: .zero)
+        let view = UIImageView() //GradientImageView(frame: .zero)
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
         view.backgroundColor = .white
@@ -32,7 +32,7 @@ class ReviewView: BaseView {
     
     let imageView2 = {
         //let view = UIImageView()
-        let view = GradientImageView(frame: .zero)
+        let view = UIImageView() //GradientImageView(frame: .zero)
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
         view.backgroundColor = .white
@@ -156,6 +156,9 @@ class ReviewView: BaseView {
         label.textAlignment = .center
         return label
     }()
+    
+    
+    
     //    얼럿스타일
     //    let visitCountButton: UIButton = {
     //        let button = UIButton()
@@ -238,27 +241,31 @@ class ReviewView: BaseView {
         view.layer.cornerRadius = 3
         return view
     }()
-    let infoLabel = {
-        let view = UILabel()
-        view.text = "이미지를 눌러서 \n사진을 넣어주세요!"
-        view.numberOfLines = 2
-        view.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
-        view.font = UIFont(name: "KCC-Ganpan", size: 11.0)
-        view.backgroundColor = .clear
-        view.textAlignment = .center
-        view.isHidden = false
-        return view
-    }()
+//    let infoLabel = {
+//        let view = GradientLabel() //UILabel()
+//        view.text = "이미지를 눌러서 \n사진을 넣어주세요!"
+//        view.numberOfLines = 2
+//        view.textColor = .yellow
+//        view.font = UIFont(name: "KCC-Ganpan", size: 11.0)
+//        view.backgroundColor = .clear
+//        view.textAlignment = .center
+//        view.isHidden = false
+//        view.textAlignment = .center
+//        view.gradientLayer.cornerRadius = 10
+//        return view
+//    }()
     
     let infoLabel2 = {
-        let view = UILabel()
+        let view = GradientLabel() //UILabel()
         view.text = "이미지를 눌러서 \n사진을 넣어주세요!"
         view.numberOfLines = 2
-        view.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
+        view.textColor = .orange
         view.font = UIFont(name: "KCC-Ganpan", size: 11.0)
         view.backgroundColor = .clear
         view.textAlignment = .center
         view.isHidden = false
+        view.textAlignment = .center
+        view.gradientLayer.cornerRadius = 10
         return view
     }()
 
@@ -282,11 +289,11 @@ class ReviewView: BaseView {
         alertView.addSubview(handleView)
         alertView.addSubview(visitCountLabel)
         alertView.addSubview(visitCountStepper)
-        alertView.addSubview(infoLabel)
+        //alertView.addSubview(infoLabel)
         alertView.addSubview(infoLabel2)
         
         cosmosView.didFinishTouchingCosmos = { [weak self] rating in
-            print("User rated: \(rating)")
+            //print("User rated: \(rating)")
             self?.rateNumberLabel.text = "\(rating)"
         }
         imageView1.tag = 1
@@ -435,14 +442,18 @@ class ReviewView: BaseView {
             make.height.equalTo(40)
         }
         
-        infoLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(imageView1)
-            make.bottom.equalTo(imageView1).inset(2)
-        }
+//        infoLabel.snp.makeConstraints { make in
+//            make.right.equalTo(imageView1)
+//            make.left.equalTo(imageView1)
+//            make.centerX.equalTo(imageView1)
+//            make.bottom.equalTo(imageView1)
+//        }
         
         infoLabel2.snp.makeConstraints { make in
+            make.right.equalTo(imageView2)
+            make.left.equalTo(imageView2)
             make.centerX.equalTo(imageView2)
-            make.bottom.equalTo(imageView2).inset(2)
+            make.top.equalTo(imageView2)
         }
     }
     
@@ -453,8 +464,8 @@ class ReviewView: BaseView {
         cosmosView.settings.updateOnTouch = true
         cosmosView.settings.starSize = 38
         cosmosView.settings.starMargin = 5
-        cosmosView.settings.filledImage = UIImage(named: "newFill")
-        cosmosView.settings.emptyImage = UIImage(named: "newEmpty")
+        cosmosView.settings.filledImage = UIImage(named: "matfill")
+        cosmosView.settings.emptyImage = UIImage(named: "matempty")
         cosmosView.contentMode = .center
         cosmosView.rating = 0.0
         cosmosView.didTouchCosmos = { [weak self] _ in
@@ -467,24 +478,50 @@ class ReviewView: BaseView {
     
 }
 
+//class GradientLabel: UILabel {
+//    private var gradientLayer: CAGradientLayer!
+//
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//        setupGradientBackground()
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        super.init(coder: coder)
+//        setupGradientBackground()
+//    }
+//
+//    private func setupGradientBackground() {
+//        gradientLayer = CAGradientLayer()
+//        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.darkGray.cgColor]
+//        layer.insertSublayer(gradientLayer, at: 0)
+//    }
+//
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        gradientLayer.frame = bounds
+//    }
+//}
 
-class GradientImageView: UIImageView {
-    private var gradientLayer: CAGradientLayer!
+
+class GradientLabel: UILabel {
+    var gradientLayer: CAGradientLayer!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupGradientLayer()
+        setupGradientBackground()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupGradientLayer()
+        setupGradientBackground()
     }
 
-    private func setupGradientLayer() {
+    private func setupGradientBackground() {
         gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
-        gradientLayer.locations = [0.85, 1.0]
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.lightGray.cgColor]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         layer.insertSublayer(gradientLayer, at: 0)
     }
 
@@ -493,7 +530,6 @@ class GradientImageView: UIImageView {
         gradientLayer.frame = bounds
     }
 }
-
 
 
 

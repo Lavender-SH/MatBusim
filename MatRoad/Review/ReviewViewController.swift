@@ -186,7 +186,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     // MARK: - 웹뷰 버튼 함수
     @objc func openWebView() {
         guard var urlString = placeURL else {
-            print("Invalid URL")
+            //print("Invalid URL")
             return
         }
         if urlString.starts(with: "http://") {
@@ -211,24 +211,6 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         present(imagePickerController, animated: true, completion: nil)
     }
-    
-//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-//        if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-//
-//            // 이미지 크기 조정
-//            let targetSize = CGSize(width: 500, height: 500)
-//            let scaledImage = selectedImage.scale(to: targetSize)
-//
-//            if picker.view.tag == reviewView.imageView1.tag {
-//                reviewView.imageView1.image = scaledImage
-//                reviewView.infoLabel.isHidden = true
-//            } else if picker.view.tag == reviewView.imageView2.tag {
-//                reviewView.imageView2.image = scaledImage
-//                reviewView.infoLabel2.isHidden = true
-//            }
-//        }
-//        dismiss(animated: true, completion: nil)
-//    }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
@@ -264,7 +246,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     func setImage(_ image: UIImage, forTag tag: Int) {
         if tag == reviewView.imageView1.tag {
             reviewView.imageView1.image = image
-            reviewView.infoLabel.isHidden = true
+            //reviewView.infoLabel.isHidden = true
         } else if tag == reviewView.imageView2.tag {
             reviewView.imageView2.image = image
             reviewView.infoLabel2.isHidden = true
@@ -280,7 +262,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height / 3 // Adjust this value as needed
+                self.view.frame.origin.y -= keyboardSize.height / 3
             }
         }
     }
@@ -371,18 +353,6 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         present(alertController, animated: true, completion: nil)
     }
     
-    //조건이 만족되면 저장버튼의 색깔을 바꿈
-//    func updateSaveButtonBorderColor() {
-//        if reviewView.cosmosView.rating > 0,
-//           reviewView.dateButton.title(for: .normal) != "  맛집을 방문한 날짜를 입력해보세요.",
-//           reviewView.memoTextView.text.count >= 1 {
-//            reviewView.saveButton.layer.borderColor = UIColor.white.cgColor
-//            reviewView.saveButton.setTitleColor(.white, for: .normal)
-//        } else {
-//            reviewView.saveButton.layer.borderColor = UIColor.darkGray.cgColor
-//        }
-//    }
-    
     func updateSaveButtonBorderColor() {
         if hasReviewChanged() {
             reviewView.saveButton.layer.borderColor = UIColor(named: "gold")?.cgColor
@@ -439,7 +409,7 @@ extension ReviewViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 }
 
 
-
+// MARK: - 이미지 회전 확장
 extension UIImage {
     func rotated(by radians: CGFloat) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)

@@ -93,7 +93,7 @@ class MainViewController: BaseViewController {
         
         //메인의 뷰디드로드에 선택한 테마를 전달해줘야 해결됨 sceneDelegate가 아님⭐️
         let savedTheme = loadThemeFromRealm()
-        print(savedTheme)
+        //print(savedTheme)
         applyTheme(savedTheme)
         
     }
@@ -163,27 +163,32 @@ class MainViewController: BaseViewController {
         navigationItem.titleView = imageView
     }
     
-    private func setupBarButtonItems() {
-        let customFont = UIFont(name: "KCC-Ganpan", size: 16.0)
-        let customColor = UIColor(named: "textColor")
-        
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: customFont as Any,
-            .foregroundColor: customColor as Any
-        ]
-        // 삭제 및 완료 버튼 초기화
-        deleteBarButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(deleteSelectedItems))
-        deleteBarButton.setTitleTextAttributes(attributes, for: .normal)
-        
-        doneBarButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(endEditMode))
-        doneBarButton.setTitleTextAttributes(attributes, for: .normal)
-        //⭐️이동 ver2
-        transBarButton = UIBarButtonItem(title: "이동", style: .plain, target: self, action: #selector(transSelectedItems))
-        transBarButton.setTitleTextAttributes(attributes, for: .normal)
-        
-        transDoneBarButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(endTransferMode))
-        transDoneBarButton.setTitleTextAttributes(attributes, for: .normal)
+    func borderedButton(title: String, action: Selector) -> UIBarButtonItem {
+        let button = UIButton(type: .custom)
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(UIColor(named: "textColor"), for: .normal)
+        button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 16.0)
+        button.layer.borderWidth = 2.0
+        button.layer.borderColor = UIColor(named: "textColor")?.cgColor
+        button.layer.cornerRadius = 10
+        button.layer.cornerCurve = .continuous
+        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return UIBarButtonItem(customView: button)
     }
+
+    private func setupBarButtonItems() {
+        // 삭제 및 완료 버튼 초기화
+        deleteBarButton = borderedButton(title: "삭제", action: #selector(deleteSelectedItems))
+        doneBarButton = borderedButton(title: "취소", action: #selector(endEditMode))
+        
+        //⭐️이동 ver2
+        transBarButton = borderedButton(title: "이동", action: #selector(transSelectedItems))
+        transDoneBarButton = borderedButton(title: "취소", action: #selector(endTransferMode))
+    }
+
+    
+    
     
     // MARK: - 사이드 메뉴바 세팅
     func setupSideMenu() {
@@ -254,10 +259,12 @@ class MainViewController: BaseViewController {
             self.present(alertController, animated: true, completion: nil)
             
             transButton.isEnabled = false
+            albumButton.isEnabled = false
             //tabBarController?.tabBar.isHidden = true
         } else {
             // 삭제 모드 종료
             transButton.isEnabled = true
+            albumButton.isEnabled = true
             endEditMode()
         }
         mainView.collectionView.reloadData()
@@ -377,13 +384,45 @@ class MainViewController: BaseViewController {
         mainView.collectionView.reloadData()
     }
     
+    //⭐️⭐️⭐️ 데이터 삭제
     @objc func deleteSelectedItems() {
-        for review in selectedItemsToDelete {
-            repository.deleteReview(review)
+        // All셀에서 삭제할때는 전체 삭제
+        if isAllSelected {
+            for review in selectedItemsToDelete {
+                repository.deleteReview(review)
+            }
+            
+            // 'All'에서 삭제할 때의 알림
+            let alertController = UIAlertController(title: nil, message: "데이터가 삭제 되었습니다!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+
+        } else {
+            // 앨범에서 삭제할때는 해당 앨범의 데이터만 삭제하고 다른 앨범, all셀에 있는 데이터는 살림
+            if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
+               let selectedAlbumId = try? ObjectId(string: selectedAlbumIdString),
+               let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: selectedAlbumId) {
+                try! realm.write {
+                    for review in selectedItemsToDelete {
+                        if let index = album.reviews.index(of: review) {
+                            album.reviews.remove(at: index)
+                        }
+                    }
+                }
+                
+                // 특정 앨범에서 삭제할 때의 알림
+                let alertController = UIAlertController(title: nil, message: "\(album.albumName) 앨범에서 \n데이터가 삭제 되었습니다!", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
         }
+
         selectedItemsToDelete.removeAll()
         mainView.collectionView.reloadData()
     }
+
     //⭐️이동 ver2
     @objc func transSelectedItems() {
         let alertController = UIAlertController(title: nil, message: "데이터를 이동할 앨범을 선택해주세요!", preferredStyle: .alert)
@@ -490,7 +529,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             reviewVC.imageView2URL = review.imageView2URL
             reviewVC.visitCount = review.visitCount
             
-            reviewVC.reviewView.infoLabel.isHidden = true
+            //reviewVC.reviewView.infoLabel.isHidden = true
             reviewVC.reviewView.infoLabel2.isHidden = true
             present(reviewVC, animated: true, completion: nil)
         }
@@ -561,7 +600,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                 reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbum._id)
                 
                 UserDefaults.standard.set(matchingAlbum._id.stringValue, forKey: "selectedAlbumId")
-                print("===111===", matchingAlbum._id)
+                //print("===111===", matchingAlbum._id)
             }
         }
         
@@ -650,7 +689,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         headerView.addSubview(titleLabel)
         
         let editButton = UIButton(frame: CGRect(x: tableView.bounds.width - 60, y: 10, width: 50, height: 30))
-        editButton.setTitle("Edit", for: .normal)
+        editButton.setTitle("편집", for: .normal)
         editButton.setTitleColor(.white, for: .normal)
         editButton.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 18.0)
         editButton.layer.borderColor = UIColor.white.cgColor
@@ -660,7 +699,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         headerView.addSubview(editButton)
         
-        // Adjust the table view's content inset
         tableView.contentInset = UIEdgeInsets(top: -26, left: 0, bottom: 0, right: 0)
         
         return headerView
@@ -707,24 +745,24 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     // MARK: - 슬라이드 메뉴 바 셀 삭제
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        
+
         return indexPath.row != 0 && indexPath.row != albumNames.count - 1
     }
-    
+
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
+
             let albumNameToDelete = albumNames[indexPath.row]
             if let albumToDelete = realm.objects(AlbumTable.self).filter("albumName == %@", albumNameToDelete).first {
                 try! realm.write {
                     realm.delete(albumToDelete)
                 }
             }
-            
+
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
-    
+
     @objc func handleTapOutside() {
         if sideMenuTableViewController.tableView.isEditing {
             sideMenuTableViewController.tableView.setEditing(false, animated: true)

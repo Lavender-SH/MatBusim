@@ -50,7 +50,6 @@
 		0277C3362AD94420004BD44D /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277C3322AD94420004BD44D /* FileManager+Extension.swift */; };
 		0277C3372AD94420004BD44D /* BackUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277C3332AD94420004BD44D /* BackUpTableViewCell.swift */; };
 		0277C3382AD94420004BD44D /* BackUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277C3342AD94420004BD44D /* BackUpViewController.swift */; };
-		02D7CADE2AE4EEFB00C63E16 /* Dovemayo_wild.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02D7CADD2AE4EEFB00C63E16 /* Dovemayo_wild.ttf */; };
 		02D7CAE12AE4F35800C63E16 /* KCC-Ganpan.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D7CAE02AE4F35800C63E16 /* KCC-Ganpan.otf */; };
 /* End PBXBuildFile section */
 
@@ -90,7 +89,6 @@
 		0277C3322AD94420004BD44D /* FileManager+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
 		0277C3332AD94420004BD44D /* BackUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackUpTableViewCell.swift; sourceTree = "<group>"; };
 		0277C3342AD94420004BD44D /* BackUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackUpViewController.swift; sourceTree = "<group>"; };
-		02D7CADD2AE4EEFB00C63E16 /* Dovemayo_wild.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Dovemayo_wild.ttf; sourceTree = "<group>"; };
 		02D7CAE02AE4F35800C63E16 /* KCC-Ganpan.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "KCC-Ganpan.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -256,7 +254,6 @@
 		02D7CADF2AE4F28100C63E16 /* Font */ = {
 			isa = PBXGroup;
 			children = (
-				02D7CADD2AE4EEFB00C63E16 /* Dovemayo_wild.ttf */,
 				02D7CAE02AE4F35800C63E16 /* KCC-Ganpan.otf */,
 			);
 			path = Font;
@@ -349,7 +346,6 @@
 				0277C2E32AD71588004BD44D /* LaunchScreen.storyboard in Resources */,
 				0208CE7B2AC14FB7000563D8 /* Assets.xcassets in Resources */,
 				02D7CAE12AE4F35800C63E16 /* KCC-Ganpan.otf in Resources */,
-				02D7CADE2AE4EEFB00C63E16 /* Dovemayo_wild.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,7 +552,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lavender.sesac.MatRoad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -590,7 +586,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lavender.sesac.MatRoad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

@@ -13,7 +13,7 @@ class CollectionView: BaseView {
         let searchBar = UISearchBar()
         searchBar.placeholder = "  맛집 키워드 검색"
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            textField.font = UIFont(name: "KCC-Ganpan", size: 15.0)//UIFont.systemFont(ofSize: 14) //플레이스 홀더 글씨 크기
+            textField.font = UIFont(name: "KCC-Ganpan", size: 15.0)//플레이스 홀더 글씨 크기
         }
         searchBar.layer.shadowColor = UIColor.clear.cgColor
         //searchBar.showsCancelButton = true
@@ -158,24 +158,32 @@ class CollectionView: BaseView {
             //make.width.equalTo(300)
         }
         
-        
-        
-        
+              
     }
-    
-    
     private func collectionViewLayout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 5
-        let size = UIScreen.main.bounds.width - 20
-        layout.itemSize = CGSize(width: size / 3, height: 192)
-        //layer.cornerRadius = 30
+        layout.minimumLineSpacing = 0
+        
+        let padding: CGFloat = 10
+        let itemsPerRow: CGFloat = 3
+        let itemSpacing: CGFloat = 14
+        let totalSpacing: CGFloat = (itemsPerRow - 1) * itemSpacing + padding * 2
+        let itemWidth = (UIScreen.main.bounds.width - totalSpacing) / itemsPerRow
+        
+    
+        let additionalHeightForCosmosView: CGFloat = 30
+        let itemHeight = itemWidth * 1.4 + additionalHeightForCosmosView
+        layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
+
+
+        layout.minimumInteritemSpacing = itemSpacing
+
+        layout.sectionInset = UIEdgeInsets(top: 1, left: padding, bottom: 0, right: padding)
+        
         return layout
     }
-    
-    
-    
-    
+
+
+
     
 }

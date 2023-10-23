@@ -366,13 +366,13 @@ extension MapViewController {
                 } else {
                     authorization = CLLocationManager.authorizationStatus()
                 }
-                print(authorization, "77")
+                //print(authorization, "77")
             //메인 스레드에서 권한 상태를 처리하는 부분. 메인 스레드에서 UI 업데이트 및 사용자 액션을 처리해야 하므로, 백그라운드 스레드에서 확인한 권한 상태를 메인 스레드에서 처리함.
                 DispatchQueue.main.async {
                     self.checkCurrentLocationAuthorization(status: authorization)
                 }
             } else {
-                print("위치 서비스가 꺼져 있어서 위치 권한 요청을 못합니다.")
+                //print("위치 서비스가 꺼져 있어서 위치 권한 요청을 못합니다.")
             }
         }
     }
@@ -380,7 +380,7 @@ extension MapViewController {
     // MARK: - 위치 서비스 권한의 상태에 따라 적절한 동작을 수행하는 역할을 하는 함수
     /// - Parameter status: status 매개변수로 권한 상태를 전달받음.
     func checkCurrentLocationAuthorization(status: CLAuthorizationStatus) {
-        print("Check", status)
+        //print("Check", status)
         //    @frozen >> 더 이상 열거형에 절대 추가될 케이스가 없다고 확인한다.!!!
         switch status {
         case .notDetermined: //사용자가 위치 권한을 아직 결정하지 않은 상태

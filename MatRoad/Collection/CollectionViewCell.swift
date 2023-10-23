@@ -20,22 +20,15 @@ class CollectionViewCell: BaseCollectionViewCell {
         return view
     }()
     
-    let imageView: UIImageView = {
-        let view = UIImageView()
+    let imageView: GradientImageView = {
+        let view = GradientImageView(frame: .zero)
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 16.5
         view.clipsToBounds = true
-        view.backgroundColor = .clear // UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
-        
-        // 그라디언트 레이어 추가
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
-        gradientLayer.locations = [0.69, 1.0] // 시작 위치와 끝 위치 설정
-        gradientLayer.frame = view.bounds
-        view.layer.insertSublayer(gradientLayer, at: 0)
-        
+        view.backgroundColor = .clear
         return view
     }()
+
     
     let dateLabel = {
         let view = UILabel()
@@ -103,27 +96,21 @@ class CollectionViewCell: BaseCollectionViewCell {
     }
     
     override func setConstraints() {
+
         shadowContainerView.snp.makeConstraints { make in
-            make.left.equalTo(contentView).offset(2)
-            make.right.equalTo(contentView).offset(-2)
-            make.top.equalTo(contentView.snp.top).inset(2)
-            make.height.equalTo(180)
+            make.left.equalTo(contentView)
+            make.right.equalTo(contentView)
+            make.top.equalTo(contentView.snp.top)
+            make.height.equalTo(shadowContainerView.snp.width).multipliedBy(1.4)
         }
+
         imageView.snp.makeConstraints { make in
-            make.edges.equalTo(shadowContainerView) // imageView의 edges를 그림자 컨테이너 뷰에 맞춤
+            make.edges.equalTo(shadowContainerView)
         }
-        
-//        imageView.snp.makeConstraints { make in
-//            //make.horizontalEdges.equalTo(contentView)
-//            make.left.equalTo(contentView).offset(2)
-//            make.right.equalTo(contentView).offset(-2)
-//            make.top.equalTo(contentView.snp.top).inset(0)
-//            make.height.equalTo(180)
-//        }
+
         dateLabel.snp.makeConstraints { make in
             make.bottom.equalTo(titleLabel.snp.top).offset(3)
             make.leading.equalTo(12)
-            
             make.height.equalTo(20)
         }
         titleLabel.snp.makeConstraints { make in
@@ -133,14 +120,22 @@ class CollectionViewCell: BaseCollectionViewCell {
             //make.width.equalToSuperview()
             
         }
+//        cosmosView.snp.makeConstraints { make in
+//            make.top.equalTo(imageView.snp.bottom).offset(7)
+//            //make.top.equalTo(contentView.snp.top).inset(0)
+//            make.leading.equalTo(imageView.snp.leading).offset(7)
+//            make.centerX.equalTo(contentView)
+//            //make.width.equalTo(80)
+//            //make.right.equalTo(imageView.snp.right).inset(7)
+//        }
+        
         cosmosView.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(7)
-            //make.top.equalTo(contentView.snp.top).inset(0)
             make.leading.equalTo(imageView.snp.leading).offset(7)
             make.centerX.equalTo(contentView)
-            //make.width.equalTo(80)
-            //make.right.equalTo(imageView.snp.right).inset(7)
+            make.bottom.equalTo(contentView.snp.bottom).offset(-7) // 추가된 줄
         }
+
         deleteCheckmark.snp.makeConstraints { make in
             make.size.equalTo(50)
             make.center.equalTo(imageView)
@@ -163,3 +158,34 @@ class CollectionViewCell: BaseCollectionViewCell {
 }
 
 
+class GradientImageView: UIImageView {
+    private var gradientLayer: CAGradientLayer!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupGradientLayer()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupGradientLayer()
+    }
+    
+    private func setupGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradientLayer.locations = [0.6, 1.0]
+        layer.insertSublayer(gradientLayer, at: 0)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = bounds
+    }
+    
+    func refreshGradient() {
+        gradientLayer.removeFromSuperlayer()
+        setupGradientLayer()
+        setNeedsLayout()
+    }
+}
