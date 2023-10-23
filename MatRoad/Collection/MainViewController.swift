@@ -40,6 +40,8 @@ class MainViewController: BaseViewController {
         let albums = realm.objects(AlbumTable.self).map { $0.albumName }
         return ["All"] + albums + ["+ 앨범 추가"]
     }
+    var sideMenuPanGesture: UIGestureRecognizer?
+    
     var selectedReview: ReviewTable?
     var isAllSelected: Bool = false
     var selectedSideMenuIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
@@ -220,8 +222,9 @@ class MainViewController: BaseViewController {
         
         sideMenu = SideMenuNavigationController(rootViewController: sideMenuTableViewController)
         sideMenu?.navigationBar.barTintColor = .black //UIColor(named: "TabBarTintColor") //⭐️
+        sideMenu?.leftSide = true //왼쪽방향에서 나오기
         SideMenuManager.default.leftMenuNavigationController = sideMenu
-        SideMenuManager.default.addPanGestureToPresent(toView: self.view)
+        //SideMenuManager.default.addPanGestureToPresent(toView: self.view) //화면 끌어서 슬라이드 메뉴바 나타내기
         sideMenuTableViewController.edgesForExtendedLayout = [.top]
         
     }
@@ -250,7 +253,7 @@ class MainViewController: BaseViewController {
         isDeleteMode.toggle()
         if isDeleteMode {
             // 삭제 모드 시작
-            //tabBarController?.tabBar.isHidden = false
+            tabBarController?.tabBar.isHidden = true
             navigationItem.rightBarButtonItems = [deleteBarButton, doneBarButton]
             
             let alertController = UIAlertController(title: nil, message: "삭제할 데이터를 선택하고 \n삭제 버튼을 눌러주세요!", preferredStyle: .alert)
@@ -260,7 +263,7 @@ class MainViewController: BaseViewController {
             
             transButton.isEnabled = false
             albumButton.isEnabled = false
-            //tabBarController?.tabBar.isHidden = true
+            
         } else {
             // 삭제 모드 종료
             transButton.isEnabled = true
@@ -269,13 +272,14 @@ class MainViewController: BaseViewController {
         }
         mainView.collectionView.reloadData()
     }
-    
+
+
     //⭐️이동 ver2
     @objc func transModeButtonTapped() {
+        
         isTransferMode.toggle()
         if isTransferMode {
             // 이동 모드 시작
-            //tabBarController?.tabBar.isHidden = false
             navigationItem.rightBarButtonItems = [transBarButton, transDoneBarButton]
             // 현재 선택된 리뷰 항목을 이동 세트에 추가합니다.
             if let selectedIndexPaths = mainView.collectionView.indexPathsForSelectedItems {
@@ -290,20 +294,30 @@ class MainViewController: BaseViewController {
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
             albumButton.isEnabled = false
-            //tabBarController?.tabBar.isHidden = true
+            tabBarController?.tabBar.isHidden = true
         } else {
             // 이동 모드 종료
-            albumButton.isEnabled = true
             endTransferMode()
         }
         mainView.collectionView.reloadData()
     }
-
-    
+ 
     
     @objc func albumButtonTapped() {
         present(sideMenu!, animated: true)
     }
+    
+//    @objc func albumButtonTapped() {
+//        // 슬라이드 메뉴바 열기/닫기
+//        if let sideMenu = sideMenu {
+//            if self.presentedViewController == sideMenu {
+//                sideMenu.dismiss(animated: true, completion: nil)
+//            } else {
+//                present(sideMenu, animated: true, completion: nil)
+//            }
+//        }
+//    }
+
     // MARK: - 정렬버튼
     @objc func sortByRating() {
         isAscendingOrder.toggle()
@@ -368,7 +382,7 @@ class MainViewController: BaseViewController {
     
     @objc func endEditMode() {
         isDeleteMode = false
-        //tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = false
         makeNavigationUI()
         selectedItemsToDelete.removeAll()
         transButton.isEnabled = true
@@ -377,7 +391,7 @@ class MainViewController: BaseViewController {
     //⭐️이동 ver2
     @objc func endTransferMode() {
         isTransferMode = false
-        //tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = false
         makeNavigationUI()
         selectedItemsToTranse.removeAll()
         albumButton.isEnabled = true
@@ -386,6 +400,7 @@ class MainViewController: BaseViewController {
     
     //⭐️⭐️⭐️ 데이터 삭제
     @objc func deleteSelectedItems() {
+        tabBarController?.tabBar.isHidden = false
         // All셀에서 삭제할때는 전체 삭제
         if isAllSelected {
             for review in selectedItemsToDelete {
@@ -393,7 +408,7 @@ class MainViewController: BaseViewController {
             }
             
             // 'All'에서 삭제할 때의 알림
-            let alertController = UIAlertController(title: nil, message: "데이터가 삭제 되었습니다!", preferredStyle: .alert)
+            let alertController = UIAlertController(title: nil, message: "모든 앨범내에서 \n데이터가 삭제 되었습니다!", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
@@ -425,6 +440,9 @@ class MainViewController: BaseViewController {
 
     //⭐️이동 ver2
     @objc func transSelectedItems() {
+        
+        tabBarController?.tabBar.isHidden = false
+        
         let alertController = UIAlertController(title: nil, message: "데이터를 이동할 앨범을 선택해주세요!", preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
@@ -436,8 +454,6 @@ class MainViewController: BaseViewController {
         alertController.addAction(confirmAction)
         
         self.present(alertController, animated: true, completion: nil)
-        
-        //tabBarController?.tabBar.isHidden = true
         
     }
     
