@@ -61,7 +61,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
 //            reviewView.dateButton.setTitle("  \(dateString)", for: .normal)
 //        }
         
-        let currentDate = Date()
+        let currentDate = reviewDate ?? Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy년 MM월 dd일"
         let dateString = formatter.string(from: currentDate)
@@ -131,8 +131,9 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         let calendar = Calendar.current
         datePicker.minimumDate = calendar.date(from: DateComponents(year: 1980, month: 1, day: 1))
         datePicker.maximumDate = Date()
-        datePicker.date = Date()
-        
+        //datePicker.date = Date()
+        datePicker.date = reviewDate ?? Date()
+
         let datePickerSize = datePicker.sizeThatFits(CGSize.zero)
         datePicker.frame = CGRect(x: (alertController.view.bounds.size.width - datePickerSize.width) * 0.5, y: 20, width: datePickerSize.width, height: datePickerSize.height)
         

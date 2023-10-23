@@ -546,6 +546,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             reviewVC.starCount = review.starCount
             reviewVC.rateNumber = review.rateNumber
             reviewVC.reviewDate = review.reviewDate
+
             reviewVC.memo = review.memo
             reviewVC.imageView1URL = review.imageView1URL
             reviewVC.imageView2URL = review.imageView2URL
