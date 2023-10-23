@@ -169,10 +169,10 @@ class MainViewController: BaseViewController {
     func borderedButton(title: String, action: Selector) -> UIBarButtonItem {
         let button = UIButton(type: .custom)
         button.setTitle(title, for: .normal)
-        button.setTitleColor(UIColor(named: "textColor"), for: .normal)
+        button.setTitleColor(UIColor(named: "gold"), for: .normal)
         button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 16.0)
-        button.layer.borderWidth = 2.0
-        button.layer.borderColor = UIColor(named: "textColor")?.cgColor
+        button.layer.borderWidth = 2.5
+        button.layer.borderColor = UIColor(named: "gold")?.cgColor
         button.layer.cornerRadius = 10
         button.layer.cornerCurve = .continuous
         button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
@@ -609,9 +609,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - 사이드메뉴바의 셀을 누를떄마다 데이터 가져오기
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.reloadData()
         let selectedAlbum = albumNames[indexPath.row]
-        
+
         if selectedAlbum == "모두 보기" {
             isAllSelected = true
             reviewItems = repository.fetch()
@@ -624,25 +623,22 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                 reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbum._id)
                 
                 UserDefaults.standard.set(matchingAlbum._id.stringValue, forKey: "selectedAlbumId")
-                //print("===111===", matchingAlbum._id)
             }
         }
-        
+
         mainView.collectionView.reloadData()
         sideMenu?.dismiss(animated: true, completion: nil)
-        
-        selectedSideMenuIndexPath = indexPath
-        
-        // 체크마크 관련 로직 추가
+
         if let previousSelectedIndexPath = selectedSideMenuIndexPath {
             tableView.cellForRow(at: previousSelectedIndexPath)?.accessoryType = .none
         }
         
-        // "+ 앨범 추가" 셀을 제외하고 체크마크 표시
         if selectedAlbum != "+ 앨범 추가" {
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            selectedSideMenuIndexPath = indexPath
         }
+
+        selectedSideMenuIndexPath = indexPath
+        
         
         tableView.reloadData()
         

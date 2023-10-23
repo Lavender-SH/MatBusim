@@ -241,26 +241,26 @@ class ReviewView: BaseView {
         view.layer.cornerRadius = 3
         return view
     }()
-//    let infoLabel = {
-//        let view = GradientLabel() //UILabel()
-//        view.text = "이미지를 눌러서 \n사진을 넣어주세요!"
-//        view.numberOfLines = 2
-//        view.textColor = .yellow
-//        view.font = UIFont(name: "KCC-Ganpan", size: 11.0)
-//        view.backgroundColor = .clear
-//        view.textAlignment = .center
-//        view.isHidden = false
-//        view.textAlignment = .center
-//        view.gradientLayer.cornerRadius = 10
-//        return view
-//    }()
+    let infoLabel = {
+        let view = GradientLabel() //UILabel()
+        view.text = "사진을 넣어주세요!"
+        view.numberOfLines = 2
+        view.textColor = .orange
+        view.font = UIFont(name: "KCC-Ganpan", size: 12.0)
+        view.backgroundColor = .clear
+        view.textAlignment = .center
+        view.isHidden = false
+        view.textAlignment = .center
+        view.gradientLayer.cornerRadius = 10
+        return view
+    }()
     
     let infoLabel2 = {
         let view = GradientLabel() //UILabel()
-        view.text = "이미지를 눌러서 \n사진을 넣어주세요!"
+        view.text = "사진을 넣어주세요!"
         view.numberOfLines = 2
         view.textColor = .orange
-        view.font = UIFont(name: "KCC-Ganpan", size: 11.0)
+        view.font = UIFont(name: "KCC-Ganpan", size: 12.0)
         view.backgroundColor = .clear
         view.textAlignment = .center
         view.isHidden = false
@@ -289,7 +289,7 @@ class ReviewView: BaseView {
         alertView.addSubview(handleView)
         alertView.addSubview(visitCountLabel)
         alertView.addSubview(visitCountStepper)
-        //alertView.addSubview(infoLabel)
+        alertView.addSubview(infoLabel)
         alertView.addSubview(infoLabel2)
         
         cosmosView.didFinishTouchingCosmos = { [weak self] rating in
@@ -442,12 +442,12 @@ class ReviewView: BaseView {
             make.height.equalTo(40)
         }
         
-//        infoLabel.snp.makeConstraints { make in
-//            make.right.equalTo(imageView1)
-//            make.left.equalTo(imageView1)
-//            make.centerX.equalTo(imageView1)
-//            make.bottom.equalTo(imageView1)
-//        }
+        infoLabel.snp.makeConstraints { make in
+            make.right.equalTo(imageView1)
+            make.left.equalTo(imageView1)
+            make.centerX.equalTo(imageView1)
+            make.top.equalTo(imageView1)
+        }
         
         infoLabel2.snp.makeConstraints { make in
             make.right.equalTo(imageView2)

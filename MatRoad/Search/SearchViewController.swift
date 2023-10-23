@@ -37,6 +37,10 @@ class SearchViewController: BaseViewController {
         view.addGestureRecognizer(tapGesture)
         //서치화면 -> 리뷰창 닫기 -> 메인화면으로 돌아오기
         NotificationCenter.default.addObserver(self, selector: #selector(handleReviewSavedNotification), name: Notification.Name("ReviewSavedFromSearch"), object: nil)
+        
+        let tapGesture5 = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard5))
+        tapGesture5.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture5)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -76,12 +80,15 @@ class SearchViewController: BaseViewController {
         navigationItem.leftBarButtonItem = backButton
     }
 
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func dismissKeyboard() {
+    @objc func dismissKeyboard5() {
         view.endEditing(true)
     }
     
