@@ -372,7 +372,7 @@ extension MapViewController {
                     self.checkCurrentLocationAuthorization(status: authorization)
                 }
             } else {
-                //print("위치 서비스가 꺼져 있어서 위치 권한 요청을 못합니다.")
+                print("위치 서비스가 꺼져 있어서 위치 권한 요청을 못합니다.")
             }
         }
     }
@@ -388,6 +388,7 @@ extension MapViewController {
             locationManager.requestWhenInUseAuthorization() //권한 허용을 위한 alert(info.plist)창을 표시하도록 요청함. 사용자에게 위치 정보를 사용할 때의 권한을 요청.
         case .restricted: //앱에 의해 제한된 상태. 일반적으로 부모가 관리하는 계정이나 디바이스 제한.
             print("restricted")
+            showLocationSetiingAlert()
         case .denied: //사용자가 위치 권한을 거부한 상태.
             print("denied")
             showLocationSetiingAlert() //위치 설정을 변경하도록 유도하는 알림창을 표시

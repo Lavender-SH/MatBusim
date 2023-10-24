@@ -51,6 +51,9 @@ class AlbumTable: Object {
     }
 }
 
+
+
+
 class UserTheme: Object {
     @Persisted var selectedTheme: String
 }

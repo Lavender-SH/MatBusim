@@ -247,7 +247,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     func setImage(_ image: UIImage, forTag tag: Int) {
         if tag == reviewView.imageView1.tag {
             reviewView.imageView1.image = image
-            //reviewView.infoLabel.isHidden = true
+            reviewView.infoLabel.isHidden = true
         } else if tag == reviewView.imageView2.tag {
             reviewView.imageView2.image = image
             reviewView.infoLabel2.isHidden = true
@@ -263,7 +263,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height / 3
+                self.view.frame.origin.y -= keyboardSize.height / 1.2
             }
         }
     }

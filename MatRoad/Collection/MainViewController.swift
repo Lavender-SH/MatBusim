@@ -89,7 +89,7 @@ class MainViewController: BaseViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         
-        print(realm.configuration.fileURL)
+        //print(realm.configuration.fileURL)
         
         mainView.timeButton.setTitleColor(UIColor(named: "gold"), for: .normal)
         mainView.timeButton.layer.borderColor = UIColor(named: "gold")?.cgColor
@@ -169,10 +169,10 @@ class MainViewController: BaseViewController {
     func borderedButton(title: String, action: Selector) -> UIBarButtonItem {
         let button = UIButton(type: .custom)
         button.setTitle(title, for: .normal)
-        button.setTitleColor(UIColor(named: "gold"), for: .normal)
+        button.setTitleColor(UIColor(named: "realGold"), for: .normal)
         button.titleLabel?.font = UIFont(name: "KCC-Ganpan", size: 16.0)
         button.layer.borderWidth = 2.5
-        button.layer.borderColor = UIColor(named: "gold")?.cgColor
+        button.layer.borderColor = UIColor(named: "realGold")?.cgColor
         button.layer.cornerRadius = 10
         button.layer.cornerCurve = .continuous
         button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
@@ -265,7 +265,7 @@ class MainViewController: BaseViewController {
             
             transButton.isEnabled = false
             albumButton.isEnabled = false
-            deleteButton.isEnabled = false
+            //deleteButton.isEnabled = true
             
         } else {
             // 삭제 모드 종료
@@ -390,7 +390,7 @@ class MainViewController: BaseViewController {
         makeNavigationUI()
         selectedItemsToDelete.removeAll()
         transButton.isEnabled = true
-        deleteButton.isEnabled = true
+        //deleteButton.isEnabled = true
         mainView.collectionView.reloadData()
     }
     //⭐️이동 ver2
@@ -406,42 +406,55 @@ class MainViewController: BaseViewController {
     
     //⭐️⭐️⭐️ 데이터 삭제
     @objc func deleteSelectedItems() {
-        tabBarController?.tabBar.isHidden = false
-        // All셀에서 삭제할때는 전체 삭제
+        //tabBarController?.tabBar.isHidden = true
+        let deleteCount = selectedItemsToDelete.count
+        
         if isAllSelected {
+            // All셀에서 삭제할때는 전체 삭제
+            print("777", selectedItemsToDelete.count)
             for review in selectedItemsToDelete {
                 repository.deleteReview(review)
             }
             
             // 'All'에서 삭제할 때의 알림
-            let alertController = UIAlertController(title: nil, message: "모든 앨범내에서 \n데이터가 삭제 되었습니다!", preferredStyle: .alert)
+            let alertController = UIAlertController(title: nil, message: "모든 앨범내에서 \n\(deleteCount)개의 데이터가 삭제 되었습니다!", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
-
-        } else {
+            endEditMode()
+            
+        } else if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
+                  let selectedAlbumId = try? ObjectId(string: selectedAlbumIdString),
+                  let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: selectedAlbumId) {
+            
             // 앨범에서 삭제할때는 해당 앨범의 데이터만 삭제하고 다른 앨범, all셀에 있는 데이터는 살림
-            if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
-               let selectedAlbumId = try? ObjectId(string: selectedAlbumIdString),
-               let album = realm.object(ofType: AlbumTable.self, forPrimaryKey: selectedAlbumId) {
-                try! realm.write {
-                    for review in selectedItemsToDelete {
-                        if let index = album.reviews.index(of: review) {
-                            album.reviews.remove(at: index)
-                        }
+            try! realm.write {
+                for review in selectedItemsToDelete {
+                    if let index = album.reviews.index(of: review) {
+                        album.reviews.remove(at: index)
                     }
                 }
-                
-                // 특정 앨범에서 삭제할 때의 알림
-                let alertController = UIAlertController(title: nil, message: "\(album.albumName) 앨범에서 \n데이터가 삭제 되었습니다!", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-                alertController.addAction(okAction)
-                self.present(alertController, animated: true, completion: nil)
             }
+            
+            // 특정 앨범에서 삭제할 때의 알림
+            let alertController = UIAlertController(title: nil, message: "\(album.albumName) 앨범에서 \n\(deleteCount)개의 데이터가 삭제 되었습니다!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            endEditMode()
+        } else {
+            // isAllSelected도 아니고 특정 앨범에서도 아닐 경우 전체 삭제(처음 뷰디드로드화면)
+            for review in selectedItemsToDelete {
+                repository.deleteReview(review)
+            }
+            
+            
+            let alertController = UIAlertController(title: nil, message: "모든 앨범내에서 \n\(deleteCount)개의 데이터가 삭제 되었습니다!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            endEditMode()
         }
-
-        selectedItemsToDelete.removeAll()
-        mainView.collectionView.reloadData()
     }
 
     //⭐️이동 ver2
@@ -552,7 +565,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             reviewVC.imageView2URL = review.imageView2URL
             reviewVC.visitCount = review.visitCount
             
-            //reviewVC.reviewView.infoLabel.isHidden = true
+            reviewVC.reviewView.infoLabel.isHidden = true
             reviewVC.reviewView.infoLabel2.isHidden = true
             present(reviewVC, animated: true, completion: nil)
         }
@@ -629,17 +642,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         mainView.collectionView.reloadData()
         sideMenu?.dismiss(animated: true, completion: nil)
 
-        if let previousSelectedIndexPath = selectedSideMenuIndexPath {
-            tableView.cellForRow(at: previousSelectedIndexPath)?.accessoryType = .none
-        }
-        
-        if selectedAlbum != "+ 앨범 추가" {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+            if let previousSelectedIndexPath = selectedSideMenuIndexPath {
+                tableView.cellForRow(at: previousSelectedIndexPath)?.accessoryType = .checkmark
+            }
 
-        selectedSideMenuIndexPath = indexPath
+            if selectedAlbum != "+ 앨범 추가" {
+                tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+            }
+
+            selectedSideMenuIndexPath = indexPath
         
-        
+
         tableView.reloadData()
         
         
@@ -684,7 +697,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                 endTransferMode()
                 
                 // 데이터 이동 완료 얼럿창 표시
-                let alertController = UIAlertController(title: nil, message: "\(selectedAlbum) 앨범으로 \n데이터 이동이 완료되었습니다!", preferredStyle: .alert)
+                let alertController = UIAlertController(title: nil, message: "\(selectedAlbum) 앨범으로 \n\(reviewsArray.count)개의 데이터가 이동되었습니다!", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
                 alertController.addAction(okAction)
                 self.present(alertController, animated: true, completion: nil)
