@@ -50,6 +50,8 @@ class MainViewController: BaseViewController {
     var albumButton: UIBarButtonItem!
     var deleteButton: UIBarButtonItem!
     
+    var isMoveToMainView = false
+    
     override func loadView() {
         self.view = mainView
     }
@@ -163,8 +165,28 @@ class MainViewController: BaseViewController {
         let logo = UIImage(named: "newLogo")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
+        imageView.isUserInteractionEnabled = true  // imageView에 제스쳐를 추가하기 위해 활성화
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(refreshViewContents))
+        imageView.addGestureRecognizer(tapGesture)
         navigationItem.titleView = imageView
     }
+
+    @objc func refreshViewContents() {
+        // "모두 보기" 셀이 눌린 것과 같은 로직 추가
+        isAllSelected = true
+        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
+        UserDefaults.standard.removeObject(forKey: "selectedAlbumId")
+        mainView.collectionView.reloadData()
+
+        selectedSideMenuIndexPath = IndexPath(row: 0, section: 0)
+        sideMenuTableViewController.tableView.reloadData()
+        
+        let alertController = UIAlertController(title: nil, message: "처음 화면으로 이동했습니다!", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
     
     func borderedButton(title: String, action: Selector) -> UIBarButtonItem {
         let button = UIButton(type: .custom)
@@ -324,6 +346,7 @@ class MainViewController: BaseViewController {
 
     // MARK: - 정렬버튼
     @objc func sortByRating() {
+        
         isAscendingOrder.toggle()
         if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
            let selectedAlbumId = try? ObjectId(string: selectedAlbumIdString) {
@@ -333,6 +356,17 @@ class MainViewController: BaseViewController {
         }
 
         mainView.collectionView.reloadData()
+        
+        //로고를 눌렀을때 정렬
+        if isMoveToMainView == true {
+            isAscendingOrder.toggle()
+
+            reviewItems = repository.fetch().sorted(byKeyPath: "starCount", ascending: isAscendingOrder)
+            
+
+            mainView.collectionView.reloadData()
+        }
+        
     }
 
     @objc func sortByLatest() {
@@ -345,6 +379,15 @@ class MainViewController: BaseViewController {
         }
 
         mainView.collectionView.reloadData()
+        
+        //로고를 눌렀을때 정렬
+        if isMoveToMainView == true {
+            isAscendingOrder.toggle()
+
+                reviewItems = repository.fetch().sorted(byKeyPath: "visitCount", ascending: isAscendingOrder)
+            
+            mainView.collectionView.reloadData()
+        }
     }
 
     @objc func sortByPast() {
@@ -357,6 +400,14 @@ class MainViewController: BaseViewController {
         }
 
         mainView.collectionView.reloadData()
+        
+        //로고를 눌렀을때 정렬
+        if isMoveToMainView == true {
+            isAscendingOrder.toggle()
+
+                reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
+            
+        }
     }
 
 
@@ -581,17 +632,20 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SideMenuCell", for: indexPath)
+        cell.prepareForReuse()
         cell.textLabel?.text = albumNames[indexPath.row]
         cell.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 0.3))
         cell.textLabel?.textColor = .white
         cell.textLabel?.font = UIFont(name: "KCC-Ganpan", size: 16.0)
         //체크표시
         if indexPath == selectedSideMenuIndexPath {
-            cell.accessoryType = .checkmark
-            cell.tintColor = .white
+            //cell.accessoryType = .checkmark
+            //cell.tintColor = .white
+            cell.backgroundColor = UIColor(named: "logoBack")
         } else {
-            cell.accessoryType = .none
+            //cell.accessoryType = .none
         }
+
         // "+ 앨범 추가" 셀에 버튼 추가
         if indexPath.row == albumNames.count - 1 {
             let addButton = UIButton(frame: CGRect(x: 5, y: 5, width: 230, height: 35))
@@ -642,18 +696,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         mainView.collectionView.reloadData()
         sideMenu?.dismiss(animated: true, completion: nil)
 
-            if let previousSelectedIndexPath = selectedSideMenuIndexPath {
-                tableView.cellForRow(at: previousSelectedIndexPath)?.accessoryType = .checkmark
-            }
-
-            if selectedAlbum != "+ 앨범 추가" {
-                tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            }
-
-            selectedSideMenuIndexPath = indexPath
-        
-
+        selectedSideMenuIndexPath = indexPath
         tableView.reloadData()
+    
+
+        
+        
         
         
         //⭐️이동 ver2
