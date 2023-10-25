@@ -43,7 +43,7 @@ class BackUpViewController: BaseViewController {
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.isTranslucent = false
  
-        let logo = UIImage(named: "newLogo")
+        let logo = UIImage(named: "투명로고")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
         

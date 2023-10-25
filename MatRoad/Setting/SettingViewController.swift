@@ -68,7 +68,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.isTranslucent = false
         // "matlogo" 이미지를 네비게이션 제목 타이틀에 추가
-        let logo = UIImage(named: "newLogo")
+        let logo = UIImage(named: "투명로고")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
         

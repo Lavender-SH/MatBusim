@@ -149,12 +149,15 @@ class MainViewController: BaseViewController {
         navigationController?.navigationBar.isTranslucent = false
         
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.app"), style: .plain, target: self, action: #selector(reviewPlusButtonTapped))
-        plusButton.tintColor = UIColor(named: "gold")
+        plusButton.tintColor = UIColor(named: "memoGold")
         deleteButton = UIBarButtonItem(image: UIImage(systemName: "minus.square"), style: .plain, target: self, action: #selector(reviewDeleteButtonTapped))
+        deleteButton.tintColor = UIColor(named: "memoGold")
         
         albumButton = UIBarButtonItem(image: UIImage(systemName: "photo.on.rectangle.angled"), style: .plain, target: self, action: #selector(albumButtonTapped))
+        albumButton.tintColor = UIColor(named: "memoGold")
         //⭐️ 이동 ver2
         transButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.arrow.right.square"), style: .plain, target: self, action: #selector(transModeButtonTapped))
+        transButton.tintColor = UIColor(named: "memoGold")
         //let albumButton3 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         //let albumButton4 = UIBarButtonItem(image: UIImage(), style: .plain, target: self, action: #selector(albumButtonTapped))
         
@@ -162,7 +165,7 @@ class MainViewController: BaseViewController {
         navigationItem.leftBarButtonItems = [albumButton, transButton]
         
         
-        let logo = UIImage(named: "newLogo")
+        let logo = UIImage(named: "투명로고")
         let imageView = UIImageView(image: logo)
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true  // imageView에 제스쳐를 추가하기 위해 활성화

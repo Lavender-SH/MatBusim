@@ -72,7 +72,7 @@ class SearchViewController: BaseViewController {
         
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.isTranslucent = false
         navigationItem.title = "맛집 검색"
         
