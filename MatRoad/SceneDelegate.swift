@@ -15,9 +15,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         let navigationBarAppearance = UINavigationBar.appearance()
-        //navigationBarAppearance.tintColor = UIColor(named: "gold")
+        navigationBarAppearance.tintColor = UIColor(named: "gold")
         navigationBarAppearance.isTranslucent = false
-        navigationBarAppearance.backgroundColor = .clear //UIColor(named: "TabBarTintColor") //⭐️슬라이드 메뉴바 네비게이션바 부분 색
+        //navigationBarAppearance.backgroundColor = .white //UIColor(named: "TabBarTintColor") //⭐️슬라이드 메뉴바 네비게이션바 부분 색
         
         let tabBarAppearance = UITabBar.appearance()
         tabBarAppearance.tintColor = UIColor(named: "gold")
@@ -39,7 +39,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         
-        
+//        if let windowScene = scene as? UIWindowScene {
+//            windowScene.statusBarManager?.statusBarStyle = .lightContent
+//        }
+
         
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)

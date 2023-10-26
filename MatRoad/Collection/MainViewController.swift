@@ -49,8 +49,7 @@ class MainViewController: BaseViewController {
     var transButton: UIBarButtonItem! //변수로 사용하기 위함 (삭제모드일때 이동버튼 누르기 막아야함)
     var albumButton: UIBarButtonItem!
     var deleteButton: UIBarButtonItem!
-    
-    var isMoveToMainView = false
+    var isSlideGesture: Bool = true
     
     override func loadView() {
         self.view = mainView
@@ -67,6 +66,7 @@ class MainViewController: BaseViewController {
         makeNavigationUI()
         setupBarButtonItems()
         setupSideMenu()
+        setupSideMenu2()
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
         mainView.searchBar.delegate = self
@@ -180,11 +180,13 @@ class MainViewController: BaseViewController {
         reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
         UserDefaults.standard.removeObject(forKey: "selectedAlbumId")
         mainView.collectionView.reloadData()
+        pastButtonTapped()
+        isAscendingOrder = true
 
         selectedSideMenuIndexPath = IndexPath(row: 0, section: 0)
         sideMenuTableViewController.tableView.reloadData()
         
-        let alertController = UIAlertController(title: nil, message: "처음 화면으로 이동했습니다!", preferredStyle: .alert)
+        let alertController = UIAlertController(title: nil, message: "로고를 누르면 \n처음 화면으로 이동합니다!", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
         alertController.addAction(okAction)
         self.present(alertController, animated: true, completion: nil)
@@ -215,8 +217,13 @@ class MainViewController: BaseViewController {
         transDoneBarButton = borderedButton(title: "취소", action: #selector(endTransferMode))
     }
 
-    
-    
+    //스테이터스바 색깔 변경
+//    private func setStatusBarBackgroundColor() {
+//           let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+//           statusBar.backgroundColor = .red
+//           UIApplication.shared.keyWindow?.addSubview(statusBar)
+//
+//       }
     
     // MARK: - 사이드 메뉴바 세팅
     func setupSideMenu() {
@@ -242,18 +249,57 @@ class MainViewController: BaseViewController {
         
         sideMenuTableViewController.navigationController?.navigationBar.standardAppearance = appearance
         sideMenuTableViewController.navigationController?.navigationBar.compactAppearance = appearance
-        //sideMenuTableViewController.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        sideMenuTableViewController.navigationController?.navigationBar.scrollEdgeAppearance = appearance
         sideMenuTableViewController.navigationController?.navigationBar.tintColor = .blue
         
         
         sideMenu = SideMenuNavigationController(rootViewController: sideMenuTableViewController)
-        sideMenu?.navigationBar.barTintColor = .black //UIColor(named: "TabBarTintColor") //⭐️
+        sideMenu?.navigationBar.barTintColor = .clear //UIColor(named: "TabBarTintColor") //⭐️
         sideMenu?.leftSide = true //왼쪽방향에서 나오기
         SideMenuManager.default.leftMenuNavigationController = sideMenu
-        //SideMenuManager.default.addPanGestureToPresent(toView: self.view) //화면 끌어서 슬라이드 메뉴바 나타내기
+//        let statusBar = UIView(frame: sideMenu?.view.window?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+//            statusBar.backgroundColor = .red
+//            sideMenu?.view.addSubview(statusBar)
+        
         sideMenuTableViewController.edgesForExtendedLayout = [.top]
         
+        //화면 끌어서 슬라이드 메뉴바 나타내기
+        
+            // 기존 제스처 제거 (이렇게 해야 여러 개의 제스처가 누적되지 않습니다.)
+//            if let gestures = self.view.gestureRecognizers {
+//                for gesture in gestures {
+//                    if let gesture = gesture as? UIPanGestureRecognizer {
+//                        self.view.removeGestureRecognizer(gesture)
+//                    }
+//                }
+//            }
+//
+//            // isSlideGesture가 true일 때만 제스처 추가
+//            if isSlideGesture {
+//                SideMenuManager.default.addPanGestureToPresent(toView: self.view)
+//            }
+        
+
+        
     }
+    
+    func setupSideMenu2() {
+        // Remove existing pan gesture
+        if let gestures = self.view.gestureRecognizers {
+            for gesture in gestures {
+                if let gesture = gesture as? UIPanGestureRecognizer {
+                    self.view.removeGestureRecognizer(gesture)
+                }
+            }
+        }
+
+        // Only add the gesture when both modes are false
+        if !isDeleteMode && !isTransferMode && isSlideGesture {
+            SideMenuManager.default.addPanGestureToPresent(toView: self.view)
+        }
+    }
+
+
     
     // MARK: - 데이터추가 버튼
     @objc func reviewPlusButtonTapped() {
@@ -273,7 +319,7 @@ class MainViewController: BaseViewController {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    
+
     // MARK: - 데이터 삭제
     @objc func reviewDeleteButtonTapped() {
         isDeleteMode.toggle()
@@ -290,6 +336,8 @@ class MainViewController: BaseViewController {
             
             transButton.isEnabled = false
             albumButton.isEnabled = false
+            isSlideGesture = false
+            setupSideMenu2()
             //deleteButton.isEnabled = true
             
         } else {
@@ -298,6 +346,7 @@ class MainViewController: BaseViewController {
             albumButton.isEnabled = true
             endEditMode()
         }
+     
         mainView.collectionView.reloadData()
     }
 
@@ -324,10 +373,17 @@ class MainViewController: BaseViewController {
             albumButton.isEnabled = false
             transButton.isEnabled = false
             tabBarController?.tabBar.isHidden = true
+            
+            isSlideGesture = false
+            setupSideMenu2()
+            
         } else {
             // 이동 모드 종료
             endTransferMode()
+        
+            
         }
+ 
         mainView.collectionView.reloadData()
     }
  
@@ -357,19 +413,13 @@ class MainViewController: BaseViewController {
         } else {
             reviewItems = repository.fetch().sorted(byKeyPath: "starCount", ascending: isAscendingOrder)
         }
-
-        mainView.collectionView.reloadData()
         
         //로고를 눌렀을때 정렬
-        if isMoveToMainView == true {
-            isAscendingOrder.toggle()
-
+        if isAllSelected == true {
             reviewItems = repository.fetch().sorted(byKeyPath: "starCount", ascending: isAscendingOrder)
-            
-
-            mainView.collectionView.reloadData()
         }
         
+        mainView.collectionView.reloadData()
     }
 
     @objc func sortByLatest() {
@@ -380,18 +430,17 @@ class MainViewController: BaseViewController {
         } else {
             reviewItems = repository.fetch().sorted(byKeyPath: "visitCount", ascending: isAscendingOrder)
         }
-
-        mainView.collectionView.reloadData()
         
         //로고를 눌렀을때 정렬
-        if isMoveToMainView == true {
-            isAscendingOrder.toggle()
-
-                reviewItems = repository.fetch().sorted(byKeyPath: "visitCount", ascending: isAscendingOrder)
-            
-            mainView.collectionView.reloadData()
+        if isAllSelected == true {
+            reviewItems = repository.fetch().sorted(byKeyPath: "visitCount", ascending: isAscendingOrder)
         }
+        
+        mainView.collectionView.reloadData()
     }
+    
+    
+    
 
     @objc func sortByPast() {
         isAscendingOrder.toggle()
@@ -402,15 +451,12 @@ class MainViewController: BaseViewController {
             reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
         }
 
-        mainView.collectionView.reloadData()
-        
         //로고를 눌렀을때 정렬
-        if isMoveToMainView == true {
-            isAscendingOrder.toggle()
-
-                reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
-            
+        if isAllSelected == true {
+            reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
         }
+        
+        mainView.collectionView.reloadData()
     }
 
 
@@ -446,6 +492,8 @@ class MainViewController: BaseViewController {
         transButton.isEnabled = true
         //deleteButton.isEnabled = true
         mainView.collectionView.reloadData()
+        isSlideGesture = true
+        setupSideMenu2()
     }
     //⭐️이동 ver2
     @objc func endTransferMode() {
@@ -456,6 +504,8 @@ class MainViewController: BaseViewController {
         albumButton.isEnabled = true
         transButton.isEnabled = true
         mainView.collectionView.reloadData()
+        isSlideGesture = true
+        setupSideMenu2()
     }
     
     //⭐️⭐️⭐️ 데이터 삭제
@@ -533,6 +583,7 @@ class MainViewController: BaseViewController {
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("didRestoreBackup"), object: nil)
     }
+    
     
     
 }
@@ -637,8 +688,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SideMenuCell", for: indexPath)
         cell.prepareForReuse()
         cell.textLabel?.text = albumNames[indexPath.row]
-        cell.backgroundColor = UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 0.3))
-        cell.textLabel?.textColor = .white
+        cell.backgroundColor = UIColor(named: "slideCell") //UIColor(cgColor: .init(red: 0.05, green: 0.05, blue: 0.05, alpha: 0.3))
+        cell.textLabel?.textColor = UIColor(named: "goldCellText")
         cell.textLabel?.font = UIFont(name: "KCC-Ganpan", size: 16.0)
         //체크표시
         if indexPath == selectedSideMenuIndexPath {
@@ -655,10 +706,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             //let addButton = UIButton(frame: CGRect(x: 15, y: 8, width: 200, height: 30))
             addButton.contentHorizontalAlignment = .center
             addButton.setTitle(albumNames[indexPath.row], for: .normal)
-            addButton.setTitleColor(.white, for: .normal)
+            addButton.setTitleColor(UIColor(named: "gold"), for: .normal)
             addButton.backgroundColor = .clear
             addButton.addTarget(self, action: #selector(addAlbumButtonTapped), for: .touchUpInside)
-            addButton.layer.borderColor = UIColor.white.cgColor
+            addButton.layer.borderColor = UIColor(named: "gold")?.cgColor
+            //addButton.layer.borderColor = UIColor(named: "goldCellText")?.cgColor //UIColor.white.cgColor
             addButton.layer.borderWidth = 2.0
             addButton.layer.cornerRadius = 10
             addButton.clipsToBounds = true
@@ -764,7 +816,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerHeight: CGFloat = 50
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: headerHeight))
-        headerView.backgroundColor = .darkGray
+        headerView.backgroundColor = UIColor(named: "slideHeader")
         
         let titleLabel = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.bounds.width - 60, height: headerHeight))
         titleLabel.text = "나의 앨범"
@@ -834,25 +886,61 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return indexPath.row != 0 && indexPath.row != albumNames.count - 1
     }
 
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//
+//            let albumNameToDelete = albumNames[indexPath.row]
+//            if let albumToDelete = realm.objects(AlbumTable.self).filter("albumName == %@", albumNameToDelete).first {
+//                try! realm.write {
+//                    realm.delete(albumToDelete)
+//                }
+//            }
+//
+//            tableView.deleteRows(at: [indexPath], with: .automatic)
+//        }
+//    }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-
             let albumNameToDelete = albumNames[indexPath.row]
-            if let albumToDelete = realm.objects(AlbumTable.self).filter("albumName == %@", albumNameToDelete).first {
-                try! realm.write {
-                    realm.delete(albumToDelete)
+            
+            // Create an alert to confirm the deletion
+            let alertController = UIAlertController(title: "알림", message: "\(albumNameToDelete) 앨범의 데이터를 삭제하시겠습니까?", preferredStyle: .alert)
+            
+            // "확인" action
+            let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
+                // Delete the album from the realm
+                if let albumToDelete = self.realm.objects(AlbumTable.self).filter("albumName == %@", albumNameToDelete).first {
+                    try! self.realm.write {
+                        self.realm.delete(albumToDelete)
+                    }
+                    // Update the table view
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
                 }
             }
-
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+            let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+            
+            alertController.addAction(confirmAction)
+            alertController.addAction(cancelAction)
+            
+            // Close the SideMenu before presenting the alert
+            sideMenu?.dismiss(animated: true, completion: {
+                // Show the alert
+                self.present(alertController, animated: true, completion: nil)
+            })
         }
     }
+
+
 
     @objc func handleTapOutside() {
         if sideMenuTableViewController.tableView.isEditing {
             sideMenuTableViewController.tableView.setEditing(false, animated: true)
         }
     }
+    
+    
     
 }
 // MARK: - 서치바 관련함수
@@ -936,3 +1024,5 @@ extension MainViewController {
         }
     }
 }
+
+

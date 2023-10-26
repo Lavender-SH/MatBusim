@@ -246,23 +246,57 @@ extension BackUpViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//            // zip 파일 삭제
+//            let fileName = fetchZipList()[indexPath.row].name
+//            guard let path = documentDirectoryPath() else {
+//                print("도큐먼트 위치에 오류가 있어요")
+//                return
+//            }
+//            let fileURL = path.appendingPathComponent(fileName)
+//
+//            do {
+//                try FileManager.default.removeItem(at: fileURL)
+//                tableView.deleteRows(at: [indexPath], with: .fade)
+//            } catch {
+//                print("파일 삭제 실패: \(error)")
+//            }
+//        }
+//    }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // zip 파일 삭제
-            let fileName = fetchZipList()[indexPath.row].name
-            guard let path = documentDirectoryPath() else {
-                print("도큐먼트 위치에 오류가 있어요")
-                return
-            }
-            let fileURL = path.appendingPathComponent(fileName)
+            // Create an alert to confirm the deletion
+            let alertController = UIAlertController(title: "알림", message: "선택한 백업 파일을 삭제하시겠습니까?", preferredStyle: .alert)
             
-            do {
-                try FileManager.default.removeItem(at: fileURL)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-            } catch {
-                print("파일 삭제 실패: \(error)")
+            // "확인" action
+            let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
+                // zip 파일 삭제
+                let fileName = self.fetchZipList()[indexPath.row].name
+                guard let path = self.documentDirectoryPath() else {
+                    print("도큐먼트 위치에 오류가 있어요")
+                    return
+                }
+                let fileURL = path.appendingPathComponent(fileName)
+                
+                do {
+                    try FileManager.default.removeItem(at: fileURL)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                } catch {
+                    print("파일 삭제 실패: \(error)")
+                }
             }
+            
+            let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+            
+            alertController.addAction(confirmAction)
+            alertController.addAction(cancelAction)
+            
+            // Show the alert
+            self.present(alertController, animated: true, completion: nil)
         }
     }
+
     
 }

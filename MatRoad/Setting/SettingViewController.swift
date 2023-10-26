@@ -27,7 +27,7 @@ enum Section: Int, CaseIterable {
         switch self {
         case .theme: return ["라이트모드", "다크모드"]
         case .backupRestore: return ["백업/복구/공유하기"]
-        case .about: return ["문의/의견", "맛슐랭 1.0.0 Version"]
+        case .about: return ["문의/의견", "맛슐랭 1.0.1 Version"]
         }
     }
 }

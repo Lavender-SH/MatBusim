@@ -48,7 +48,7 @@ class BackUpView: BaseView {
     let backUpButton: UIButton = {
         let view = UIButton()
         view.backgroundColor = UIColor(named: "darkGold")
-        view.setTitle("       백업 파일 만들기", for: .normal)
+        view.setTitle("         백업 파일 만들기", for: .normal)
         view.setTitleColor(.white, for: .normal)
         view.layer.borderWidth = 2.0
         view.layer.cornerRadius = 16.5
@@ -69,7 +69,7 @@ class BackUpView: BaseView {
     let restoreButton: UIButton = {
         let view = UIButton()
         view.backgroundColor = UIColor(named: "darkGold")
-        view.setTitle("  복구 하기", for: .normal)
+        view.setTitle("   복구 하기", for: .normal)
         view.setTitleColor(.white, for: .normal)
         view.layer.borderWidth = 2.0
         view.layer.cornerRadius = 16.5
@@ -127,7 +127,7 @@ class BackUpView: BaseView {
         }
         backUpButton.snp.makeConstraints { make in
             make.bottom.equalTo(backupTableView.snp.top).offset(-10)
-            make.left.equalToSuperview().offset(25)
+            make.left.equalToSuperview().offset(22)
             make.width.equalToSuperview().multipliedBy(0.5).offset(-35)
             make.height.equalTo(40)
         }
@@ -138,7 +138,7 @@ class BackUpView: BaseView {
             }
         restoreButton.snp.makeConstraints { make in
             make.bottom.equalTo(backupTableView.snp.top).offset(-10)
-            make.right.equalToSuperview().offset(-25)
+            make.right.equalToSuperview().offset(-22)
             make.width.equalTo(backUpButton.snp.width)
             make.height.equalTo(40)
         }
