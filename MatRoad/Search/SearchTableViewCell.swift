@@ -101,6 +101,8 @@ class SearchTableViewCell: BaseTableViewCell {
         categoryLabel.text = item.finalCategory
         roadAddressLabel.text = item.roadAddressName
         phoneLabel.text = item.phone
+        
+        
     }
     
 

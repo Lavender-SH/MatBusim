@@ -50,6 +50,9 @@ class MainViewController: BaseViewController {
     var albumButton: UIBarButtonItem!
     var deleteButton: UIBarButtonItem!
     var isSlideGesture: Bool = true
+    var activityIndicator: UIActivityIndicatorView!
+    
+    
     
     override func loadView() {
         self.view = mainView
@@ -67,6 +70,7 @@ class MainViewController: BaseViewController {
         setupBarButtonItems()
         setupSideMenu()
         setupSideMenu2()
+        IndiatorViewBasic()
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
         mainView.searchBar.delegate = self
@@ -120,6 +124,17 @@ class MainViewController: BaseViewController {
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
+    func IndiatorViewBasic() {
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .red
+        view.addSubview(activityIndicator)
+        
+        activityIndicator.snp.makeConstraints { (make) in
+            make.center.equalTo(mainView)
+        }
+    }
+    
     
     override func configureView() {
         mainView.ratingButton.addTarget(self, action: #selector(sortByRating), for: .touchUpInside)
@@ -130,9 +145,9 @@ class MainViewController: BaseViewController {
         mainView.visitsButton.addTarget(self, action: #selector(latestButtonTapped), for: .touchUpInside)
         mainView.timeButton.addTarget(self, action: #selector(pastButtonTapped), for: .touchUpInside)
         
-//        if let cancelButton = mainView.searchBar.value(forKey: "cancelButton") as? UIButton {
-//            cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: UIControl.Event.touchUpInside)
-//        }
+        //        if let cancelButton = mainView.searchBar.value(forKey: "cancelButton") as? UIButton {
+        //            cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: UIControl.Event.touchUpInside)
+        //        }
     }
     
     // MARK: - 네비게이션UI
@@ -173,25 +188,48 @@ class MainViewController: BaseViewController {
         imageView.addGestureRecognizer(tapGesture)
         navigationItem.titleView = imageView
     }
-
+    
+    //    @objc func refreshViewContents() {
+    //        // "모두 보기" 셀이 눌린 것과 같은 로직 추가
+    //        isAllSelected = true
+    //        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
+    //        UserDefaults.standard.removeObject(forKey: "selectedAlbumId")
+    //        mainView.collectionView.reloadData()
+    //        pastButtonTapped()
+    //        isAscendingOrder = true
+    //
+    //        selectedSideMenuIndexPath = IndexPath(row: 0, section: 0)
+    //        sideMenuTableViewController.tableView.reloadData()
+    //
+    //        let alertController = UIAlertController(title: nil, message: "로고를 누르면 \n처음 화면으로 이동합니다!", preferredStyle: .alert)
+    //        let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+    //        alertController.addAction(okAction)
+    //        self.present(alertController, animated: true, completion: nil)
+    //    }
     @objc func refreshViewContents() {
-        // "모두 보기" 셀이 눌린 것과 같은 로직 추가
-        isAllSelected = true
-        reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
-        UserDefaults.standard.removeObject(forKey: "selectedAlbumId")
-        mainView.collectionView.reloadData()
-        pastButtonTapped()
-        isAscendingOrder = true
-
-        selectedSideMenuIndexPath = IndexPath(row: 0, section: 0)
-        sideMenuTableViewController.tableView.reloadData()
+        // 인디케이터 시작
+        activityIndicator.startAnimating()
         
-        let alertController = UIAlertController(title: nil, message: "로고를 누르면 \n처음 화면으로 이동합니다!", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-        alertController.addAction(okAction)
-        self.present(alertController, animated: true, completion: nil)
+        // 1초의 지연 후에 실행
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            // 인디케이터 중지
+            self?.activityIndicator.stopAnimating()
+            
+            // 원래의 refresh 로직 실행
+            self?.isAllSelected = true
+            self?.reviewItems = self?.repository.fetch().sorted(byKeyPath: "reviewDate", ascending: false)
+            UserDefaults.standard.removeObject(forKey: "selectedAlbumId")
+            self?.mainView.collectionView.reloadData()
+            self?.pastButtonTapped()
+            self?.isAscendingOrder = true
+            self?.mainView.searchBar.placeholder = "모두 보기 앨범"
+            
+            self?.selectedSideMenuIndexPath = IndexPath(row: 0, section: 0)
+            self?.sideMenuTableViewController.tableView.reloadData()
+        }
     }
-
+    
+    
     
     func borderedButton(title: String, action: Selector) -> UIBarButtonItem {
         let button = UIButton(type: .custom)
@@ -206,7 +244,7 @@ class MainViewController: BaseViewController {
         button.addTarget(self, action: action, for: .touchUpInside)
         return UIBarButtonItem(customView: button)
     }
-
+    
     private func setupBarButtonItems() {
         // 삭제 및 완료 버튼 초기화
         deleteBarButton = borderedButton(title: "삭제", action: #selector(deleteSelectedItems))
@@ -216,14 +254,14 @@ class MainViewController: BaseViewController {
         transBarButton = borderedButton(title: "이동", action: #selector(transSelectedItems))
         transDoneBarButton = borderedButton(title: "취소", action: #selector(endTransferMode))
     }
-
+    
     //스테이터스바 색깔 변경
-//    private func setStatusBarBackgroundColor() {
-//           let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
-//           statusBar.backgroundColor = .red
-//           UIApplication.shared.keyWindow?.addSubview(statusBar)
-//
-//       }
+    //    private func setStatusBarBackgroundColor() {
+    //           let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+    //           statusBar.backgroundColor = .red
+    //           UIApplication.shared.keyWindow?.addSubview(statusBar)
+    //
+    //       }
     
     // MARK: - 사이드 메뉴바 세팅
     func setupSideMenu() {
@@ -257,30 +295,11 @@ class MainViewController: BaseViewController {
         sideMenu?.navigationBar.barTintColor = .clear //UIColor(named: "TabBarTintColor") //⭐️
         sideMenu?.leftSide = true //왼쪽방향에서 나오기
         SideMenuManager.default.leftMenuNavigationController = sideMenu
-//        let statusBar = UIView(frame: sideMenu?.view.window?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
-//            statusBar.backgroundColor = .red
-//            sideMenu?.view.addSubview(statusBar)
+        //        let statusBar = UIView(frame: sideMenu?.view.window?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+        //            statusBar.backgroundColor = .red
+        //            sideMenu?.view.addSubview(statusBar)
         
         sideMenuTableViewController.edgesForExtendedLayout = [.top]
-        
-        //화면 끌어서 슬라이드 메뉴바 나타내기
-        
-            // 기존 제스처 제거 (이렇게 해야 여러 개의 제스처가 누적되지 않습니다.)
-//            if let gestures = self.view.gestureRecognizers {
-//                for gesture in gestures {
-//                    if let gesture = gesture as? UIPanGestureRecognizer {
-//                        self.view.removeGestureRecognizer(gesture)
-//                    }
-//                }
-//            }
-//
-//            // isSlideGesture가 true일 때만 제스처 추가
-//            if isSlideGesture {
-//                SideMenuManager.default.addPanGestureToPresent(toView: self.view)
-//            }
-        
-
-        
     }
     
     func setupSideMenu2() {
@@ -292,34 +311,42 @@ class MainViewController: BaseViewController {
                 }
             }
         }
-
+        
         // Only add the gesture when both modes are false
         if !isDeleteMode && !isTransferMode && isSlideGesture {
             SideMenuManager.default.addPanGestureToPresent(toView: self.view)
         }
     }
-
-
+    
+    
     
     // MARK: - 데이터추가 버튼
     @objc func reviewPlusButtonTapped() {
-        let alertController = UIAlertController(title: nil, message: "맛집을 찾으셨습니까?", preferredStyle: .actionSheet)
         
-        let registerAction = UIAlertAction(title: "맛집 등록", style: .default) { (action) in
-            
-            let searchVC = SearchViewController()
-            let searchNavController = UINavigationController(rootViewController: searchVC)
-            searchNavController.modalPresentationStyle = .fullScreen
-            self.present(searchNavController, animated: true, completion: nil)
-        }
-        alertController.addAction(registerAction)
+        //얼럿창 있는 버전
+        //        let alertController = UIAlertController(title: nil, message: "맛집을 찾으셨습니까?", preferredStyle: .actionSheet)
+        //
+        //        let registerAction = UIAlertAction(title: "맛집 등록", style: .default) { (action) in
+        //
+        //            let searchVC = SearchViewController()
+        //            let searchNavController = UINavigationController(rootViewController: searchVC)
+        //            searchNavController.modalPresentationStyle = .fullScreen
+        //            self.present(searchNavController, animated: true, completion: nil)
+        //        }
+        //        alertController.addAction(registerAction)
+        //
+        //        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        //        alertController.addAction(cancelAction)
+        //
+        //        self.present(alertController, animated: true, completion: nil)
         
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        
-        self.present(alertController, animated: true, completion: nil)
+        //얼럿창 없는 버전
+        let searchVC = SearchViewController()
+        let searchNavController = UINavigationController(rootViewController: searchVC)
+        searchNavController.modalPresentationStyle = .fullScreen
+        self.present(searchNavController, animated: true, completion: nil)
     }
-
+    
     // MARK: - 데이터 삭제
     @objc func reviewDeleteButtonTapped() {
         isDeleteMode.toggle()
@@ -346,17 +373,26 @@ class MainViewController: BaseViewController {
             albumButton.isEnabled = true
             endEditMode()
         }
-     
+        
         mainView.collectionView.reloadData()
     }
-
-
+    
+    
     //⭐️이동 ver2
     @objc func transModeButtonTapped() {
-        
+        // 이동 모드 시작
         isTransferMode.toggle()
         if isTransferMode {
-            // 이동 모드 시작
+            // 앨범 존재 확인
+            if albumNames.count <= 2 { // "모두 보기"와 "+ 앨범 추가"만 있을 경우
+                let alertController = UIAlertController(title: nil, message: "이동할 새로운 앨범을 먼저 만들어주세요!", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+                isTransferMode = false // 이동 모드 종료
+                return
+            }
+            
             navigationItem.rightBarButtonItems = [transBarButton, transDoneBarButton]
             // 현재 선택된 리뷰 항목을 이동 세트에 추가합니다.
             if let selectedIndexPaths = mainView.collectionView.indexPathsForSelectedItems {
@@ -364,7 +400,7 @@ class MainViewController: BaseViewController {
                     selectedItemsToTranse.insert(reviewItems[indexPath.row])
                 }
             }
-
+            
             // 얼럿창 표시
             let alertController = UIAlertController(title: nil, message: "이동할 데이터를 선택하고 \n이동 버튼을 눌러주세요!", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
@@ -380,29 +416,29 @@ class MainViewController: BaseViewController {
         } else {
             // 이동 모드 종료
             endTransferMode()
-        
+            
             
         }
- 
+        
         mainView.collectionView.reloadData()
     }
- 
+    
     
     @objc func albumButtonTapped() {
         present(sideMenu!, animated: true)
     }
     
-//    @objc func albumButtonTapped() {
-//        // 슬라이드 메뉴바 열기/닫기
-//        if let sideMenu = sideMenu {
-//            if self.presentedViewController == sideMenu {
-//                sideMenu.dismiss(animated: true, completion: nil)
-//            } else {
-//                present(sideMenu, animated: true, completion: nil)
-//            }
-//        }
-//    }
-
+    //    @objc func albumButtonTapped() {
+    //        // 슬라이드 메뉴바 열기/닫기
+    //        if let sideMenu = sideMenu {
+    //            if self.presentedViewController == sideMenu {
+    //                sideMenu.dismiss(animated: true, completion: nil)
+    //            } else {
+    //                present(sideMenu, animated: true, completion: nil)
+    //            }
+    //        }
+    //    }
+    
     // MARK: - 정렬버튼
     @objc func sortByRating() {
         
@@ -421,7 +457,7 @@ class MainViewController: BaseViewController {
         
         mainView.collectionView.reloadData()
     }
-
+    
     @objc func sortByLatest() {
         isAscendingOrder.toggle()
         if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
@@ -441,7 +477,7 @@ class MainViewController: BaseViewController {
     
     
     
-
+    
     @objc func sortByPast() {
         isAscendingOrder.toggle()
         if let selectedAlbumIdString = UserDefaults.standard.string(forKey: "selectedAlbumId"),
@@ -450,7 +486,7 @@ class MainViewController: BaseViewController {
         } else {
             reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
         }
-
+        
         //로고를 눌렀을때 정렬
         if isAllSelected == true {
             reviewItems = repository.fetch().sorted(byKeyPath: "reviewDate", ascending: isAscendingOrder)
@@ -458,8 +494,8 @@ class MainViewController: BaseViewController {
         
         mainView.collectionView.reloadData()
     }
-
-
+    
+    
     
     @objc func ratingButtonTapped() {
         updateButtonStyles(selected: mainView.ratingButton, others: [mainView.visitsButton, mainView.timeButton])
@@ -515,7 +551,7 @@ class MainViewController: BaseViewController {
         
         if isAllSelected {
             // All셀에서 삭제할때는 전체 삭제
-            print("777", selectedItemsToDelete.count)
+            //print("777", selectedItemsToDelete.count)
             for review in selectedItemsToDelete {
                 repository.deleteReview(review)
             }
@@ -560,7 +596,7 @@ class MainViewController: BaseViewController {
             endEditMode()
         }
     }
-
+    
     //⭐️이동 ver2
     @objc func transSelectedItems() {
         
@@ -621,7 +657,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.dateLabel.text = dateString
         
         if let imageUrlString = review.imageView1URL, let imageUrl = URL(string: imageUrlString) {
-            cell.imageView.kf.setImage(with: imageUrl) // Kingfisher 라이브러리를 사용하여 이미지를 로드합니다.
+            cell.imageView.kf.setImage(with: imageUrl)
         }
         
         //삭제할때
@@ -664,7 +700,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             reviewVC.starCount = review.starCount
             reviewVC.rateNumber = review.rateNumber
             reviewVC.reviewDate = review.reviewDate
-
+            
             reviewVC.memo = review.memo
             reviewVC.imageView1URL = review.imageView1URL
             reviewVC.imageView2URL = review.imageView2URL
@@ -699,7 +735,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             //cell.accessoryType = .none
         }
-
+        
         // "+ 앨범 추가" 셀에 버튼 추가
         if indexPath.row == albumNames.count - 1 {
             let addButton = UIButton(frame: CGRect(x: 5, y: 5, width: 230, height: 35))
@@ -731,8 +767,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - 사이드메뉴바의 셀을 누를떄마다 데이터 가져오기
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //⭐️
+        handleAlbumSelection(with: albumNames[indexPath.row], at: indexPath)
+        
         let selectedAlbum = albumNames[indexPath.row]
-
+        
         if selectedAlbum == "모두 보기" {
             isAllSelected = true
             reviewItems = repository.fetch()
@@ -747,52 +786,26 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                 UserDefaults.standard.set(matchingAlbum._id.stringValue, forKey: "selectedAlbumId")
             }
         }
-
+        
         mainView.collectionView.reloadData()
         sideMenu?.dismiss(animated: true, completion: nil)
-
+        
         selectedSideMenuIndexPath = indexPath
         tableView.reloadData()
-    
-
         
-        
-        
-        
-        //⭐️이동 ver2
-        // 이동 모드에서 앨범 선택 시 데이터 이동
-//        if isTransferMode {
-//            let targetAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", selectedAlbum).first
-//            if let targetAlbum = targetAlbum {
-//                try! realm.write {
-//                    for review in selectedItemsToTranse {
-//                        if let currentAlbum = review.album.first {
-//                            currentAlbum.reviews.remove(at: currentAlbum.reviews.index(of: review)!)
-//                        }
-//                        targetAlbum.reviews.append(review)
-//                    }
-//                }
-//                // 이동 모드 종료 및 선택 항목 초기화
-//                isTransferMode = false
-//                selectedItemsToTranse.removeAll()
-//                mainView.collectionView.reloadData()
-//                endTransferMode()
-//
-//                // 데이터 이동 완료 얼럿창 표시
-//                let alertController = UIAlertController(title: nil, message: "데이터 이동이 완료되었습니다!", preferredStyle: .alert)
-//                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-//                alertController.addAction(okAction)
-//                self.present(alertController, animated: true, completion: nil)
-//            }
-//        }
-        
-        //⭐️⭐️⭐️ 데이터 이동
+        //⭐️이동 ver2 ReviewTableRepository 담기 전 데이터 이동o, 복사x
         if isTransferMode {
-            let repository = ReviewTableRepository()
-            let reviewsArray = Array(selectedItemsToTranse) // Set을 Array로 변환
-            let success = repository.transferReviews(from: nil, to: selectedAlbum, reviews: reviewsArray)
-            
-            if success {
+            let reviewsArray = Array(selectedItemsToTranse)
+            let targetAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", selectedAlbum).first
+            if let targetAlbum = targetAlbum {
+                try! realm.write {
+                    for review in selectedItemsToTranse {
+                        if let currentAlbum = review.album.first {
+                            currentAlbum.reviews.remove(at: currentAlbum.reviews.index(of: review)!)
+                        }
+                        targetAlbum.reviews.append(review)
+                    }
+                }
                 // 이동 모드 종료 및 선택 항목 초기화
                 isTransferMode = false
                 selectedItemsToTranse.removeAll()
@@ -806,7 +819,30 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                 self.present(alertController, animated: true, completion: nil)
             }
         }
-
+        
+        //⭐️⭐️⭐️ 데이터 복사o, 이동x
+        //        if isTransferMode {
+        //            let repository = ReviewTableRepository()
+        //            let reviewsArray = Array(selectedItemsToTranse) // Set을 Array로 변환
+        //            let success = repository.transferReviews(from: nil, to: selectedAlbum, reviews: reviewsArray)
+        //
+        //            if success {
+        //                // 이동 모드 종료 및 선택 항목 초기화
+        //                isTransferMode = false
+        //                selectedItemsToTranse.removeAll()
+        //                mainView.collectionView.reloadData()
+        //                endTransferMode()
+        //
+        //                // 데이터 이동 완료 얼럿창 표시
+        //                let alertController = UIAlertController(title: nil, message: "\(selectedAlbum) 앨범으로 \n\(reviewsArray.count)개의 데이터가 이동되었습니다!", preferredStyle: .alert)
+        //                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+        //                alertController.addAction(okAction)
+        //                self.present(alertController, animated: true, completion: nil)
+        //            }
+        //        }
+        
+        
+        
         
         
     }
@@ -853,6 +889,37 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
     }
     
+    //    @objc func addAlbumButtonTapped() {
+    //        sideMenu?.dismiss(animated: true, completion: {
+    //            // 얼럿창
+    //            let alertController = UIAlertController(title: "새로운 앨범", message: "이 앨범의 이름을 입력해주세요.", preferredStyle: .alert)
+    //            alertController.addTextField { (textField) in
+    //                textField.placeholder = " "
+    //            }
+    //            // "추가"
+    //            let addAction = UIAlertAction(title: "추가", style: .default) { _ in
+    //                if let newAlbumName = alertController.textFields?.first?.text, !newAlbumName.isEmpty {
+    //                    let newAlbum = AlbumTable(albumName: newAlbumName)
+    //
+    //                    let newAlbumId = newAlbum._id
+    //                    UserDefaults.standard.set(newAlbumId.stringValue, forKey: "newAlbumId")
+    //                    UserDefaults.standard.set(newAlbumName, forKey: "newAlbumName")
+    //
+    //                    self.repository.saveAlbum(newAlbum)
+    //                    self.sideMenuTableViewController.tableView.reloadData()
+    //
+    //                    // 새로운 앨범을 컬렉션 뷰에 추가
+    //                    self.reviewItems = self.repository.fetch().filter("ANY album._id == %@", newAlbum._id)
+    //                    self.mainView.collectionView.reloadData()
+    //                }
+    //            }
+    //            let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+    //            alertController.addAction(addAction)
+    //            alertController.addAction(cancelAction)
+    //            // 얼럿창 표시
+    //            self.present(alertController, animated: true, completion: nil)
+    //        })
+    //    }
     @objc func addAlbumButtonTapped() {
         sideMenu?.dismiss(animated: true, completion: {
             // 얼럿창
@@ -860,45 +927,107 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             alertController.addTextField { (textField) in
                 textField.placeholder = " "
             }
-            // "추가"
+            
+            // "추가" 액션
             let addAction = UIAlertAction(title: "추가", style: .default) { _ in
-                if let newAlbumName = alertController.textFields?.first?.text, !newAlbumName.isEmpty {
+                let newAlbumName = alertController.textFields?.first?.text ?? ""
+                
+                if !newAlbumName.isEmpty {
                     let newAlbum = AlbumTable(albumName: newAlbumName)
-                    
                     let newAlbumId = newAlbum._id
                     UserDefaults.standard.set(newAlbumId.stringValue, forKey: "newAlbumId")
                     UserDefaults.standard.set(newAlbumName, forKey: "newAlbumName")
                     
                     self.repository.saveAlbum(newAlbum)
                     self.sideMenuTableViewController.tableView.reloadData()
+                    
+                    // 새로운 앨범을 컬렉션 뷰에 나타내기
+                    self.reviewItems = self.repository.fetch().filter("ANY album._id == %@", newAlbum._id)
+                    self.mainView.collectionView.reloadData()
+                    
+                    //새로운 앨범 생성시 셀의 배경과 데이터 관련
+                    let newIndex = self.albumNames.count - 2
+                    let newIndexPath = IndexPath(row: newIndex, section: 0)
+                    self.handleAlbumSelection(with: newAlbumName, at: newIndexPath)
+                    self.sideMenuTableViewController.tableView.selectRow(at: newIndexPath, animated: true, scrollPosition: .none)
+                    self.mainView.searchBar.placeholder = "  \(newAlbumName) 앨범"
                 }
             }
+            
             let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
             alertController.addAction(addAction)
             alertController.addAction(cancelAction)
+            
             // 얼럿창 표시
             self.present(alertController, animated: true, completion: nil)
         })
     }
+    
+    //⭐️
+    //    func handleAlbumSelection(with albumName: String, at indexPath: IndexPath) {
+    //        if albumName == "모두 보기" {
+    //            isAllSelected = true
+    //            reviewItems = repository.fetch()
+    //            UserDefaults.standard.removeObject(forKey: "selectedAlbumId")
+    //        } else if albumName == "+ 앨범 추가" {
+    //            return
+    //        } else {
+    //            isAllSelected = false
+    //            if let matchingAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", albumName).first {
+    //                reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbum._id)
+    //                UserDefaults.standard.set(matchingAlbum._id.stringValue, forKey: "selectedAlbumId")
+    //            }
+    //        }
+    //
+    //        mainView.collectionView.reloadData()
+    //        sideMenu?.dismiss(animated: true, completion: nil)
+    //        selectedSideMenuIndexPath = indexPath
+    //    }
+    
+    func handleAlbumSelection(with albumName: String, at indexPath: IndexPath) {
+        if albumName == "모두 보기" {
+            isAllSelected = true
+            reviewItems = repository.fetch()
+            UserDefaults.standard.removeObject(forKey: "selectedAlbumId")
+            mainView.searchBar.placeholder = "  모두 보기 앨범"
+        } else if albumName == "+ 앨범 추가" {
+            return
+        } else {
+            isAllSelected = false
+            if let matchingAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", albumName).first {
+                reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbum._id)
+                UserDefaults.standard.set(matchingAlbum._id.stringValue, forKey: "selectedAlbumId")
+            }
+            mainView.searchBar.placeholder = "  \(albumName) 앨범"
+        }
+        
+        mainView.collectionView.reloadData()
+        sideMenu?.dismiss(animated: true, completion: nil)
+        selectedSideMenuIndexPath = indexPath
+    }
+    
+    
+    
+    
     // MARK: - 슬라이드 메뉴 바 셀 삭제
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-
+        
         return indexPath.row != 0 && indexPath.row != albumNames.count - 1
     }
-
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//
-//            let albumNameToDelete = albumNames[indexPath.row]
-//            if let albumToDelete = realm.objects(AlbumTable.self).filter("albumName == %@", albumNameToDelete).first {
-//                try! realm.write {
-//                    realm.delete(albumToDelete)
-//                }
-//            }
-//
-//            tableView.deleteRows(at: [indexPath], with: .automatic)
-//        }
-//    }
+    
+    //    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    //        if editingStyle == .delete {
+    //
+    //            let albumNameToDelete = albumNames[indexPath.row]
+    //            if let albumToDelete = realm.objects(AlbumTable.self).filter("albumName == %@", albumNameToDelete).first {
+    //                try! realm.write {
+    //                    realm.delete(albumToDelete)
+    //                }
+    //            }
+    //
+    //            tableView.deleteRows(at: [indexPath], with: .automatic)
+    //        }
+    //    }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -931,9 +1060,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             })
         }
     }
-
-
-
+    
+    
+    
     @objc func handleTapOutside() {
         if sideMenuTableViewController.tableView.isEditing {
             sideMenuTableViewController.tableView.setEditing(false, animated: true)
@@ -1024,5 +1153,3 @@ extension MainViewController {
         }
     }
 }
-
-

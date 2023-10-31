@@ -85,22 +85,36 @@ class ReviewTableRepository: ReviewTableRepositoryType {
         }
     }
     
-    //데이터 이동 ⭐️⭐️⭐️
-    func transferReviews(from currentAlbumName: String?, to targetAlbumName: String, reviews: [ReviewTable]) -> Bool {
-        guard let targetAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", targetAlbumName).first else {
-            return false
-        }
-        
+    //데이터 복사o 이동x ⭐️⭐️⭐️
+//    func transferReviews(from currentAlbumName: String?, to targetAlbumName: String, reviews: [ReviewTable]) -> Bool {
+//        guard let targetAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", targetAlbumName).first else {
+//            return false
+//        }
+//        
+//        try! realm.write {
+//            for review in reviews {
+//                if let currentAlbumName = currentAlbumName, let currentAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", currentAlbumName).first {
+//                    currentAlbum.reviews.remove(at: currentAlbum.reviews.index(of: review)!)
+//                }
+//                targetAlbum.reviews.append(review)
+//            }
+//        }
+//        return true
+//    }
+    
+    
+    //초기화
+    func clearAllData() {
         try! realm.write {
-            for review in reviews {
-                if let currentAlbumName = currentAlbumName, let currentAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", currentAlbumName).first {
-                    currentAlbum.reviews.remove(at: currentAlbum.reviews.index(of: review)!)
-                }
-                targetAlbum.reviews.append(review)
-            }
+            realm.deleteAll()
         }
-        return true
     }
+    
+    
+    
+
+    
+
     
 
 }

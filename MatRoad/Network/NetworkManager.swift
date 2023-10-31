@@ -25,7 +25,7 @@ class NetworkManager {
         AF.request(baseURL, method: .get, parameters: parameters, headers: header).validate(statusCode: 200...500).responseDecodable(of: Food.self) { response in
             //print("===555===", response.value)
             if let statusCode = response.response?.statusCode {
-            //print("===1111===Status Code: \(statusCode)")
+            print("===1111===Status Code: \(statusCode)")
             }
             
             switch response.result {
@@ -33,6 +33,11 @@ class NetworkManager {
                 completion(value.documents)
 //                let filteredDocuments = value.documents.filter { $0.categoryGroupCode == .fd6 || $0.categoryGroupCode == .ce7 }
 //                        completion(filteredDocuments)
+
+
+                
+                
+                
             case .failure(let error):
                 print("Error: \(error)")
                 completion(nil)

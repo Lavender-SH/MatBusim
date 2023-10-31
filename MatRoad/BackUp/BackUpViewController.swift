@@ -57,7 +57,7 @@ class BackUpViewController: BaseViewController {
         
         //2. 도큐먼트 위치
         guard let path = documentDirectoryPath() else {
-            //print("도큐먼트 위치에 오류가 있습니다.")
+            print("도큐먼트 위치에 오류가 있습니다.")
             return
         }
         //3. 백업하고자 하는 파일 경로 ex ~~~/~~/~~~/Document/default.realm
@@ -65,7 +65,7 @@ class BackUpViewController: BaseViewController {
         
         //4. 3번 경로가 유효한 지 확인
         guard FileManager.default.fileExists(atPath: realmFile.path) else {
-            //print("백업할 파일이 없습니다.")
+            print("백업할 파일이 없습니다.")
             return
         }
         //5. 압축하고자 하는 파일을 배열에 추가
@@ -80,24 +80,24 @@ class BackUpViewController: BaseViewController {
         //6. 압축
         do {
             let zipFilePath = try Zip.quickZipFiles(urlPaths, fileName: fileName)
-            //print("location: \(zipFilePath)")
+            print("location: \(zipFilePath)")
             backUpView.backupTableView.reloadData()
         } catch {
-            //print("압축을 실패했어요")
+            print("압축을 실패했어요")
         }
     }
     
     //⭐️⭐️⭐️
     func unzipAndRestore(fileURL: URL) {
         guard let destinationPath = documentDirectoryPath() else {
-            //print("도큐먼트 위치에 오류가 있어요")
+            print("도큐먼트 위치에 오류가 있어요")
             return
         }
         do {
             try Zip.unzipFile(fileURL, destination: destinationPath, overwrite: true, password: nil)
-            //print("복구 완료!")
+            print("복구 완료!")
         } catch {
-            //print("압축 해제 실패: \(error)")
+            print("압축 해제 실패: \(error)")
         }
     }
     // MARK: - 복구버튼
@@ -119,7 +119,7 @@ extension BackUpViewController: UIDocumentPickerDelegate {
         //print(#function, urls)
         
         guard let selectFileURL = urls.first else { // 파일앱에서의 URL
-            //print("선택한 파일에 오류가 있어요")
+            print("선택한 파일에 오류가 있어요")
             return
         }
         
@@ -139,7 +139,7 @@ extension BackUpViewController: UIDocumentPickerDelegate {
     func proceedWithRestore(using fileURL: URL) {
         
         guard let path = documentDirectoryPath() else { // 앱 도큐먼트 path
-            //print("도큐먼트 위치에 오류가 있어요")
+            print("도큐먼트 위치에 오류가 있어요")
             return
         }
         
@@ -246,24 +246,6 @@ extension BackUpViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            // zip 파일 삭제
-//            let fileName = fetchZipList()[indexPath.row].name
-//            guard let path = documentDirectoryPath() else {
-//                print("도큐먼트 위치에 오류가 있어요")
-//                return
-//            }
-//            let fileURL = path.appendingPathComponent(fileName)
-//
-//            do {
-//                try FileManager.default.removeItem(at: fileURL)
-//                tableView.deleteRows(at: [indexPath], with: .fade)
-//            } catch {
-//                print("파일 삭제 실패: \(error)")
-//            }
-//        }
-//    }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -293,7 +275,6 @@ extension BackUpViewController: UITableViewDelegate, UITableViewDataSource {
             alertController.addAction(confirmAction)
             alertController.addAction(cancelAction)
             
-            // Show the alert
             self.present(alertController, animated: true, completion: nil)
         }
     }

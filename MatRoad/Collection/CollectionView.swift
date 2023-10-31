@@ -11,7 +11,7 @@ import SnapKit
 class CollectionView: BaseView {
     lazy var searchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "  맛집 키워드 검색"
+        searchBar.placeholder = "  모두 보기 앨범"
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.font = UIFont(name: "KCC-Ganpan", size: 15.0)//플레이스 홀더 글씨 크기
         }

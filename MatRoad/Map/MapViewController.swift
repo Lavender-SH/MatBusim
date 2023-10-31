@@ -265,6 +265,10 @@ extension MapViewController {
             reviewVC.imageView2URL = review.imageView2URL
             reviewVC.visitCount = review.visitCount
             
+            reviewVC.reviewView.infoLabel.isHidden = true
+            reviewVC.reviewView.infoLabel2.isHidden = true
+            
+            
             // 어노테이션의 선택 상태를 해제 (이동 위치) 그래야 다시 어노테이션을 눌러도 리뷰 창이 뜸⭐️
             mapView.deselectAnnotation(annotation, animated: false)
             

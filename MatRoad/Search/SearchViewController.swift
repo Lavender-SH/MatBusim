@@ -12,6 +12,12 @@ import RealmSwift
 class SearchViewController: BaseViewController {
     
     let searchView = SearchView()
+    //Realm 관련 변수
+    var reviewItems: Results<ReviewTable>!
+    var albumItems: Results<AlbumTable>!
+    let realm = try! Realm()
+    let repository = ReviewTableRepository()
+    
     var isEnd = false
     var page = 1
     var foodManager = NetworkManager.shared
@@ -35,7 +41,7 @@ class SearchViewController: BaseViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.delegate = self
         view.addGestureRecognizer(tapGesture)
-        //서치화면 -> 리뷰창 닫기 -> 메인화면으로 돌아오기
+        //서치화면 -> 리뷰창 닫기 -> 메인화면으로 돌아오기 && // 저장된 장소와 일치하는지 확인하고, 일치하는 경우 셀 배경색을 하이라이팅
         NotificationCenter.default.addObserver(self, selector: #selector(handleReviewSavedNotification), name: Notification.Name("ReviewSavedFromSearch"), object: nil)
         
         let tapGesture5 = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard5))
@@ -92,7 +98,9 @@ class SearchViewController: BaseViewController {
         view.endEditing(true)
     }
     
+    //서치화면 -> 리뷰창 닫기 -> 메인화면으로 돌아오기 && // 저장된 장소와 일치하는지 확인하고, 일치하는 경우 셀 배경색을 하이라이팅
     @objc func handleReviewSavedNotification() {
+        searchView.tableView.reloadData()
         self.dismiss(animated: true) {
             self.navigationController?.popToRootViewController(animated: true)
         }
@@ -148,12 +156,28 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         guard indexPath.row < foodItems.count else {
             return UITableViewCell()
         }
+//        let item = foodItems[indexPath.row]
+//        cell.configure(with: item)
+//        cell.backgroundColor = UIColor(named: "White")
+//
+//        return cell
+        //⭐️
         let item = foodItems[indexPath.row]
+        
+        // 저장된 장소와 일치하는지 확인하고, 일치하는 경우 셀 배경색을 하이라이팅
+        let savedPlaceNames = getSavedPlaceNames()
+        if let placeName = item.placeName, savedPlaceNames.contains(placeName) {
+            cell.backgroundColor = UIColor(named: "searchHi")
+        } else {
+            cell.backgroundColor = UIColor(named: "White")
+        }
+        
         cell.configure(with: item)
-        cell.backgroundColor = UIColor(named: "White")
         
         return cell
     }
+    
+    
     // MARK: - 페이지네이션
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
@@ -198,6 +222,13 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         
         //navigationController?.pushViewController(reviewVC, animated: true)
     }
+    
+    // 저장된 장소와 일치하는지 확인하고, 일치하는 경우 셀 배경색을 하이라이팅
+    func getSavedPlaceNames() -> [String] {
+        let reviews = realm.objects(ReviewTable.self)
+        return reviews.compactMap { $0.storeName }
+    }
+
     
 }
 

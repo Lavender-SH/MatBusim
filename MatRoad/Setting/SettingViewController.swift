@@ -14,20 +14,23 @@ enum Section: Int, CaseIterable {
     case theme = 0
     case backupRestore
     case about
+    case reset
     
     var title: String {
         switch self {
         case .theme: return "테마"
         case .backupRestore: return "백업/복구/공유"
         case .about: return "맛슐랭"
+        case .reset: return "초기화"
         }
     }
     
     var items: [String] {
         switch self {
         case .theme: return ["라이트모드", "다크모드"]
-        case .backupRestore: return ["백업/복구/공유하기"]
-        case .about: return ["문의/의견", "맛슐랭 1.0.1 Version"]
+        case .backupRestore: return ["백업/복구/공유하기", "데이터 초기화"]
+        case .about: return ["문의/의견", "맛슐랭 \(Utils.getAppVersion()) Version"]
+        case .reset: return ["데이터 초기화"]
         }
     }
 }
@@ -237,8 +240,21 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
                 sendEmail()
             }
             tableView.deselectRow(at: indexPath, animated: true)
-            //default: break
+        case .reset:
+            if indexPath.row == 0 {  // "데이터 초기화" 셀을 선택했을 때
+                let alert = UIAlertController(title: "초기화 경고", message: "모든 데이터가 삭제됩니다. 정말로 계속하시겠습니까?", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "확인", style: .destructive) { _ in
+                    // 데이터 삭제 함수 호출
+                    ReviewTableRepository().clearAllData()
+                }
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                alert.addAction(okAction)
+                alert.addAction(cancelAction)
+                present(alert, animated: true)
+            }
         }
+    
+        
     }
     // 앱을 껏다 켜도 테마를 저장하기 위해 Realm 이용
     func saveThemeToRealm(_ theme: String) {

@@ -282,7 +282,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
     @objc func cancelButtonTapped(){
         dismiss(animated: true, completion: nil)
     }
-    
+    // MARK: - 저장
     @objc func saveButtonTapped() {
         // 1. 입력된 정보를 가져옴.
         let storeName = placeName ?? ""
@@ -344,6 +344,7 @@ class ReviewViewController: BaseViewController, UIImagePickerControllerDelegate,
         
         NotificationCenter.default.post(name: Notification.Name("ReviewUpdated"), object: nil)
         NotificationCenter.default.post(name: Notification.Name("ReviewSavedFromSearch"), object: nil)
+
     }
 
     
