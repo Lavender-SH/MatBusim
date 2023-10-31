@@ -53,7 +53,6 @@ class MainViewController: BaseViewController {
     var activityIndicator: UIActivityIndicatorView!
     
     
-    
     override func loadView() {
         self.view = mainView
     }
@@ -104,6 +103,7 @@ class MainViewController: BaseViewController {
         let savedTheme = loadThemeFromRealm()
         //print(savedTheme)
         applyTheme(savedTheme)
+
         
     }
     func loadThemeFromRealm() -> String {
@@ -303,7 +303,7 @@ class MainViewController: BaseViewController {
     }
     
     func setupSideMenu2() {
-        // Remove existing pan gesture
+        
         if let gestures = self.view.gestureRecognizers {
             for gesture in gestures {
                 if let gesture = gesture as? UIPanGestureRecognizer {
@@ -311,8 +311,7 @@ class MainViewController: BaseViewController {
                 }
             }
         }
-        
-        // Only add the gesture when both modes are false
+       
         if !isDeleteMode && !isTransferMode && isSlideGesture {
             SideMenuManager.default.addPanGestureToPresent(toView: self.view)
         }
@@ -886,40 +885,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     @objc func editButtonTapped() {
         isDeleteMode.toggle()
         sideMenuTableViewController.tableView.setEditing(isDeleteMode, animated: true)
-        
     }
     
-    //    @objc func addAlbumButtonTapped() {
-    //        sideMenu?.dismiss(animated: true, completion: {
-    //            // 얼럿창
-    //            let alertController = UIAlertController(title: "새로운 앨범", message: "이 앨범의 이름을 입력해주세요.", preferredStyle: .alert)
-    //            alertController.addTextField { (textField) in
-    //                textField.placeholder = " "
-    //            }
-    //            // "추가"
-    //            let addAction = UIAlertAction(title: "추가", style: .default) { _ in
-    //                if let newAlbumName = alertController.textFields?.first?.text, !newAlbumName.isEmpty {
-    //                    let newAlbum = AlbumTable(albumName: newAlbumName)
-    //
-    //                    let newAlbumId = newAlbum._id
-    //                    UserDefaults.standard.set(newAlbumId.stringValue, forKey: "newAlbumId")
-    //                    UserDefaults.standard.set(newAlbumName, forKey: "newAlbumName")
-    //
-    //                    self.repository.saveAlbum(newAlbum)
-    //                    self.sideMenuTableViewController.tableView.reloadData()
-    //
-    //                    // 새로운 앨범을 컬렉션 뷰에 추가
-    //                    self.reviewItems = self.repository.fetch().filter("ANY album._id == %@", newAlbum._id)
-    //                    self.mainView.collectionView.reloadData()
-    //                }
-    //            }
-    //            let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-    //            alertController.addAction(addAction)
-    //            alertController.addAction(cancelAction)
-    //            // 얼럿창 표시
-    //            self.present(alertController, animated: true, completion: nil)
-    //        })
-    //    }
+
+
     @objc func addAlbumButtonTapped() {
         sideMenu?.dismiss(animated: true, completion: {
             // 얼럿창
@@ -1033,18 +1002,19 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         if editingStyle == .delete {
             let albumNameToDelete = albumNames[indexPath.row]
             
-            // Create an alert to confirm the deletion
             let alertController = UIAlertController(title: "알림", message: "\(albumNameToDelete) 앨범의 데이터를 삭제하시겠습니까?", preferredStyle: .alert)
-            
-            // "확인" action
+
             let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
-                // Delete the album from the realm
+                
                 if let albumToDelete = self.realm.objects(AlbumTable.self).filter("albumName == %@", albumNameToDelete).first {
                     try! self.realm.write {
                         self.realm.delete(albumToDelete)
                     }
-                    // Update the table view
+                    
                     tableView.deleteRows(at: [indexPath], with: .automatic)
+                    
+                    self.editButtonTapped()
+                    self.refreshViewContents()
                 }
             }
             
@@ -1053,23 +1023,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             alertController.addAction(confirmAction)
             alertController.addAction(cancelAction)
             
-            // Close the SideMenu before presenting the alert
             sideMenu?.dismiss(animated: true, completion: {
-                // Show the alert
                 self.present(alertController, animated: true, completion: nil)
             })
         }
     }
     
-    
-    
-    @objc func handleTapOutside() {
-        if sideMenuTableViewController.tableView.isEditing {
-            sideMenuTableViewController.tableView.setEditing(false, animated: true)
-        }
-    }
-    
-    
+
     
 }
 // MARK: - 서치바 관련함수

@@ -99,7 +99,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
         let logo = UIImage(named: "투명아이콘")
         let imageView2 = UIImageView(image: logo)
         view.addSubview(imageView2)
-
+        
         imageView2.snp.makeConstraints { make in
             make.top.equalTo(view).offset(-25)
             make.centerX.equalTo(view)
@@ -124,7 +124,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
             }
             
             if item == "맛슐랭 1.0.0 Version" {
-                    cell.isUserInteractionEnabled = false
+                cell.isUserInteractionEnabled = false
             }
             
             return cell
@@ -246,6 +246,17 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
                 let okAction = UIAlertAction(title: "확인", style: .destructive) { _ in
                     // 데이터 삭제 함수 호출
                     ReviewTableRepository().clearAllData()
+                    
+                    //실행되지 않음
+//                    if let navController = self.navigationController,
+//                       let mainVC = navController.viewControllers.first(where: { $0 is MainViewController }) as? MainViewController {
+//                        mainVC.refreshViewContents()
+//                    }
+                    // 데이터 삭제 후 새로운 얼럿 표시
+                    let completionAlert = UIAlertController(title: "초기화 완료", message: "초기화가 완료되었습니다! \n앱을 다시 실행해 주시기 바랍니다.", preferredStyle: .alert)
+                    let okayAction = UIAlertAction(title: "확인", style: .default)
+                    completionAlert.addAction(okayAction)
+                    self.present(completionAlert, animated: true)
                 }
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel)
                 alert.addAction(okAction)
@@ -253,7 +264,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
                 present(alert, animated: true)
             }
         }
-    
+        
         
     }
     // 앱을 껏다 켜도 테마를 저장하기 위해 Realm 이용
@@ -271,12 +282,12 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
             }
         }
     }
-
+    
     func loadThemeFromRealm() -> String {
         let realm = try! Realm()
         return realm.objects(UserTheme.self).first?.selectedTheme ?? "라이트모드"
     }
-
+    
     
     // MARK: - Email
     func sendEmail() {
@@ -314,16 +325,16 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
 // MARK: - Email Utils
 final class Utils {
     static func getAppVersion() -> String {
-            let fullVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        let fullVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
         
-            let regexPattern = #"^(\d+\.\d+\.\d+)"#
-            if let regex = try? NSRegularExpression(pattern: regexPattern),
-               let match = regex.firstMatch(in: fullVersion, options: [], range: NSRange(location: 0, length: fullVersion.utf16.count)),
-               let range = Range(match.range(at: 1), in: fullVersion) {
-                return String(fullVersion[range])
-            }
-            return fullVersion
+        let regexPattern = #"^(\d+\.\d+\.\d+)"#
+        if let regex = try? NSRegularExpression(pattern: regexPattern),
+           let match = regex.firstMatch(in: fullVersion, options: [], range: NSRange(location: 0, length: fullVersion.utf16.count)),
+           let range = Range(match.range(at: 1), in: fullVersion) {
+            return String(fullVersion[range])
         }
+        return fullVersion
+    }
     
     static func getBuildVersion() -> String {
         return Bundle.main.infoDictionary?["CFBundleVersion"] as! String
@@ -342,13 +353,13 @@ final class Utils {
     }
     
     static func getDeviceModelName() -> String {
-            let device = UIDevice.current
-            let modelName = device.name
-            if modelName.isEmpty {
-                return "알 수 없음"
-            } else {
-                return modelName
-            }
+        let device = UIDevice.current
+        let modelName = device.name
+        if modelName.isEmpty {
+            return "알 수 없음"
+        } else {
+            return modelName
         }
-
+    }
+    
 }

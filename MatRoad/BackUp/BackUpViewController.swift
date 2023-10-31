@@ -156,7 +156,7 @@ extension BackUpViewController: UIDocumentPickerDelegate {
                 }, fileOutputHandler: { unzippedFile in
                     print("압축해제 완료: \(unzippedFile)")
                     NotificationCenter.default.post(name: NSNotification.Name("didRestoreBackup"), object: nil)
-                    let completionAlert = UIAlertController(title: "복구 완료", message: "복구되었습니다.\n반드시 앱을 재부팅 시켜주세요!", preferredStyle: .alert)
+                    let completionAlert = UIAlertController(title: "복구 완료", message: "데이터가 복구되었습니다.\n앱을 다시 실행해 주시기 바랍니다.", preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
                     completionAlert.addAction(okAction)
                     self.present(completionAlert, animated: true, completion: nil)
