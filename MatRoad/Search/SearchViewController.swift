@@ -228,7 +228,6 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UITa
         let reviews = realm.objects(ReviewTable.self)
         return reviews.compactMap { $0.storeName }
     }
-
     
 }
 

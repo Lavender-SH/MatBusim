@@ -248,17 +248,19 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UIDocumentP
                     ReviewTableRepository().clearAllData()
                     
                     //실행되지 않음
-//                    if let navController = self.navigationController,
-//                       let mainVC = navController.viewControllers.first(where: { $0 is MainViewController }) as? MainViewController {
-//                        mainVC.refreshViewContents()
-//                    }
+                    //                    if let navController = self.navigationController,
+                    //                       let mainVC = navController.viewControllers.first(where: { $0 is MainViewController }) as? MainViewController {
+                    //                        mainVC.refreshViewContents()
+                    //                    }
                     // 데이터 삭제 후 새로운 얼럿 표시
                     let completionAlert = UIAlertController(title: "초기화 완료", message: "초기화가 완료되었습니다! \n앱을 다시 실행해 주시기 바랍니다.", preferredStyle: .alert)
                     let okayAction = UIAlertAction(title: "확인", style: .default)
                     completionAlert.addAction(okayAction)
                     self.present(completionAlert, animated: true)
                 }
-                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel) { _ in
+                    tableView.deselectRow(at: indexPath, animated: true)  // 셀의 선택된 흔적을 없앰
+                }
                 alert.addAction(okAction)
                 alert.addAction(cancelAction)
                 present(alert, animated: true)

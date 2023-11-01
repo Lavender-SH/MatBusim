@@ -103,7 +103,7 @@ class MainViewController: BaseViewController {
         let savedTheme = loadThemeFromRealm()
         //print(savedTheme)
         applyTheme(savedTheme)
-
+        
         
     }
     func loadThemeFromRealm() -> String {
@@ -311,7 +311,7 @@ class MainViewController: BaseViewController {
                 }
             }
         }
-       
+        
         if !isDeleteMode && !isTransferMode && isSlideGesture {
             SideMenuManager.default.addPanGestureToPresent(toView: self.view)
         }
@@ -548,6 +548,15 @@ class MainViewController: BaseViewController {
         //tabBarController?.tabBar.isHidden = true
         let deleteCount = selectedItemsToDelete.count
         
+        if selectedItemsToDelete.isEmpty {
+            // If there are no items in selectedItemsToTranse, show an alert
+            let alertController = UIAlertController(title: nil, message: "삭제할 데이터를 선택해주세요!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        
         if isAllSelected {
             // All셀에서 삭제할때는 전체 삭제
             //print("777", selectedItemsToDelete.count)
@@ -598,6 +607,14 @@ class MainViewController: BaseViewController {
     
     //⭐️이동 ver2
     @objc func transSelectedItems() {
+        
+        if selectedItemsToTranse.isEmpty {
+            let alertController = UIAlertController(title: nil, message: "이동할 데이터를 선택해주세요!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
         
         tabBarController?.tabBar.isHidden = false
         
@@ -794,6 +811,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         //⭐️이동 ver2 ReviewTableRepository 담기 전 데이터 이동o, 복사x
         if isTransferMode {
+            
+            
             let reviewsArray = Array(selectedItemsToTranse)
             let targetAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", selectedAlbum).first
             if let targetAlbum = targetAlbum {
@@ -817,6 +836,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                 alertController.addAction(okAction)
                 self.present(alertController, animated: true, completion: nil)
             }
+            
+            
         }
         
         //⭐️⭐️⭐️ 데이터 복사o, 이동x
@@ -840,6 +861,16 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         //            }
         //        }
         
+        if selectedAlbum == "모두 보기" && isTransferMode {
+            let alertController = UIAlertController(title: nil, message: "모두 보기는 전체의 데이터이므로 \n데이터를 이동하지 않아도 데이터가 존재합니다. \n이동하기 모드를 종료합니다.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+            tableView.deselectRow(at: indexPath, animated: true)
+            endTransferMode()
+            return
+        }
         
         
         
@@ -887,8 +918,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         sideMenuTableViewController.tableView.setEditing(isDeleteMode, animated: true)
     }
     
-
-
+    
+    
     @objc func addAlbumButtonTapped() {
         sideMenu?.dismiss(animated: true, completion: {
             // 얼럿창
@@ -1003,7 +1034,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             let albumNameToDelete = albumNames[indexPath.row]
             
             let alertController = UIAlertController(title: "알림", message: "\(albumNameToDelete) 앨범의 데이터를 삭제하시겠습니까?", preferredStyle: .alert)
-
+            
             let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
                 
                 if let albumToDelete = self.realm.objects(AlbumTable.self).filter("albumName == %@", albumNameToDelete).first {
@@ -1029,7 +1060,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-
+    
     
 }
 // MARK: - 서치바 관련함수
