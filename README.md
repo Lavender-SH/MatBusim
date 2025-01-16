@@ -28,7 +28,7 @@
  - 앱스토어 음식 카테고리 차트 최고 순위 30위
  - MAU 평균 200명, 다운로드 수 1200회
 
-<img src="https://github.com/user-attachments/assets/6da09f4c-0b92-4e1a-9025-2110a8c30f05" width="100%">
+<img src="https://github.com/user-attachments/assets/16ac7c47-c6b3-4fd5-aae5-fc2ee86ac75e" width="100%">
 
 <img src="https://github.com/user-attachments/assets/33e66f98-f950-40c0-b0b7-0c09848bf472" width="100%">
 
