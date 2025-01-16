@@ -22,9 +22,9 @@
  - 맛슐랭과 함께라면, 평범한 하루도 특별한 미식 경험으로 바뀌게 됩니다. 맛있는 순간을 기록하고, 새로운 미식 세계를 탐험해보세요!
 
 <p>
-<img src="https://github.com/user-attachments/assets/48f2bab0-75c0-4c64-94a6-37475cb505b1" width="80%">
+<img src="https://github.com/user-attachments/assets/48f2bab0-75c0-4c64-94a6-37475cb505b1" width="70%">
 
-<img src="https://github.com/user-attachments/assets/7364cde6-4d5e-452c-8d93-7b17180cd003" width="20%">
+<img src="https://github.com/user-attachments/assets/7364cde6-4d5e-452c-8d93-7b17180cd003" width="29%">
 <p>
 
 </br>
