@@ -45,7 +45,7 @@
 ## 기술 스택
 
 - **Framework**
-`UIKit`, `RXSwift`, RealmSwift`, `MapKit`,  `Alamofire`, `Kingfisher`, `WebKit`, `Zip`, `PhotosUI`, `SideMenu` ,`SnapKit`, `MessageUI`, `Cosmos`, `Firebase Analytics`, `Firebase Crashlytics`
+`UIKit`, `RXSwift`, `RealmSwift`, `MapKit`,  `Alamofire`, `Kingfisher`, `WebKit`, `Zip`, `PhotosUI`, `SideMenu` ,`SnapKit`, `MessageUI`, `Cosmos`, `Firebase Analytics`, `Firebase Crashlytics`
 
 - **Design Pattern**
 `MVVM`, `MVC`
