@@ -1,4 +1,4 @@
-# 맛슐랭 - 나만의 맛집 컬렉션. 
+# 맛슐랭 - 나만의 맛집 컬렉션 
 
 
 <img src="https://github.com/user-attachments/assets/76ed30a0-e006-4cd1-aadb-5dfa34887178" width="25%">
@@ -21,11 +21,35 @@
  - 사진과 리뷰를 통해 맛집을 한눈에 관리하고, 지도 기반으로 나만의 미식 지도를 만들어보세요. AI 추천 기능은 여러분의 취향에 딱 맞는 새로운 맛집을 소개하며, 미식 여행의 즐거움을 더해줍니다.
  - 맛슐랭과 함께라면, 평범한 하루도 특별한 미식 경험으로 바뀌게 됩니다. 맛있는 순간을 기록하고, 새로운 미식 세계를 탐험해보세요!
 
-<p>
-<img src="https://github.com/user-attachments/assets/48f2bab0-75c0-4c64-94a6-37475cb505b1" width="70%">
+<img src="https://github.com/user-attachments/assets/47da9767-ff0f-43cd-bfb9-65dd08e17e58" width="100%">
 
-<img src="https://github.com/user-attachments/assets/7364cde6-4d5e-452c-8d93-7b17180cd003" width="29%">
-<p>
+
+### 성과
+ - 앱스토어 음식 카테고리 차트 최고 순위 30위
+ - MAU 평균 200명, 다운로드 수 2000회
+
+<img src="https://github.com/user-attachments/assets/43da4ee7-d3aa-4aaa-b671-3c0345cf1eeb" width="100%">
+
+<img src="https://github.com/user-attachments/assets/33e66f98-f950-40c0-b0b7-0c09848bf472" width="100%">
 
 </br>
 
+### 프로젝트 기간
+- 2024.10.01 ~ 2024.11.1 (4주) + 현재 진행중 </br>
+
+### 프로젝트 참여 인원
+- 개인(1인) 프로젝트
+
+</br>
+
+## 기술 스택
+
+- **Framework**
+`UIKit`, `RXSwift`, RealmSwift`, `MapKit`,  `Alamofire`, `Kingfisher`, `WebKit`, `Zip`, `PhotosUI`, `SideMenu` ,`SnapKit`, `MessageUI`, `Cosmos`, `Firebase Analytics`, `Firebase Crashlytics`
+
+- **Design Pattern**
+`MVVM`, `MVC`
+
+</br>
+
+## 핵심 기능과 코드 설명
