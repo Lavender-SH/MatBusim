@@ -6,7 +6,7 @@
 
 - [맛슐랭 - 나만의 맛집 컬렉션 앱스토어 링크](https://apps.apple.com/kr/app/%EB%A7%9B%EC%8A%90%EB%9E%AD-%EB%82%98%EB%A7%8C%EC%9D%98-%EB%A7%9B%EC%A7%91-%EC%BB%AC%EB%A0%89%EC%85%98/id6470218238)</br>
 
-- [맛슐랭 기획서](https://www.notion.so/130f3da005f180ba966ae83146764414?pvs=4)</br>
+- [맛슐랭 프로젝트 기획서](https://www.notion.so/130f3da005f180ba966ae83146764414?pvs=4)</br>
 
 - [맛슐랭 개인정보 처리 방침](https://www.notion.so/5830260f9fef4317902134e9362bfcb1?pvs=4)</br>
 
@@ -43,7 +43,7 @@
 ### 향후 계획
 서버와 AI 기술을 도입하여 맛슐랭 2.0 버전을 개발할 계획입니다.</br>
 
-- [맛슐랭 기획서](https://www.notion.so/130f3da005f180ba966ae83146764414?pvs=4)</br>
+- [맛슐랭 프로젝트 기획서](https://www.notion.so/130f3da005f180ba966ae83146764414?pvs=4)</br>
 
 - AI 추천 기능 강화: 사용자 리뷰 및 방문 기록을 분석하여 개인화된 맛집 추천 기능을 제공합니다.</br>
 - 서버 기반 데이터 관리: 사용자 데이터를 안전하게 저장하고, 여러 기기 간 동기화 기능을 지원합니다.</br>
