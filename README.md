@@ -215,3 +215,87 @@ func fetchSortedReviews(by key: String, ascending: Bool) -> Results<ReviewTable>
 
 ```
  </br>
+
+ ### 2.나만의 맛집 앨범을 만들어 카테고리를 분류하는 기능
+이 기능은 사용자가 개인적으로 소중한 맛집 리뷰를 정리하는 데 강력한 도구를 제공하며, 이를 통해 사용자 만족도를 극대화하고 카테고리 기반 데이터 관리를 더욱 직관적으로 만듦으로써 사용자가 데이터를 쉽게 탐색하고 관리할 수 있도록 돕습니다.
+
+ 2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
+ 1. 새로운 AlbumTable 인스턴스를 생성</br>
+ 2. Realm 데이터베이스에 저장</br>
+ 3. 새로운 앨범이 생성되면 사이드 메뉴와 연동되어 UI에 실시간 반영</br>
+ 
+``` swift
+
+class AlbumTable: Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var albumName: String
+    @Persisted var reviews: List<ReviewTable> // To-Many Relationship
+    
+    convenience init(albumName: String) {
+        self.init()
+        self.albumName = albumName
+    }
+
+
+@objc func addAlbumButtonTapped() {
+    let alertController = UIAlertController(title: "새로운 앨범", message: "앨범 이름을 입력하세요.", preferredStyle: .alert)
+    alertController.addTextField { textField in
+        textField.placeholder = "앨범 이름"
+    }
+    let addAction = UIAlertAction(title: "추가", style: .default) { _ in
+        guard let albumName = alertController.textFields?.first?.text, !albumName.isEmpty else { return }
+        let newAlbum = AlbumTable(albumName: albumName)
+        try! self.realm.write {
+            self.realm.add(newAlbum)
+        }
+        self.sideMenuTableViewController.tableView.reloadData()
+    }
+    let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+    alertController.addAction(addAction)
+    alertController.addAction(cancelAction)
+    present(alertController, animated: true)
+}
+
+```
+ 
+ 
+ 2-2. 사이드 메뉴바 라이브러리를 사용하여 카테고리 탐색 지원 </br>
+ - `SideMenu` 라이브러리를 사용하여 사용자 경험 향상
+ - 사이드 메뉴에 표시되는 카테고리 목록(앨범 이름)
+ - "+ 앨범 추가" 버튼을 통해 새로운 카테고리 생성 가능
+ - `UITableView`를 사용하여 앨범 목록 표시
+ 
+
+``` swift
+func setupSideMenu() {
+    sideMenuTableViewController = UITableViewController()
+    sideMenuTableViewController.tableView.delegate = self
+    sideMenuTableViewController.tableView.dataSource = self
+    sideMenu = SideMenuNavigationController(rootViewController: sideMenuTableViewController)
+    sideMenu?.leftSide = true
+    SideMenuManager.default.leftMenuNavigationController = sideMenu
+}
+
+```
+</br>
+ 
+ - 선택한 앨범에 속한 리뷰만 필터링하여 표시
+ - "모두 보기"를 선택하면 모든 리뷰를 보여줌
+ - UserDefaults와 Realm 데이터베이스를 활용해 선택한 앨범 상태를 유지
+
+``` swift
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let selectedAlbum = albumNames[indexPath.row]
+    if selectedAlbum == "모두 보기" {
+        reviewItems = repository.fetch()
+    } else if let matchingAlbum = realm.objects(AlbumTable.self).filter("albumName == %@", selectedAlbum).first {
+        reviewItems = repository.fetch().filter("ANY album._id == %@", matchingAlbum._id)
+    }
+    mainView.collectionView.reloadData()
+    sideMenu?.dismiss(animated: true)
+}
+
+``` 
+</br>
+
+### 3.WebView를 사용하여 음식점 사이트로 바로 이동하는 기능
