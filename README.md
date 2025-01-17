@@ -67,7 +67,7 @@
 
 ## 핵심 기능과 코드 설명
 
-- **1.맛집을 기록하고 관리하는 기능**</br>
+- **1. 맛집을 기록하고 관리하는 기능**</br>
 `RealmSwift`로 데이터베이스 구성</br>
 1-1. Realm 모델에 리뷰로 저장할 내용 정의</br>
 1-2. Realm Repository를 활용한 CRUD 구현</br>
@@ -216,10 +216,10 @@ func fetchSortedReviews(by key: String, ascending: Bool) -> Results<ReviewTable>
 ```
  </br>
 
- ### 2.나만의 맛집 앨범을 만들어 카테고리를 분류하는 기능
+ ### 2. 나만의 맛집 앨범을 만들어 카테고리를 분류하는 기능
 이 기능은 사용자가 개인적으로 소중한 맛집 리뷰를 정리하는 데 강력한 도구를 제공하며, 이를 통해 사용자 만족도를 극대화하고 카테고리 기반 데이터 관리를 더욱 직관적으로 만듦으로써 사용자가 데이터를 쉽게 탐색하고 관리할 수 있도록 돕습니다.
 
- 2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
+ ### 2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
  1. 새로운 AlbumTable 인스턴스를 생성</br>
  2. Realm 데이터베이스에 저장</br>
  3. 새로운 앨범이 생성되면 사이드 메뉴와 연동되어 UI에 실시간 반영</br>
@@ -259,7 +259,7 @@ class AlbumTable: Object {
 ```
  
  
- 2-2. 사이드 메뉴바 라이브러리를 사용하여 카테고리 탐색 지원 </br>
+### 2-2. 사이드 메뉴바 라이브러리를 사용하여 카테고리 탐색 지원 </br>
  - `SideMenu` 라이브러리를 사용하여 사용자 경험 향상
  - 사이드 메뉴에 표시되는 카테고리 목록(앨범 이름)
  - "+ 앨범 추가" 버튼을 통해 새로운 카테고리 생성 가능
@@ -281,7 +281,7 @@ func setupSideMenu() {
  
  - 선택한 앨범에 속한 리뷰만 필터링하여 표시
  - "모두 보기"를 선택하면 모든 리뷰를 보여줌
- - UserDefaults와 Realm 데이터베이스를 활용해 선택한 앨범 상태를 유지
+ - `UserDefaults`와 `Realm` 데이터베이스를 활용해 선택한 앨범 상태를 유지
 
 ``` swift
 func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -298,4 +298,4 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 ``` 
 </br>
 
-### 3.WebView를 사용하여 음식점 사이트로 바로 이동하는 기능
+### 3. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능
