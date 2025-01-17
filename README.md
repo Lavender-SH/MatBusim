@@ -87,6 +87,8 @@
 
 - **6.앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능**</br>
 
+</br>
+
  ### 1.맛집을 기록하고 관리하는 기능
  이 기능은 사용자가 맛집 리뷰를 체계적으로 기록하고, 데이터를 직관적으로 관리할 수 있도록 설계되었습니다. RealmSwift 기반의 데이터베이스와 직관적인 정렬/검색 기능은 사용자 경험을 극대화하며, 앨범 관리와 이미지 파일 처리 등 상세한 기능은 앱의 유용성을 한층 더 높였습니다.</br>
  
@@ -119,16 +121,16 @@ class AlbumTable: Object {
  ### 1-2. Realm Repository를 활용한 CRUD 구현</br>
  ReviewTableRepository는 맛집 리뷰 데이터를 효율적으로 관리하기 위해 설계되었습니다. CRUD 작업 외에도 이미지 파일 저장 및 삭제, 데이터 초기화와 같은 유틸리티 기능을 포함하여 사용자의 편리한 데이터 관리를 지원합니다. 이러한 세부 구현은 앱이 데이터를 신뢰성 있게 처리하고, 사용자 경험을 향상시키는 데 기여합니다.</br>
  
-    1. 읽기(Read)</br>
+    1. 읽기(Read)
     - 모든 리뷰 데이터를 불러오거나 특정 조건에 맞는 데이터를 필터링
     - 데이터를 정렬(별점순, 리뷰 날짜순, 방문 횟수순)하여 제공
-    2. 생성 및 저장 (Create)</br>
+    2. 생성 및 저장 (Create)
     - 새 리뷰를 저장하고 앨범과 연계
-    3. 수정(Update)</br>
+    3. 수정(Update)
     - 기존 리뷰 데이터를 업데이트
-    4. 삭제(Delete)</br>
+    4. 삭제(Delete)
     - 리뷰 삭제 시 관련 이미지 파일도 함께 제거
-    5. 유틸리티 기능</br>
+    5. 유틸리티 기능
     - 데이터 초기화, 이미지 저장/관리, 파일 경로 검색 기능
     
  ``` swift
@@ -184,7 +186,7 @@ class AlbumTable: Object {
     }
 
     // **이미지 파일 삭제**
-    private func removeImageFromDocument(imageURL: String) {
+    func removeImageFromDocument(imageURL: String) {
         if let filePath = URL(string: imageURL)?.path {
             try? FileManager.default.removeItem(atPath: filePath)
         }
