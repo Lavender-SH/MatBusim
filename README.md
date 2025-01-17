@@ -221,7 +221,10 @@ func fetchSortedReviews(by key: String, ascending: Bool) -> Results<ReviewTable>
  </br>
 
  ### 2. 나만의 맛집 앨범을 만들어 카테고리를 분류하는 기능
+
 이 기능은 사용자가 개인적으로 소중한 맛집 리뷰를 정리하는 데 강력한 도구를 제공하며, 이를 통해 사용자 만족도를 극대화하고 카테고리 기반 데이터 관리를 더욱 직관적으로 만듦으로써 사용자가 데이터를 쉽게 탐색하고 관리할 수 있도록 돕습니다.
+
+ <img src=" https://github.com/user-attachments/assets/8b6b0c6d-9838-423f-a34c-0fe358701146"></br>
 
  ### 2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
  1. 새로운 AlbumTable 인스턴스를 생성</br>
@@ -304,7 +307,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 ### 3. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능</br>
 
-<video src="https://github.com/user-attachments/assets/233f244a-56ab-4a5b-a682-fbb086cfab38"></video>
+<video src="https://github.com/user-attachments/assets/f7f40801-f138-4ed5-bc8a-e4c56350831d"></video>
 
  WebView 기능은 `WebKit`을 활용하여 맛집 리뷰와 관련된 외부 정보를 쉽게 접근할 수 있도록 설계되었습니다. 이를 통해 사용자는 별도의 브라우저 없이도 앱 내에서 링크된 사이트를 탐색할 수 있습니다.</br>
  
