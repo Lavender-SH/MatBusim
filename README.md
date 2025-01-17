@@ -96,6 +96,8 @@
  ### 1. 맛집을 기록하고 관리하는 기능
  이 기능은 사용자가 맛집 리뷰를 체계적으로 기록하고, 데이터를 직관적으로 관리할 수 있도록 설계되었습니다. RealmSwift 기반의 데이터베이스와 직관적인 정렬/검색 기능은 사용자 경험을 극대화하며, 앨범 관리와 이미지 파일 처리 등 상세한 기능은 앱의 유용성을 한층 더 높였습니다.</br>
  
+  <img src=" https://github.com/user-attachments/assets/e532c463-515a-4e2f-9b2e-eae65133b7c5" width="100%">
+ 
  ### 1-1. Realm 모델에 리뷰로 저장할 내용 정의
   - 맛집 리뷰를 저장할 ReviewTable과 앨범 관리를 위한 AlbumTable 클래스 정의</br>
   - 리뷰 데이터에는 별점, 방문 횟수, 메모, 이미지 경로, 위치 정보(위도/경도) 등이 포함됨</br>
@@ -223,10 +225,8 @@ func fetchSortedReviews(by key: String, ascending: Bool) -> Results<ReviewTable>
  ### 2. 나만의 맛집 앨범을 만들어 카테고리를 분류하는 기능
 
 이 기능은 사용자가 개인적으로 소중한 맛집 리뷰를 정리하는 데 강력한 도구를 제공하며, 이를 통해 사용자 만족도를 극대화하고 카테고리 기반 데이터 관리를 더욱 직관적으로 만듦으로써 사용자가 데이터를 쉽게 탐색하고 관리할 수 있도록 돕습니다.
-
- <img src=" https://github.com/user-attachments/assets/a85d6af4-e49d-447e-8ff1-2288d8f79d84" >
  
- <img src="https://github.com/user-attachments/assets/a85d6af4-e49d-447e-8ff1-2288d8f79d84" width="40%">
+ <img src="https://github.com/user-attachments/assets/a85d6af4-e49d-447e-8ff1-2288d8f79d84" width="50%">
 
  ### 2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
  1. 새로운 AlbumTable 인스턴스를 생성</br>
