@@ -226,7 +226,7 @@ func fetchSortedReviews(by key: String, ascending: Bool) -> Results<ReviewTable>
 
  <img src=" https://github.com/user-attachments/assets/a85d6af4-e49d-447e-8ff1-2288d8f79d84" >
  
- <img src="https://github.com/user-attachments/assets/a85d6af4-e49d-447e-8ff1-2288d8f79d84" width="100%">
+ <img src="https://github.com/user-attachments/assets/a85d6af4-e49d-447e-8ff1-2288d8f79d84" width="40%">
 
  ### 2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
  1. 새로운 AlbumTable 인스턴스를 생성</br>
