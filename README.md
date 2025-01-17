@@ -96,7 +96,7 @@
  ### 1. 맛집을 기록하고 관리하는 기능
  이 기능은 사용자가 맛집 리뷰를 체계적으로 기록하고, 데이터를 직관적으로 관리할 수 있도록 설계되었습니다. RealmSwift 기반의 데이터베이스와 직관적인 정렬/검색 기능은 사용자 경험을 극대화하며, 앨범 관리와 이미지 파일 처리 등 상세한 기능은 앱의 유용성을 한층 더 높였습니다.</br>
  
-  <img src=" https://github.com/user-attachments/assets/e532c463-515a-4e2f-9b2e-eae65133b7c5" width="100%">
+  <img src=" https://github.com/user-attachments/assets/e532c463-515a-4e2f-9b2e-eae65133b7c5" width="90%">
  
  ### 1-1. Realm 모델에 리뷰로 저장할 내용 정의
   - 맛집 리뷰를 저장할 ReviewTable과 앨범 관리를 위한 AlbumTable 클래스 정의</br>
