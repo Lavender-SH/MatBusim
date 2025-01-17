@@ -302,4 +302,56 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 ``` 
 </br>
 
-### 3. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능
+### 3. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능</br>
+ WebView 기능은 `WebKit`을 활용해맛집 리뷰와 관련된 외부 정보를 쉽게 접근할 수 있도록 설계되었습니다. 이를 통해 사용자는 별도의 브라우저 없이도 앱 내에서 링크된 사이트를 탐색할 수 있습니다.</br>
+ 
+ - `WKWebView`는 `WebKit` 프레임워크를 기반으로 외부 웹 페이지를 앱 내부에서 로드하는 데 사용</br>
+ - 리뷰 데이터에서 음식점의 URL을 placeURL 변수에 저장</br>
+ - internetButton 클릭 시 openWebView 메서드 실행</br>
+ - URL 유효성 검사 후 WebViewController를 생성하여 화면 전환</br>
+ 
+``` swift
+class WebViewController: UIViewController, WKUIDelegate {
+    var webView: WKWebView!
+    var urlToLoad: URL
+    
+    init(url: URL) {
+        self.urlToLoad = url
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // WebView 설정
+        let webConfiguration = WKWebViewConfiguration()
+        webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        webView.uiDelegate = self
+        view.addSubview(webView)
+        
+        // URL 요청 및 로드
+        let request = URLRequest(url: urlToLoad)
+        webView.load(request)
+    }
+}
+
+
+@objc func openWebView() {        
+        // URL 유효성 검사
+        guard var urlString = placeURL else { return }
+        if urlString.starts(with: "http://") {
+            urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
+        }
+        guard let url = URL(string: urlString) else { return }
+        
+        // WebViewController로 전환
+        let webVC = WebViewController(url: url)
+        present(webVC, animated: true, completion: nil)
+    }
+
+``` 
+   
