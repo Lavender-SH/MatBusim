@@ -303,7 +303,10 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 </br>
 
 ### 3. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능</br>
- WebView 기능은 `WebKit`을 활용해맛집 리뷰와 관련된 외부 정보를 쉽게 접근할 수 있도록 설계되었습니다. 이를 통해 사용자는 별도의 브라우저 없이도 앱 내에서 링크된 사이트를 탐색할 수 있습니다.</br>
+
+<video src="https://github.com/user-attachments/assets/233f244a-56ab-4a5b-a682-fbb086cfab38"></video>
+
+ WebView 기능은 `WebKit`을 활용하여 맛집 리뷰와 관련된 외부 정보를 쉽게 접근할 수 있도록 설계되었습니다. 이를 통해 사용자는 별도의 브라우저 없이도 앱 내에서 링크된 사이트를 탐색할 수 있습니다.</br>
  
  - `WKWebView`는 `WebKit` 프레임워크를 기반으로 외부 웹 페이지를 앱 내부에서 로드하는 데 사용</br>
  - 리뷰 데이터에서 음식점의 URL을 placeURL 변수에 저장</br>
