@@ -205,12 +205,13 @@ class AlbumTable: Object {
 </br>
 
  ### 1-3. 데이터를 별점순, 시간순, 방문순 정렬하는 기능</br>
-  </br>
- - byKeyPath: starCount, reviewDate, visitCount 입력
-  </br>
+
+ - byKeyPath: starCount, reviewDate, visitCount 입력</br>
+
 ``` swift
 func fetchSortedReviews(by key: String, ascending: Bool) -> Results<ReviewTable> {
     return realm.objects(ReviewTable.self).sorted(byKeyPath: key, ascending: ascending)
 }
 
 ```
+ </br>
