@@ -6,9 +6,9 @@
 
 - [맛슐랭 - 나만의 맛집 컬렉션 앱스토어 링크](https://apps.apple.com/kr/app/%EB%A7%9B%EC%8A%90%EB%9E%AD-%EB%82%98%EB%A7%8C%EC%9D%98-%EB%A7%9B%EC%A7%91-%EC%BB%AC%EB%A0%89%EC%85%98/id6470218238)</br>
 
-- [맛슐랭- 서버 버전 홍보 영상](https://youtu.be/B3ehN8v3Gq0)</br>
+- [맛슐랭 - 2.0 서버 버전 홍보 영상](https://youtu.be/B3ehN8v3Gq0)</br>
 
-- [맛슐랭 - 서버 버전 깃허브 링크](https://github.com/Lavender-SH/MatchelinServer-RX-MVVM)</br>
+- [맛슐랭 - 2.0 서버 버전 깃허브 링크](https://github.com/Lavender-SH/MatchelinServer-RX-MVVM)</br>
 
 - [맛슐랭 프로젝트 기획서](https://www.notion.so/130f3da005f180ba966ae83146764414?pvs=4)</br>
 
