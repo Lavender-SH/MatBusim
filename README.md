@@ -69,10 +69,9 @@
 
 - **1.맛집을 기록하고 관리하는 기능**</br>
 `RealmSwift`로 데이터베이스 구성</br>
-1-1 Realm 모델에 리뷰로 저장할 내용 정의</br>
-1-2 Realm Repository를 활용한 CRUD 구현</br>
-1-3 데이터 초기화 기능</br>
-1-4 데이터를 별점순, 시간순, 방문순 정렬하는 기능</br>
+1-1. Realm 모델에 리뷰로 저장할 내용 정의</br>
+1-2. Realm Repository를 활용한 CRUD 구현</br>
+1-3. 데이터를 별점순, 시간순, 방문순 정렬하는 기능</br>
 
 - **2.나만의 맛집 앨범을 만들어 카테고리를 분류하는 기능**</br>
  2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
@@ -87,3 +86,117 @@
 - **5. 백업 파일 생성 및 공유/복구 기능**</br>
 
 - **6.앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능**</br>
+
+ ### 1.맛집을 기록하고 관리하는 기능
+ 이 기능은 사용자가 맛집 리뷰를 체계적으로 기록하고, 데이터를 직관적으로 관리할 수 있도록 설계되었습니다. RealmSwift 기반의 데이터베이스와 직관적인 정렬/검색 기능은 사용자 경험을 극대화하며, 앨범 관리와 이미지 파일 처리 등 상세한 기능은 앱의 유용성을 한층 더 높였습니다.</br>
+ 
+ ### 1-1. Realm 모델에 리뷰로 저장할 내용 정의
+  - 맛집 리뷰를 저장할 ReviewTable과 앨범 관리를 위한 AlbumTable 클래스 정의</br>
+  - 리뷰 데이터에는 별점, 방문 횟수, 메모, 이미지 경로, 위치 정보(위도/경도) 등이 포함됨</br>
+  - 앨범과 리뷰 간의 To-Many 관계를 설정하여 앨범별 리뷰를 관리</br>
+  
+``` swift
+class ReviewTable: Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var storeName: String
+    @Persisted var starCount: Double
+    @Persisted var reviewDate: Date
+    @Persisted var memo: String
+    @Persisted var imageView1URL: String?  // 이미지 경로
+    @Persisted var visitCount: Int?
+    @Persisted var album: LinkingObjects<AlbumTable> = LinkingObjects(fromType: AlbumTable.self, property: "reviews")
+}
+
+class AlbumTable: Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var albumName: String
+    @Persisted var reviews: List<ReviewTable>  // To-Many 관계
+}
+
+```
+</br>
+
+ ### 1-2. Realm Repository를 활용한 CRUD 구현</br>
+ ReviewTableRepository는 맛집 리뷰 데이터를 효율적으로 관리하기 위해 설계되었습니다. CRUD 작업 외에도 이미지 파일 저장 및 삭제, 데이터 초기화와 같은 유틸리티 기능을 포함하여 사용자의 편리한 데이터 관리를 지원합니다. 이러한 세부 구현은 앱이 데이터를 신뢰성 있게 처리하고, 사용자 경험을 향상시키는 데 기여합니다.</br>
+ 
+    1. 읽기(Read)</br>
+    - 모든 리뷰 데이터를 불러오거나 특정 조건에 맞는 데이터를 필터링
+    - 데이터를 정렬(별점순, 리뷰 날짜순, 방문 횟수순)하여 제공
+    2. 생성 및 저장 (Create)</br>
+    - 새 리뷰를 저장하고 앨범과 연계
+    3. 수정(Update)</br>
+    - 기존 리뷰 데이터를 업데이트
+    4. 삭제(Delete)</br>
+    - 리뷰 삭제 시 관련 이미지 파일도 함께 제거
+    5. 유틸리티 기능</br>
+    - 데이터 초기화, 이미지 저장/관리, 파일 경로 검색 기능
+    
+ ``` swift
+ class ReviewTableRepository: ReviewTableRepositoryType {
+    private let realm = try! Realm()
+    
+    // **읽기 (Read)**
+    func fetch() -> Results<ReviewTable> {
+        return realm.objects(ReviewTable.self).sorted(byKeyPath: "reviewDate", ascending: false)
+    }
+
+    // **생성 및 저장 (Create)**
+    func saveReview(_ review: ReviewTable) {
+        try! realm.write {
+            realm.add(review)
+        }
+    }
+
+    // **수정 (Update)**
+    func updateReview(_ existingReview: ReviewTable, with updatedReview: ReviewTable) {
+        try! realm.write {
+            existingReview.starCount = updatedReview.starCount
+            existingReview.memo = updatedReview.memo
+            existingReview.reviewDate = updatedReview.reviewDate
+            existingReview.imageView1URL = updatedReview.imageView1URL
+            existingReview.visitCount = updatedReview.visitCount
+        }
+    }
+
+    // **삭제 (Delete)**
+    func deleteReview(_ review: ReviewTable) {
+        try! realm.write {
+            // 리뷰 삭제 전에 관련 이미지 제거
+            if let imageURL = review.imageView1URL {
+                removeImageFromDocument(imageURL: imageURL)
+            }
+            realm.delete(review)
+        }
+    }
+
+    // **이미지 파일 저장**
+    func saveImageToDocument(fileName: String, image: UIImage) -> String? {
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        let fileURL = documentDirectory.appendingPathComponent(fileName)
+        guard let data = image.jpegData(compressionQuality: 0.5) else { return nil }
+        do {
+            try data.write(to: fileURL)
+            return fileURL.absoluteString
+        } catch {
+            print("Image save error: \(error)")
+            return nil
+        }
+    }
+
+    // **이미지 파일 삭제**
+    private func removeImageFromDocument(imageURL: String) {
+        if let filePath = URL(string: imageURL)?.path {
+            try? FileManager.default.removeItem(atPath: filePath)
+        }
+    }
+
+    // **데이터 초기화**
+    func clearAllData() {
+        try! realm.write {
+            realm.deleteAll()
+        }
+    }
+}
+
+``` 
+</br>
