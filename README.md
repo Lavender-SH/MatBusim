@@ -226,7 +226,7 @@ func fetchSortedReviews(by key: String, ascending: Bool) -> Results<ReviewTable>
 
 이 기능은 사용자가 개인적으로 소중한 맛집 리뷰를 정리하는 데 강력한 도구를 제공하며, 이를 통해 사용자 만족도를 극대화하고 카테고리 기반 데이터 관리를 더욱 직관적으로 만듦으로써 사용자가 데이터를 쉽게 탐색하고 관리할 수 있도록 돕습니다.
  
- <img src="https://github.com/user-attachments/assets/a85d6af4-e49d-447e-8ff1-2288d8f79d84" width="50%">
+ <img src="https://github.com/user-attachments/assets/6415e36a-2d8e-45a8-af5d-1ed37af758bf" width="50%">
 
  ### 2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
  1. 새로운 AlbumTable 인스턴스를 생성</br>
