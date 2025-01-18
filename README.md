@@ -52,7 +52,7 @@
 - 개인(1인) 프로젝트</br>
 </br>
 
-### 맛슐랭 2.0 서버 버전⭐️
+### 맛슐랭 2.0 서버 버전 ⭐️
 현재 맛슐랭은 1.0의 성공을 기반으로, 서버와 AI 기술을 도입하여 더욱 발전된 2.0 버전을 개발 중입니다.</br>
 
 - [맛슐랭 프로젝트 기획서](https://www.notion.so/130f3da005f180ba966ae83146764414?pvs=4)</br>
@@ -665,5 +665,195 @@ func mailComposeController(_ controller: MFMailComposeViewController, didFinishW
 }
 
 ```
+</br>
+
+</br>
 
 ## 맛슐랭 2.0 핵심 기능과 코드 설명
+맛슐랭 2.0은 회원 관리, 게시글 작성, 댓글, 프로필 관리와 같은 다양한 기능을 제공하며, 이를 통해 사용자 경험을 극대화합니다. 이 과정에서 MVVM 디자인 패턴, `Alamofire`, `RxSwift`, 그리고 프로토콜 지향 설계를 활용하여 효율적이고 유지보수 가능한 네트워크 계층을 구성했습니다. 아래는 이 프로젝트의 핵심 설계와 구현 방식입니다.</br>
+
+
+- **1. MVVM 디자인 패턴**</br>
+
+- **2. RxSwift와 Alamofire를 활용한 비동기 네트워크 처리**</br>
+
+- **3. 공통 로직과 프로토콜을 활용한 네트워크 계층 설계**</br>
+
+- **4. 상태 코드와 에러 처리**</br>
+</br>
+
+- 코드 재사용성 및 확장성 향상: 공통 로직과 프로토콜 설계를 통해 API 추가가 용이
+- 효율적인 비동기 처리: RxSwift를 사용한 MVVM 아키텍처로 데이터 흐름 관리
+- 유지보수성 강화: 프로토콜과 공통 로직 분리로 코드 수정 및 기능 추가 비용 감소
+- 테스트 가능성: 네트워크 계층 추상화를 통해 단위 테스트 가능
+- 맛슐랭 2.0의 설계는 클린 코드와 유지보수성을 중시하며, 사용자와 개발자가 모두 만족할 수 있는 서비스를 제공합니다.
+
+
+### 1. MVVM 디자인 패턴
+ - 맛슐랭 2.0은 Model-View-ViewModel(MVVM) 패턴을 적용하여 로직과 UI를 명확히 분리
+ - Model: 데이터와 API 요청을 처리하는 네트워크 계층을 포함
+ - ViewModel: 비즈니스 로직을 담당하며, RxSwift를 사용해 View와 데이터를 바인딩
+ - View: 사용자 인터페이스(UI)를 담당하며, ViewModel의 상태 변화를 구독하여 UI를 업데이트
+ </br>
+ 
+ ### 2. RxSwift와 Alamofire를 활용한 비동기 네트워크 처리
+ - Alamofire를 통해 API 요청을 처리하고, RxSwift로 결과를 Observable로 변환하여 데이터 흐름을 간결하게 관리
+ - 네트워크 요청의 성공/실패 상태를 RxSwift의 PublishSubject로 View에 전달
+ - RxSwift로 데이터 바인딩하여 비동기 작업의 복잡성을 감소
+ 
+```swift
+class LoginViewModel {
+    private var networkManager: NetworkManagerProtocol
+    private let disposeBag = DisposeBag()
+
+    // RxSwift Subjects
+    let loginSuccess = PublishSubject<Void>()
+    let loginFailure = PublishSubject<String>()
+
+    init(networkManager: NetworkManagerProtocol) {
+        self.networkManager = networkManager
+    }
+
+    func login(email: String, password: String) {
+        Observable.create { [weak self] observer in
+            self?.networkManager.login(email: email, password: password) { success, accessToken, refreshToken, message in
+                if success {
+                    UserDefaults.standard.set(accessToken, forKey: "accessToken")
+                    UserDefaults.standard.set(refreshToken, forKey: "refreshToken")
+                    observer.onNext(())
+                    observer.onCompleted()
+                } else {
+                    observer.onError(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: message ?? "Login failed"]))
+                }
+            }
+            return Disposables.create()
+        }
+        .subscribe(
+            onNext: { [weak self] _ in self?.loginSuccess.onNext(()) },
+            onError: { [weak self] error in self?.loginFailure.onNext(error.localizedDescription) }
+        )
+        .disposed(by: disposeBag)
+    }
+}
+
+```
+</br>
+
+ - View는 ViewModel의 상태를 구독하여 UI를 업데이트
+ 
+ ```swift
+ private func setupViewModelBindings() {
+    viewModel.loginSuccess
+        .subscribe(onNext: { [weak self] _ in self?.navigateToMain() })
+        .disposed(by: disposeBag)
+
+    viewModel.loginFailure
+        .subscribe(onNext: { [weak self] message in self?.showAlert(with: message, navigateToMain: false) })
+        .disposed(by: disposeBag)
+}
+
+ ```
+</br>
+
+ ### 3. 프로토콜을 활용하고 공통 로직을 분리한 네트워크 계층 설계
+ NetworkManagerProtocol과 다양한 API 요청 구조체(SignUpRequest, LoginRequest)를 정의하여 코드 재사용성과 테스트 가능성을 높였습니다.</br>
+ 
+ - NetworkManagerProtocol 정의
+ - APIRequest 프로토콜 정의
+ - 프로토콜을 기반으로 개별 API 요청 구조체를 정의하여 확장성 강화
+ 
+```swift
+protocol NetworkManagerProtocol {
+    func signUp(email: String, password: String, nick: String, phoneNum: String?, birthDay: String?, completion: @escaping (Bool, String?, Int?) -> Void)
+    func validateEmail(email: String, completion: @escaping (Bool, String?, Int?) -> Void)
+    func login(email: String, password: String, completion: @escaping (Bool, String?, String?, String?) -> Void)
+    func refreshToken(completion: @escaping (Bool, String?) -> Void)
+    func withdraw(accessToken: String, completion: @escaping (Bool, String?) -> Void)
+}
+
+protocol APIRequest {
+    var method: HTTPMethod { get }
+    var path: String { get }
+    var parameters: Parameters? { get }
+    var headers: HTTPHeaders { get }
+}
+
+-----------------------------------------------------------------------------------------
+struct SignUpRequest: APIRequest {
+    let email: String
+    let password: String
+    let nick: String
+
+    var method: HTTPMethod { .post }
+    var path: String { "/join" }
+    var parameters: Parameters? { ["email": email, "password": password, "nick": nick] }
+    var headers: HTTPHeaders { ["Content-Type": "application/json"] }
+}
+
+```
+</br>
+
+ - 공통로직을 분리하여 모든 API 요청과 상태 코드를 처리하는 로직을 분리하여 중복 코드를 최소화
+ 
+```swift
+// MARK: - 공통로직
+private func performRequest(_ request: APIRequest, completion: @escaping (AFDataResponse<Any>, Error?) -> Void) {
+        do {
+            let urlRequest = try request.asURLRequest(baseURL: baseURL)
+            AF.request(urlRequest).validate().responseJSON { response in
+                completion(response, response.error)
+            }
+        } catch {
+            completion(AFDataResponse<Any>(request: nil, response: nil, data: nil, metrics: nil, serializationDuration: 0, result: .failure(error as! AFError)), error)
+        }
+    }
+    
+```
+</br>
+
+### 4. 상태 코드와 에러 처리
+ - 서버에서 반환된 상태 코드를 공통적으로 처리하여 클라이언트에서 동일한 방식으로 에러를 관리
+</br>
+ 
+```swift
+    // MARK: - 상태코드 공통로직
+    private func processResponse(_ response: AFDataResponse<Any>, completion: (Bool, String?, Int?) -> Void) {
+        guard let statusCode = response.response?.statusCode else {
+            print("응답 코드를 받지 못했습니다.")
+            completion(false, "응답 코드를 받지 못했습니다.", nil)
+            return
+        }
+        
+        let message = parseResponseMessage(response.data)
+        
+        print("상태 코드: \(statusCode), 메시지: \(message ?? "메시지 없음")")
+        
+        switch statusCode {
+        case 200:
+            completion(true, "성공", statusCode)
+        case 400:
+            completion(false, "필수 값이 누락됐습니다", statusCode)
+        case 401:
+            completion(false, "접근이 거부되었습니다", statusCode)
+        case 403:
+            completion(false, "금지된 접근입니다", statusCode)
+        case 409:
+            completion(false, "이미 가입한 유저입니다.", statusCode)
+        case 418:
+            completion(false, "리프레시 토큰이 만료되었습니다. 다시 로그인해주세요", statusCode)
+        case 419:
+            completion(false, "액세스 토큰이 만료되었습니다", statusCode)
+        case 420:
+            completion(false, "잘못된 SesacKey입니다", statusCode)
+        case 429:
+            completion(false, "요청이 너무 많습니다", statusCode)
+        case 444:
+            completion(false, "잘못된 URL입니다", statusCode)
+        case 500:
+            completion(false, "서버 에러", statusCode)
+        default:
+            completion(false, message ?? "알 수 없는 에러", statusCode)
+        }
+    }
+```
+</br>
