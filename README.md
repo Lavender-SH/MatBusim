@@ -479,10 +479,12 @@ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 ### 5. 백업 파일 생성 및 공유/복구 기능
 맛슐랭은 사용자 데이터를 안전하게 보관하고, 다른 디바이스로 쉽게 복구할 수 있도록 백업 및 복구 기능을 제공합니다. 백업은 앱 내부 데이터(default.realm)를 압축하여 ZIP 파일로 저장하며, 공유와 복구가 용이합니다.</br>
 
+<video src="https://github.com/user-attachments/assets/57e259d0-5bb2-4ee3-8f95-467742af1912"></video>
+
 ### 5-1. 백업 파일 생성 및 ZIP 압축
  - 앱 내부 데이터(default.realm)를 ZIP 파일로 압축
  - 현재 날짜와 시간을 기반으로 파일명 생성
-</br>
+
 
 ```swift
 @objc func backupButtonTapped() {
@@ -522,7 +524,7 @@ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 ### 5-2. 백업 파일 복구 및 ZIP 해제
  - 사용자로부터 ZIP 파일을 선택받아 데이터를 복구
  - 기존 데이터를 덮어쓰기 전 사용자에게 경고 메시지를 표시
-</br>
+
 
 ```swift
 @objc func restoreButtonTapped() {
@@ -550,7 +552,7 @@ func unzipAndRestore(fileURL: URL) {
 
 ### 5-3. 백업 파일 공유
  - ZIP 파일을 다른 앱이나 클라우드 서비스로 공유
-</br>
+
 
 ```swift
 func showActivityViewController(fileName: String) {
