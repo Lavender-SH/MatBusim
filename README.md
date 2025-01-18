@@ -331,13 +331,16 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
   - `Alamofire`를 사용하여 카카오 로컬 API와 통신
   - 검색어를 기반으로 API요청을 보내고, 음식점 정보를 JSON 형태로 받아와 디코딩
 </br>
+
   2. 검색 결과 처리
   - 검색 결과는 Document 모델로 디코딩하여, 음식점 이름, 주소, 전화번호 등 필요한 정보를 구조화
 </br>
+
   3. API 요청 최적화
   - 공통 헤더 및 파라미터를 구성하여 간결한 코드 유지
   - 상태 코드 검증 및 에러 핸들링 추가로 안정적인 통신 구현
 </br>
+
   4. 확장 가능성 고려
   - API 응답 데이터는 responseDecodable을 활용하여 Food와 Document 구조체로 매핑
   - 데이터 모델 설계 시 확장 가능한 형태로 작성하여, 새로운 요구사항에 쉽게 대응 가능
