@@ -325,7 +325,9 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
  ### 3. 음식점 검색 기능
 
- 카카오 로컬 API를 활용하여 사용자가 원하는 음식점을 손쉽게 검색할 수 있는 기능을 구현했습니다. 검색된 음식점의 이름, 주소, 전화번호, 카테고리 정보, 위치 좌표 등을 받아와 직관적으로 정보를 제공합니다. 이를 통해 사용자는 필요한 정보를 빠르게 확인하고, 앱 내에서 효율적으로 음식점을 탐색할 수 있습니다.
+ 카카오 로컬 API를 활용하여 사용자가 원하는 음식점을 손쉽게 검색할 수 있는 기능을 구현했습니다. 검색된 음식점의 이름, 주소, 전화번호, 카테고리 정보, 위치 좌표 등을 받아와 직관적으로 정보를 제공합니다. 이를 통해 사용자는 필요한 정보를 빠르게 확인하고, 앱 내에서 효율적으로 음식점을 탐색할 수 있습니다.</br>
+ 
+ <video src="https://github.com/user-attachments/assets/921fd520-05fd-42b6-abe3-3b34107233b7"></video>
  
   1. 카카오 로컬 API 연동
   - `Alamofire`를 사용하여 카카오 로컬 API와 통신
@@ -373,8 +375,6 @@ func searchPlaceCallRequest(query: String, page: Int = 1, size: Int = 45, comple
 
  - 사용된 데이터 모델
  
-</br>
- 
 ```swift
 struct Food: Decodable {
     let documents: [Document]
@@ -400,9 +400,9 @@ struct Document: Decodable {
 
 ### 4. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능</br>
 
-<video src="https://github.com/user-attachments/assets/f7f40801-f138-4ed5-bc8a-e4c56350831d"></video>
-
  WebView 기능은 `WebKit`을 활용하여 맛집 리뷰와 관련된 외부 정보를 쉽게 접근할 수 있도록 설계되었습니다. 이를 통해 사용자는 별도의 브라우저 없이도 앱 내에서 링크된 사이트를 탐색할 수 있습니다.</br>
+
+<video src="https://github.com/user-attachments/assets/f7f40801-f138-4ed5-bc8a-e4c56350831d"></video>
  
  - `WKWebView`는 `WebKit` 프레임워크를 기반으로 외부 웹 페이지를 앱 내부에서 로드하는 데 사용</br>
  - 리뷰 데이터에서 음식점의 URL을 placeURL 변수에 저장</br>
