@@ -95,7 +95,8 @@
  5-4. 백업 파일 삭제</br>
 
 - **6. 앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능**</br>
-
+ 6-1. 이메일 작성 및 전송
+ 6-2. 이메일 전송 결과 처리
 </br>
 
  ### 1. 맛집을 기록하고 관리하는 기능
@@ -477,7 +478,8 @@ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 </br>
 
 ### 5. 백업 파일 생성 및 공유/복구 기능
-맛슐랭은 사용자 데이터를 안전하게 보관하고, 다른 디바이스로 쉽게 복구할 수 있도록 백업 및 복구 기능을 제공합니다. 백업은 앱 내부 데이터(default.realm)를 압축하여 ZIP 파일로 저장하며, 공유와 복구가 용이합니다.</br>
+맛슐랭은 사용자 데이터를 안전하게 보관하고, 다른 디바이스로 쉽게 복구할 수 있도록 백업 및 복구 기능을 제공합니다.</br>
+백업은 앱 내부 데이터(default.realm)를 압축하여 ZIP 파일로 저장하며, 공유와 복구가 용이합니다.</br>
 
 <video src="https://github.com/user-attachments/assets/57e259d0-5bb2-4ee3-8f95-467742af1912"></video>
 
@@ -567,6 +569,7 @@ func showActivityViewController(fileName: String) {
 }
 
 ```
+</br>
 
 ### 5-4. 백업 파일 삭제
  - 테이블 뷰에서 슬라이드 동작으로 백업 파일 삭제
@@ -590,3 +593,70 @@ func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.Ed
 }
 
 ```
+</br>
+
+### 6. 앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능
+맛슐랭은 사용자의 피드백을 수집하기 위해 이메일을 통한 간편한 문의/의견 수집 기능을 제공합니다. 이 기능은 `MessageUI` 프레임워크를 사용하여 앱 내부에서 이메일을 작성하고 보낼 수 있도록 설계되었습니다.</br>
+
+<video src="https://github.com/user-attachments/assets/3d3c7350-39db-48af-b6b2-f1feabb56729"></video>
+</br>
+
+### 6-1. 이메일 작성 및 전송
+ - 이메일 작성 및 전송은 MFMailComposeViewController를 사용하여 구현
+ - 디바이스 모델, 디바이스 OS 버전, 앱 버전을 기기에서 입력없이 자동으로 가져옵니다.
+ 
+ ```swift
+ func sendEmail() {
+    let bodyString = """
+                     문의 사항 및 의견을 작성해주세요.
+                     
+                     
+                     
+                     -------------------
+                     Device Model : \(Utils.getDeviceModelName())
+                     Device OS : \(UIDevice.current.systemVersion)
+                     App Version : \(Utils.getAppVersion())
+                     -------------------
+                     """
+    
+    if MFMailComposeViewController.canSendMail() {
+        let mail = MFMailComposeViewController()
+        mail.mailComposeDelegate = self
+        mail.setToRecipients(["susie204@naver.com"]) // 문의 이메일 주소
+        mail.setSubject("맛슐랭 / 문의,의견")
+        mail.setMessageBody(bodyString, isHTML: false)
+        present(mail, animated: true)
+    } else {
+        // 이메일 설정이 되어 있지 않은 경우
+        let alert = UIAlertController(title: "이메일 전송 불가", message: "이메일 계정 설정 후 다시 시도해주세요.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        present(alert, animated: true)
+    }
+}
+
+```
+</br>
+
+### 6-2. 이메일 전송 결과 처리
+</br>
+
+``` swift
+func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+    isEmailBeingSent = false
+    switch result {
+    case .sent:
+        print("이메일 전송 완료")
+    case .cancelled:
+        print("이메일 전송 취소")
+    case .failed:
+        print("이메일 전송 실패")
+    case .saved:
+        print("이메일 임시 저장")
+    @unknown default:
+        break
+    }
+    controller.dismiss(animated: true)
+}
+
+```
+
