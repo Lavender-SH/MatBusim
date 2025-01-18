@@ -87,23 +87,26 @@
 - **2. 나만의 맛집 앨범을 만들어 카테고리를 분류하는 기능**</br>
  2-1. To-Many Relationship을 활용한 앨범 생성 기능</br>
  2-2. 사이드 메뉴바 라이브러리를 사용하여 카테고리 탐색 지원 </br>
+ 
+- **3. 음식점 검색 기능**</br>
+ [3-1. 카카오 로컬 API 활용](https://developers.kakao.com/docs/latest/ko/local/dev-guide)</br>
 
-- **3. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능**</br>
+- **4. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능**</br>
 
-- **4. 지도위에 나만의 맛집을 볼 수 있는 기능**</br>
- 4-1. MapKit의 Annotation을 활용하여 지도에 핀을 사진으로 표현</br>
- 4-2. 지도위의 핀을 클러스터링으로 구현</br>
- 4-3. SearchBar를 사용하여 저장한 맛집을 검색할 수 있는 기능</br>
+- **5. 지도위에 나만의 맛집을 볼 수 있는 기능**</br>
+ 5-1. MapKit의 Annotation을 활용하여 지도에 핀을 사진으로 표현</br>
+ 5-2. 지도위의 핀을 클러스터링으로 구현</br>
+ 5-3. SearchBar를 사용하여 저장한 맛집을 검색할 수 있는 기능</br>
 
-- **5. 백업 파일 생성 및 공유/복구 기능**</br>
- 5-1. 백업 파일 생성 및 ZIP 파일로 압축</br>
- 5-2. 백업 파일 복구 및 ZIP 해제</br>
- 5-3. 백업 파일 공유</br>
- 5-4. 백업 파일 삭제</br>
+- **6. 백업 파일 생성 및 공유/복구 기능**</br>
+ 6-1. 백업 파일 생성 및 ZIP 파일로 압축</br>
+ 6-2. 백업 파일 복구 및 ZIP 해제</br>
+ 6-3. 백업 파일 공유</br>
+ 6-4. 백업 파일 삭제</br>
 
-- **6. 앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능**</br>
- 6-1. 이메일 작성 및 전송
- 6-2. 이메일 전송 결과 처리
+- **7. 앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능**</br>
+ 7-1. 이메일 작성 및 전송
+ 7-2. 이메일 전송 결과 처리
 </br>
 
  ### 1. 맛집을 기록하고 관리하는 기능
@@ -320,7 +323,79 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 ``` 
 </br>
 
-### 3. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능</br>
+ ### 3. 음식점 검색 기능
+
+ 카카오 로컬 API를 활용하여 사용자가 원하는 음식점을 손쉽게 검색할 수 있는 기능을 구현했습니다. 검색된 음식점의 이름, 주소, 전화번호, 카테고리 정보, 위치 좌표 등을 받아와 직관적으로 정보를 제공합니다. 이를 통해 사용자는 필요한 정보를 빠르게 확인하고, 앱 내에서 효율적으로 음식점을 탐색할 수 있습니다.
+ 
+  1. 카카오 로컬 API 연동
+  - `Alamofire`를 사용하여 카카오 로컬 API와 통신
+  - 검색어를 기반으로 API요청을 보내고, 음식점 정보를 JSON 형태로 받아와 디코딩
+</br>
+  2. 검색 결과 처리
+  - 검색 결과는 Document 모델로 디코딩하여, 음식점 이름, 주소, 전화번호 등 필요한 정보를 구조화
+</br>
+  3. API 요청 최적화
+  - 공통 헤더 및 파라미터를 구성하여 간결한 코드 유지
+  - 상태 코드 검증 및 에러 핸들링 추가로 안정적인 통신 구현
+</br>
+  4. 확장 가능성 고려
+  - API 응답 데이터는 responseDecodable을 활용하여 Food와 Document 구조체로 매핑
+  - 데이터 모델 설계 시 확장 가능한 형태로 작성하여, 새로운 요구사항에 쉽게 대응 가능
+</br>
+
+```swift
+func searchPlaceCallRequest(query: String, page: Int = 1, size: Int = 45, completion: @escaping ([Document]?) -> Void) {
+    let baseURL = "https://dapi.kakao.com/v2/local/search/keyword.json"
+    let header: HTTPHeaders = [
+        "Authorization": "KakaoAK \(APIKey.key)",
+        "Content-Type": "application/json; charset=UTF-8"
+    ]
+    let parameters: [String: Any] = ["query": query]
+    
+    AF.request(baseURL, method: .get, parameters: parameters, headers: header)
+        .validate(statusCode: 200...500)
+        .responseDecodable(of: Food.self) { response in
+            switch response.result {
+            case .success(let value):
+                completion(value.documents) // 성공 시 음식점 데이터 반환
+            case .failure(let error):
+                print("Error: \(error)") // 실패 시 에러 로그 출력
+                completion(nil)
+            }
+        }
+}
+
+```
+</br>
+
+ - 사용된 데이터 모델
+ 
+</br>
+ 
+```swift
+struct Food: Decodable {
+    let documents: [Document]
+}
+
+struct Document: Decodable {
+    let addressName: String?
+    let categoryName: String?
+    let phone: String?
+    let placeName: String?
+    let placeURL: String?
+    let roadAddressName: String?
+    let x: String?  // 경도
+    let y: String?  // 위도
+
+    var finalCategory: String? {
+        return categoryName?.split(separator: ">").last?.trimmingCharacters(in: .whitespaces)
+    }
+}
+
+```
+ 
+
+### 4. WebView를 사용하여 음식점 사이트로 바로 이동하는 기능</br>
 
 <video src="https://github.com/user-attachments/assets/f7f40801-f138-4ed5-bc8a-e4c56350831d"></video>
 
@@ -377,13 +452,13 @@ class WebViewController: UIViewController, WKUIDelegate {
 ``` 
 </br>
 
-### 4. 지도 위에 나만의 맛집을 볼 수 있는 기능</br>
+### 5. 지도 위에 나만의 맛집을 볼 수 있는 기능</br>
 사용자가 저장한 맛집 정보를 지도에 표시하여 시각적으로 표현하고, 검색 기능을 통해 맛집을 쉽게 탐색할 수 있는 기능을 설명합니다.</br>
 
  <img src="https://github.com/user-attachments/assets/0db41b04-7759-4042-b609-38558e8d4339" width="100%">
  </br>
  
- ### 4-1. MapKit의 Annotation을 활용하여 지도에 핀을 사진으로 표현
+ ### 5-1. MapKit의 Annotation을 활용하여 지도에 핀을 사진으로 표현
  - MapKit 활용: MKMapView와 MKAnnotation을 사용하여 맛집 정보를 지도에 표시
  - Custom Annotation View: 맛집의 대표 이미지를 보여주기 위해 MKAnnotationView를 커스터마이징하여 ImageAnnotationView를 구현
 </br>
@@ -409,7 +484,7 @@ func loadAnnotations() {
 ``` 
 </br>
 
- ### 4-2. 지도 위의 핀을 클러스터링으로 구현
+ ### 5-2. 지도 위의 핀을 클러스터링으로 구현
  - 클러스터링 지원: 여러 핀이 모여 있을 경우, ImageClusterView를 사용하여 클러스터링된 핀과 맛집 개수를 시각적으로 표현
 
 ```swift
@@ -461,7 +536,7 @@ class ImageClusterView: MKAnnotationView {
 ```
 </br>
 
- ### 4-3. SearchBar를 사용하여 저장한 맛집을 검색할 수 있는 기능
+ ### 5-3. SearchBar를 사용하여 저장한 맛집을 검색할 수 있는 기능
 UISearchBar를 이용해 지도 위에 표시되어 있는 맛집을 음식점의 이름과 메모장에 적힌 내용을 바탕으로 빠르게 저장된 맛집을 찾을 수 있습니다.</br>
 
 ```swift
@@ -484,13 +559,13 @@ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 ```
 </br>
 
-### 5. 백업 파일 생성 및 공유/복구 기능
+### 6. 백업 파일 생성 및 공유/복구 기능
 맛슐랭은 사용자 데이터를 안전하게 보관하고, 다른 디바이스로 쉽게 복구할 수 있도록 백업 및 복구 기능을 제공합니다.</br>
 백업은 앱 내부 데이터(default.realm)를 압축하여 ZIP 파일로 저장하며, 공유와 복구가 용이합니다.</br>
 
 <video src="https://github.com/user-attachments/assets/57e259d0-5bb2-4ee3-8f95-467742af1912"></video>
 
-### 5-1. 백업 파일 생성 및 ZIP 압축
+### 6-1. 백업 파일 생성 및 ZIP 압축
  - 앱 내부 데이터(default.realm)를 ZIP 파일로 압축
  - 현재 날짜와 시간을 기반으로 파일명 생성
 
@@ -530,7 +605,7 @@ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 ```
 </br>
 
-### 5-2. 백업 파일 복구 및 ZIP 해제
+### 6-2. 백업 파일 복구 및 ZIP 해제
  - 사용자로부터 ZIP 파일을 선택받아 데이터를 복구
  - 기존 데이터를 덮어쓰기 전 사용자에게 경고 메시지를 표시
 
@@ -559,7 +634,7 @@ func unzipAndRestore(fileURL: URL) {
 ```
 </br>
 
-### 5-3. 백업 파일 공유
+### 6-3. 백업 파일 공유
  - ZIP 파일을 다른 앱이나 클라우드 서비스로 공유
 
 
@@ -578,7 +653,7 @@ func showActivityViewController(fileName: String) {
 ```
 </br>
 
-### 5-4. 백업 파일 삭제
+### 6-4. 백업 파일 삭제
  - 테이블 뷰에서 슬라이드 동작으로 백업 파일 삭제
  - 삭제 전 사용자 확인 대화 상자 표시
  
@@ -602,13 +677,13 @@ func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.Ed
 ```
 </br>
 
-### 6. 앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능
+### 7. 앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능
 맛슐랭은 사용자의 피드백을 수집하기 위해 이메일을 통한 간편한 문의/의견 수집 기능을 제공합니다. 이 기능은 `MessageUI` 프레임워크를 사용하여 앱 내부에서 이메일을 작성하고 보낼 수 있도록 설계되었습니다.</br>
 
 <video src="https://github.com/user-attachments/assets/3d3c7350-39db-48af-b6b2-f1feabb56729"></video>
 </br>
 
-### 6-1. 이메일 작성 및 전송
+### 7-1. 이메일 작성 및 전송
  - 이메일 작성 및 전송은 MFMailComposeViewController를 사용하여 구현
  - 디바이스 모델, 디바이스 OS 버전, 앱 버전을 기기에서 입력없이 자동으로 가져옵니다.
  
@@ -644,7 +719,7 @@ func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.Ed
 ```
 </br>
 
-### 6-2. 이메일 전송 결과 처리
+### 7-2. 이메일 전송 결과 처리
 
 ``` swift
 func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
