@@ -85,7 +85,8 @@
 
 - **4. 지도위에 나만의 맛집을 볼 수 있는 기능**</br>
  4-1. MapKit의 Annotation을 활용하여 지도에 핀을 사진으로 표현</br>
- 4-2. SearchBar를 사용하여 저장한 맛집을 검색할 수 있는 기능</br>
+ 4-2. 지도위의 핀을 클러스터링으로 구현
+ 4-3. SearchBar를 사용하여 저장한 맛집을 검색할 수 있는 기능</br>
 
 - **5. 백업 파일 생성 및 공유/복구 기능**</br>
 
@@ -365,6 +366,107 @@ class WebViewController: UIViewController, WKUIDelegate {
 </br>
 
 ### 4. 지도 위에 나만의 맛집을 볼 수 있는 기능</br>
-이 섹션에서는 사용자가 저장한 맛집 정보를 지도 위에 시각적으로 표현하고, 검색 기능을 통해 맛집을 쉽게 탐색할 수 있는 기능을 설명합니다.</br>
+사용자가 저장한 맛집 정보를 지도에 표시하여 시각적으로 표현하고, 검색 기능을 통해 맛집을 쉽게 탐색할 수 있는 기능을 설명합니다.</br>
 
  <img src="https://github.com/user-attachments/assets/0db41b04-7759-4042-b609-38558e8d4339" width="100%">
+ 
+ ###4-1. MapKit의 Annotation을 활용하여 지도에 핀을 사진으로 표현
+ - MapKit 활용: MKMapView와 MKAnnotation을 사용하여 맛집 정보를 지도에 표시
+ - Custom Annotation View: 맛집의 대표 이미지를 보여주기 위해 MKAnnotationView를 커스터마이징하여 ImageAnnotationView를 구현
+</br>
+
+```swift
+func loadAnnotations() {
+    let reviews = reviewRepository.fetch()
+    var newAnnotations: [MKPointAnnotation] = []
+    
+    for review in reviews {
+        if let latitude = Double(review.latitude ?? ""), let longitude = Double(review.longitude ?? "") {
+            let annotation = MKPointAnnotation()
+            annotation.title = review.storeName
+            annotation.subtitle = review.imageView1URL
+            annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            newAnnotations.append(annotation)
+        }
+    }
+    
+    mapView.addAnnotations(newAnnotations)
+}
+
+``` 
+</br>
+ ### 4-2. 지도위의 핀을 클러스터링으로 구현
+ - 클러스터링 지원: 여러 핀이 모여 있을 경우, ImageClusterView를 사용하여 클러스터링된 핀과 맛집 개수를 시각적으로 표현
+
+```swift
+class ImageClusterView: MKAnnotationView {
+    private var imageView: UIImageView!
+    private var countLabel: UILabel!
+    
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        self.frame = CGRect(x: 0, y: 0, width: 58, height: 58)
+        self.backgroundColor = .clear
+        
+        imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
+        self.addSubview(imageView)
+        
+        countLabel = UILabel()
+        countLabel.textAlignment = .center
+        countLabel.textColor = .white
+        countLabel.backgroundColor = UIColor(named: "countGold")
+        countLabel.layer.cornerRadius = 10
+        countLabel.clipsToBounds = true
+        self.addSubview(countLabel)
+        
+        countLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(2)
+            make.right.equalToSuperview().inset(2)
+            make.width.height.equalTo(20)
+        }
+    }
+    
+    override var annotation: MKAnnotation? {
+        willSet {
+            if let cluster = newValue as? MKClusterAnnotation {
+                countLabel.text = "\(cluster.memberAnnotations.count)"
+                
+                if let firstAnnotation = cluster.memberAnnotations.first as? MKPointAnnotation,
+                   let imageUrlString = firstAnnotation.subtitle,
+                   let imageUrl = URL(string: imageUrlString) {
+                    imageView.kf.setImage(with: imageUrl) // 대표 이미지 로드
+                }
+            }
+        }
+    }
+}
+
+```
+</br>
+
+ ### 4-3. SearchBar를 사용하여 저장한 맛집을 검색할 수 있는 기능
+UISearchBar를 이용해 지도 위에 표시되어 있는 맛집을 음식점의 이름과 메모장에 적힌 내용을 바탕으로 빠르게 저장된 맛집을 찾을 수 있습니다.</br>
+
+```swit
+func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    guard !searchText.isEmpty else { return }
+    
+    let storeNamePredicate = NSPredicate(format: "storeName CONTAINS[c] %@", searchText)
+    let memoPredicate = NSPredicate(format: "memo CONTAINS[c] %@", searchText)
+    let combinedPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [storeNamePredicate, memoPredicate])
+    
+    let results = reviewRepository.fetch().filter(combinedPredicate)
+    guard let firstResult = results.first,
+          let latitude = Double(firstResult.latitude ?? ""),
+          let longitude = Double(firstResult.longitude ?? "") else { return }
+    
+    let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    mapView.setRegion(MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500), animated: true)
+}
+
+```
+</br>
+
