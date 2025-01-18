@@ -48,14 +48,17 @@
 - 개인(1인) 프로젝트</br>
 </br>
 
-### 향후 계획
-서버와 AI 기술을 도입하여 맛슐랭 2.0 버전을 개발할 계획입니다.</br>
+### 맛슐랭 2.0 서버 버전
+서버와 AI 기술을 도입하여 맛슐랭 2.0 버전을 개발을 진행하고 있습니다.</br>
 
 - [맛슐랭 프로젝트 기획서](https://www.notion.so/130f3da005f180ba966ae83146764414?pvs=4)</br>
 
-- AI 추천 기능 강화: 사용자 리뷰 및 방문 기록을 분석하여 개인화된 맛집 추천 기능을 제공합니다.</br>
 - 서버 기반 데이터 관리: 사용자 데이터를 안전하게 저장하고, 여러 기기 간 동기화 기능을 지원합니다.</br>
 - 소셜 네트워크 확장: 사용자가 친구와 맛집 정보를 공유하고 서로의 컬렉션을 탐색할 수 있는 소셜 기능을 추가합니다.</br>
+- AI 추천 기능 강화: 사용자 리뷰 및 방문 기록을 분석하여 개인화된 맛집 추천 기능을 제공합니다.</br>
+</br>
+
+<img src="https://github.com/user-attachments/assets/69c06379-6443-499b-98cd-5ee024f28471" width="100%">
 
 </br>
 
@@ -638,7 +641,6 @@ func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.Ed
 </br>
 
 ### 6-2. 이메일 전송 결과 처리
-</br>
 
 ``` swift
 func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
