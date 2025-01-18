@@ -85,10 +85,14 @@
 
 - **4. 지도위에 나만의 맛집을 볼 수 있는 기능**</br>
  4-1. MapKit의 Annotation을 활용하여 지도에 핀을 사진으로 표현</br>
- 4-2. 지도위의 핀을 클러스터링으로 구현
+ 4-2. 지도위의 핀을 클러스터링으로 구현</br>
  4-3. SearchBar를 사용하여 저장한 맛집을 검색할 수 있는 기능</br>
 
 - **5. 백업 파일 생성 및 공유/복구 기능**</br>
+ 5-1. 백업 파일 생성 및 ZIP 파일로 압축</br>
+ 5-2. 백업 파일 복구 및 ZIP 해제</br>
+ 5-3. 백업 파일 공유</br>
+ 5-4. 백업 파일 삭제</br>
 
 - **6. 앱에서 직접 이메일을 통해 문의나 의견을 수집할 수 있는 기능**</br>
 
@@ -397,7 +401,7 @@ func loadAnnotations() {
 ``` 
 </br>
 
- ### 4-2. 지도위의 핀을 클러스터링으로 구현
+ ### 4-2. 지도 위의 핀을 클러스터링으로 구현
  - 클러스터링 지원: 여러 핀이 모여 있을 경우, ImageClusterView를 사용하여 클러스터링된 핀과 맛집 개수를 시각적으로 표현
 
 ```swift
@@ -472,3 +476,115 @@ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 ```
 </br>
 
+### 5. 백업 파일 생성 및 공유/복구 기능
+맛슐랭은 사용자 데이터를 안전하게 보관하고, 다른 디바이스로 쉽게 복구할 수 있도록 백업 및 복구 기능을 제공합니다. 백업은 앱 내부 데이터(default.realm)를 압축하여 ZIP 파일로 저장하며, 공유와 복구가 용이합니다.</br>
+
+### 5-1. 백업 파일 생성 및 ZIP 압축
+ - 앱 내부 데이터(default.realm)를 ZIP 파일로 압축
+ - 현재 날짜와 시간을 기반으로 파일명 생성
+</br>
+
+```swift
+@objc func backupButtonTapped() {
+    Analytics.logEvent("backup_initiated", parameters: nil)
+    var urlPaths = [URL]()
+    
+    guard let path = documentDirectoryPath() else {
+        print("도큐먼트 위치에 오류가 있습니다.")
+        return
+    }
+    
+    let realmFile = path.appendingPathComponent("default.realm")
+    
+    guard FileManager.default.fileExists(atPath: realmFile.path) else {
+        print("백업할 파일이 없습니다.")
+        return
+    }
+    urlPaths.append(realmFile)
+    
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy.MM.dd_HH:mm:ss"
+    let currentDateTime = dateFormatter.string(from: Date())
+    let fileName = "matchelin_\(currentDateTime)"
+    
+    do {
+        let zipFilePath = try Zip.quickZipFiles(urlPaths, fileName: fileName)
+        print("Backup location: \(zipFilePath)")
+        backUpView.backupTableView.reloadData()
+    } catch {
+        print("백업 실패: \(error)")
+    }
+}
+
+```
+</br>
+
+### 5-2. 백업 파일 복구 및 ZIP 해제
+ - 사용자로부터 ZIP 파일을 선택받아 데이터를 복구
+ - 기존 데이터를 덮어쓰기 전 사용자에게 경고 메시지를 표시
+</br>
+
+```swift
+@objc func restoreButtonTapped() {
+    Analytics.logEvent("restore_initiated", parameters: nil)
+    let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.archive], asCopy: true)
+    documentPicker.delegate = self
+    present(documentPicker, animated: true)
+}
+
+func unzipAndRestore(fileURL: URL) {
+    guard let destinationPath = documentDirectoryPath() else {
+        print("복구 경로 오류")
+        return
+    }
+    do {
+        try Zip.unzipFile(fileURL, destination: destinationPath, overwrite: true, password: nil)
+        print("복구 완료!")
+    } catch {
+        print("복구 실패: \(error)")
+    }
+}
+
+```
+</br>
+
+### 5-3. 백업 파일 공유
+ - ZIP 파일을 다른 앱이나 클라우드 서비스로 공유
+</br>
+
+```swift
+func showActivityViewController(fileName: String) {
+    guard let path = documentDirectoryPath() else {
+        print("도큐먼트 위치에 오류가 있습니다.")
+        return
+    }
+    let backupFileURL = path.appendingPathComponent(fileName)
+    
+    let activityVC = UIActivityViewController(activityItems: [backupFileURL], applicationActivities: nil)
+    present(activityVC, animated: true)
+}
+
+```
+
+### 5-4. 백업 파일 삭제
+ - 테이블 뷰에서 슬라이드 동작으로 백업 파일 삭제
+ - 삭제 전 사용자 확인 대화 상자 표시
+ 
+```swift
+func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+        let fileName = fetchZipList()[indexPath.row].name
+        Analytics.logEvent("backup_file_deleted", parameters: ["fileName": fileName])
+        guard let path = documentDirectoryPath() else { return }
+        let fileURL = path.appendingPathComponent(fileName)
+        
+        do {
+            try FileManager.default.removeItem(at: fileURL)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } catch {
+            print("파일 삭제 실패: \(error)")
+        }
+    }
+}
+
+```
