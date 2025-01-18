@@ -669,7 +669,7 @@ func mailComposeController(_ controller: MFMailComposeViewController, didFinishW
 
 </br>
 
-## 맛슐랭 2.0 핵심 기능과 코드 설명
+## 맛슐랭 2.0 핵심 기능과 코드 설명 ⭐️
 맛슐랭 2.0은 회원 관리, 게시글 작성, 댓글, 프로필 관리와 같은 다양한 기능을 제공하며, 이를 통해 사용자 경험을 극대화합니다. 이 과정에서 MVVM 디자인 패턴, `Alamofire`, `RxSwift`, 그리고 프로토콜 지향 설계를 활용하여 효율적이고 유지보수 가능한 네트워크 계층을 구성했습니다. 아래는 이 프로젝트의 핵심 설계와 구현 방식입니다.</br>
 </br>
 
@@ -688,7 +688,7 @@ func mailComposeController(_ controller: MFMailComposeViewController, didFinishW
 - 유지보수성 강화: 프로토콜과 공통 로직 분리로 코드 수정 및 기능 추가 비용 감소
 - 테스트 가능성: 네트워크 계층 추상화를 통해 단위 테스트 가능
 - 맛슐랭 2.0의 설계는 클린 코드와 유지보수성을 중시하며, 사용자와 개발자가 모두 만족할 수 있는 서비스를 제공합니다.
-
+</br>
 
 ### 1. MVVM 디자인 패턴
  - 맛슐랭 2.0은 Model-View-ViewModel(MVVM) 패턴을 적용하여 로직과 UI를 명확히 분리
@@ -814,7 +814,6 @@ private func performRequest(_ request: APIRequest, completion: @escaping (AFData
 
 ### 4. 상태 코드와 에러 처리
  - 서버에서 반환된 상태 코드를 공통적으로 처리하여 클라이언트에서 동일한 방식으로 에러를 관리
-</br>
  
 ```swift
     // MARK: - 상태코드 공통로직
