@@ -362,4 +362,9 @@ class WebViewController: UIViewController, WKUIDelegate {
     }
 
 ``` 
-   
+</br>
+
+### 4. 지도 위에 나만의 맛집을 볼 수 있는 기능</br>
+이 섹션에서는 사용자가 저장한 맛집 정보를 지도 위에 시각적으로 표현하고, 검색 기능을 통해 맛집을 쉽게 탐색할 수 있는 기능을 설명합니다.</br>
+
+ <img src="https://github.com/user-attachments/assets/0db41b04-7759-4042-b609-38558e8d4339" width="50%">
