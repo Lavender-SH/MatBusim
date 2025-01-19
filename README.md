@@ -10,7 +10,7 @@
 
 - [맛슐랭 - 2.0 서버 버전 깃허브 링크](https://github.com/Lavender-SH/MatchelinServer-RX-MVVM)</br>
 
-- [맛슐랭 프로젝트 기획서](https://www.notion.so/130f3da005f180ba966ae83146764414?pvs=4)</br>
+- [맛슐랭 프로젝트 기획서](https://windy-elf-2bc.notion.site/130f3da005f180ba966ae83146764414)</br>
 
 - [맛슐랭 개인정보 처리 방침](https://www.notion.so/5830260f9fef4317902134e9362bfcb1?pvs=4)</br>
 
